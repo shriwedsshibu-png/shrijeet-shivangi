@@ -33,7 +33,6 @@ function HomePage() {
     // Fixed: Bypasses the missing backend server network error and instantly triggers the success message card view
     setIsRsvped(true);
   };
-
   const handlePhotoUpload = (e) => {
     e.preventDefault();
     setUploading(true);
