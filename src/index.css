@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Great+Vibes&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply antialiased; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-apple-gray-50 text-apple-gray-900 font-sans;
+    font-family: 'DM Sans', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: 'Cormorant Garamond', serif; }
+  button, input, textarea, select { font-family: 'DM Sans', sans-serif; }
+}
+
+@layer components {
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+  .font-script { font-family: 'Great Vibes', cursive; }
+  .wedding-surface { @apply bg-apple-gray-50 text-apple-gray-900; }
+  .section-container { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+  .text-ink { color: #3b2428; }
+  .text-muted { color: #6d5d52; }
+  .form-section-title { @apply font-display text-2xl sm:text-3xl font-semibold text-maroon mb-4; }
+  .family-blessing-line { @apply font-display text-xl sm:text-2xl text-maroon max-w-3xl mx-auto mt-5 leading-relaxed; }
+  .hero-couple-name { font-size: clamp(4.5rem, 13vw, 9rem); line-height: .9; margin-bottom: 1.25rem; }
+  .hero-date-line { font-weight: 700; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
+  .countdown-box { text-align: center; }
+  @media (max-width: 420px) {
+    .countdown-grid { gap: .45rem; }
+    .countdown-box { min-width: 64px; padding: .65rem .45rem; }
+    .countdown-box > div:first-child { font-size: 1.65rem; }
+    .countdown-box > div:last-child { font-size: .58rem; letter-spacing: .08em; }
+  }
+
+  .hero-primary-button { background: #7b2635 !important; }
+  .action-card-primary { border-color: rgba(123,38,53,.35); box-shadow: 0 8px 24px rgba(123,38,53,.12); }
+  .homepage-link-card { @apply flex items-center justify-between rounded-2xl bg-white border border-apple-gray-200 px-4 py-4 sm:px-5 text-sm sm:text-base font-semibold text-maroon shadow-apple transition-all hover:-translate-y-0.5 hover:border-gold; }
+  .mobile-bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: grid; grid-template-columns: repeat(5, 1fr); background: rgba(251,247,241,.97); backdrop-filter: blur(18px); border-top: 1px solid #e8ddd0; padding: .35rem .25rem calc(.35rem + env(safe-area-inset-bottom)); box-shadow: 0 -4px 18px rgba(59,36,40,.10); }
+  .mobile-bottom-link { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: .12rem; color: #6d5d52; font-size: .66rem; font-weight: 600; padding: .35rem .1rem; }
+  .mobile-bottom-link.active { color: #7b2635; }
+  .mobile-bottom-icon { font-size: 1.05rem; line-height: 1; }
+  @media (max-width: 1023px) { body { padding-bottom: 4.4rem; } }
+  @media (max-width: 640px) { .section-title { font-size: 2.7rem; } .section-subtitle { font-size: 1rem; } .hero { min-height: 92vh; } .hero .btn-apple { width: 100%; } .hero .flex { width: min(100%, 23rem); margin-inline: auto; } .gallery-grid { gap: .65rem; } .gallery-tile { border-radius: 1rem; } }
+  .section-title { @apply font-display text-5xl sm:text-6xl font-semibold text-apple-gray-900 leading-tight; }
+  .section-subtitle { @apply text-lg text-apple-gray-600 max-w-2xl mx-auto mt-3 leading-relaxed; }
+  .eyebrow { @apply uppercase tracking-[0.2em] text-xs font-semibold text-apple-blue-600 mb-3; }
+  .hero-eyebrow { @apply text-white/85; }
+  .tag { @apply inline-flex items-center rounded-full bg-apple-gray-100 px-3 py-1.5 text-apple-gray-700; }
+  .hero { background-size: cover; background-position: center; }
+  .hero-overlay { @apply absolute inset-0; background: linear-gradient(180deg, rgba(45,20,24,.48), rgba(45,20,24,.66)); }
+  .action-card { @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-apple-xl; }
+  .btn-apple { @apply px-6 py-3 rounded-full font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[.98] shadow-apple; }
+  .btn-apple-primary { @apply btn-apple bg-maroon text-white hover:bg-apple-blue-700; }
+  .btn-apple-secondary { @apply btn-apple bg-white text-maroon border border-gold/50 hover:bg-ivory-dark; }
+  .card-apple { @apply bg-white rounded-2xl shadow-apple border border-apple-gray-200 transition-all duration-300; }
+  .input-apple { @apply w-full px-4 py-3 rounded-xl border border-apple-gray-200 bg-white text-apple-gray-900 focus:outline-none focus:ring-2 focus:ring-apple-blue-500 focus:border-transparent transition-all; }
+  .script-section-title { @apply font-script text-5xl text-maroon; }
+  .upload-dropzone { @apply border-2 border-dashed border-gold/50 rounded-3xl p-8 md:p-12 text-center bg-ivory; }
+  .gallery-filter { @apply px-4 py-2 rounded-full text-sm font-medium bg-white text-apple-gray-700 border border-apple-gray-200 transition-all; }
+  .gallery-filter:hover { @apply border-gold text-maroon; }
+  .gallery-filter-active { @apply bg-maroon text-white border-maroon; }
+  .gallery-grid { @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4; }
+  .gallery-tile { @apply relative aspect-square overflow-hidden rounded-2xl bg-apple-gray-100 shadow-apple; }
+  .gallery-tile img { @apply w-full h-full object-cover transition-transform duration-500; }
+  .gallery-tile:hover img { transform: scale(1.04); }
+  .gallery-tile-label { @apply absolute bottom-3 left-3 bg-maroon/85 text-white text-xs px-3 py-1.5 rounded-full; }
+}
+
+@media print {
+  nav, footer, .no-print { display: none !important; }
+  * { background: white !important; color: black !important; box-shadow: none !important; }
+  img { max-width: 100% !important; height: auto !important; }
+}
