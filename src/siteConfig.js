@@ -10,7 +10,7 @@ const siteConfig = {
     events: { enabled: true, label: "Events" },
     photoGallery: { enabled: true, label: "Gallery" },
     uploadPhotos: { enabled: true, label: "Share Your Moments" },
-    blessings: { enabled: true, label: "Digital Blessings" },
+    blessings: { enabled: true, label: "Blessings & Shagun" },
     families: { enabled: true, label: "Our Families" },
     tokenOfLove: { enabled: true, label: "A Token of Love" },
     travel: { enabled: true, label: "Explore Vizag" },
@@ -229,11 +229,19 @@ And here's to all the journeys still waiting for us.`,
         relation: "Bahena"
       },
       {
+        name: "Shiv Chandra Singh",
+        relation: "Nana"
+      },
+      {
+        name: "Prabha Devi",
+        relation: "Nani"
+      },
+      {
         name: "Sudhir Kumar Mishra Hon(Lt) (Retd)",
         relation: "Bade Papa"
       },
       {
-        name: "S",
+        name: "Abha",
         relation: "Badi Mummy"
       },
       {
@@ -261,11 +269,11 @@ And here's to all the journeys still waiting for us.`,
         relation: "Bhabhi"
       },
       {
-        name: "Rani Sharma",
+        name: "Rani",
         relation: "Didi"
       },
       {
-        name: "Pankaj Sharma",
+        name: "Pankaj Thakur",
         relation: "Jiju"
       },
       {
@@ -326,7 +334,11 @@ And here's to all the journeys still waiting for us.`,
       },
     ],
     stays: [
-      { name: "Hotel location", mapLink: "" },
+      { name: "Hotel location", mapLink: "https://maps.app.goo.gl/pJ2UPiyD7dDm2oKJ8" },
+      { name: "Bungalow location", mapLink: "" },
+    ],
+    NearbyMall: [
+      { name: "CMR MALL", mapLink: "https://share.google/4zt147SDw6ndapzci" },
       { name: "Bungalow location", mapLink: "" },
     ],
     photographerGalleryUrl: "",
@@ -381,8 +393,6 @@ And here's to all the journeys still waiting for us.`,
 
   footer: {
     tagline: "With love, laughter and the blessings of our families.",
-    socialMedia: {
-      instagram: "https://instagram.com/sharmashivangi31",
     },
   },
 
