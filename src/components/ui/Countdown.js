@@ -42,20 +42,29 @@ function Countdown({ targetDate, className = '' }) {
   ];
   
   return (
-    <div className={`countdown-grid flex gap-3 sm:gap-4 justify-center ${className}`}>
-      {timeUnits.map((unit, index) => (
-        <div key={index} className="countdown-box bg-white rounded-xl shadow-apple px-3 py-3 sm:px-5 sm:py-4 min-w-[72px] sm:min-w-[86px]">
-          <div className="text-3xl sm:text-4xl font-bold text-maroon leading-none">
-            {String(unit.value).padStart(2, '0')}
+    <div className="w-full text-center my-6 px-4">
+      
+      {/* 🌸 Catchy & Romantic Captions Added Above the Box Array */}
+      <h3 className="font-display text-lg md:text-xl italic font-semibold text-amber-800 tracking-wide mb-5">
+        Counting down to our forever... ✨
+      </h3>
+
+      {/* 🗓️ Core Original Functional Box Grid */}
+      <div className={`countdown-grid flex gap-3 sm:gap-4 justify-center ${className}`}>
+        {timeUnits.map((unit, index) => (
+          <div key={index} className="countdown-box bg-white rounded-xl shadow-md border border-amber-50/60 px-3 py-3 sm:px-5 sm:py-4 min-w-[72px] sm:min-w-[86px] transition-transform hover:scale-105">
+            <div className="text-3xl sm:text-4xl font-bold text-maroon leading-none font-mono">
+              {String(unit.value).padStart(2, '0')}
+            </div>
+            <div className="mt-2 text-[0.68rem] sm:text-xs uppercase tracking-[0.12em] text-amber-700 font-semibold">
+              {unit.label}
+            </div>
           </div>
-          <div className="mt-2 text-[0.68rem] sm:text-xs uppercase tracking-[0.12em] text-maroon font-semibold">
-            {unit.label}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
     </div>
   );
 }
 
 export default Countdown;
-
