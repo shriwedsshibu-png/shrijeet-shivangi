@@ -404,3 +404,4 @@ And here's to all the journeys still waiting for us.`,
 };
 
 export default siteConfig;
+Update grandparents details and locations
