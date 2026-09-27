@@ -1,30 +1,67 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import siteConfig from '../siteConfig';
 
-const links = [
-  { key: 'home', path: '/', label: 'Home', icon: '⌂' },
-  { key: 'rsvp', path: '/rsvp', label: 'RSVP', icon: '✓' },
-  { key: 'events', path: '/events', label: 'Events', icon: '◷' },
-  { key: 'uploadPhotos', path: '/upload-photos', label: 'Photos', icon: '📸' },
-  { key: 'photoGallery', path: '/gallery', label: 'Gallery', icon: '▦' },
-];
+const MobileBottomNav = ({ activeTab, setActiveTab }) => {
+  // Navigation tabs definition using native emojis
+  const navItems = [
+    { id: 'home', label: 'Home', icon: '🏠' },
+    { id: 'story', label: 'Our Story', icon: '❤️' },
+    { id: 'events', label: 'Events & RSVP', icon: '📅' },
+    { id: 'gallery', label: 'Gallery', icon: '🖼️' },
+    { id: 'blessings', label: 'Blessings & Shagun', icon: '💌' },
+  ];
 
-function MobileBottomNav() {
-  const location = useLocation();
   return (
-    <nav className="mobile-bottom-nav lg:hidden" aria-label="Quick navigation">
-      {links.filter((link) => link.key === 'home' || siteConfig.features[link.key]?.enabled).map((link) => {
-        const active = location.pathname === link.path;
-        return (
-          <Link key={link.key} to={link.path} className={`mobile-bottom-link ${active ? 'active' : ''}`}>
-            <span className="mobile-bottom-icon">{link.icon}</span>
-            <span>{link.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* 🌟 Floating Top Branding Pill */}
+      <div className="flex justify-center mb-2">
+        <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-md border border-amber-100 flex items-center space-x-2">
+          <span className="text-xs font-semibold tracking-widest text-amber-700 uppercase">
+            Shrijeet ♾️ Shivangi
+          </span>
+        </div>
+      </div>
+
+      {/* 📱 Main Bottom Navigation Bar */}
+      {/* pb-8 lifts the navigation targets cleanly above the Netlify floating badge layout */}
+      <nav className="bg-white/95 backdrop-blur-md border-t border-amber-100 shadow-xl px-4 pt-3 pb-8 md:pb-4">
+        <div className="max-w-md mx-auto flex justify-between items-center">
+          {navItems.map((item) => {
+            const isActive = activeTab === item.id;
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className="flex flex-col items-center flex-1 justify-center transition-all duration-300 relative group"
+              >
+                {/* Visual Active Anchor Dots */}
+                {isActive && (
+                  <span className="absolute -top-2 w-1.5 h-1.5 bg-amber-600 rounded-full" />
+                )}
+
+                {/* Extra Large Interactive Emojis for clean mobile tapping */}
+                <span className={`text-2xl transition-transform duration-300 group-hover:scale-110 ${
+                  isActive ? 'opacity-100 filter drop-shadow-sm' : 'opacity-50 group-hover:opacity-80'
+                }`}>
+                  {item.icon}
+                </span>
+
+                {/* Scannable Micro Text Labels */}
+                <span
+                  className={`text-[10px] font-medium mt-1 tracking-tight transition-colors duration-300 ${
+                    isActive ? 'text-amber-700 font-bold' : 'text-gray-500'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
-}
+};
 
 export default MobileBottomNav;
+Fix mobile bottom nav package error
