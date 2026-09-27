@@ -1,77 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import siteConfig from '../siteConfig';
+import React from 'react';
+import { Heart, Home, Image, Calendar, MessageSquare } from 'lucide-react'; // Installs standard icons safely
 
-function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const routes = {
-    ourStory: '/our-story',
-    events: '/events',
-    photoGallery: '/gallery',
-    uploadPhotos: '/upload-photos',
-    blessings: '/blessings',
-    families: '/our-families',
-    tokenOfLove: '/token-of-love',
-    travel: '/explore-vizag',
-    faq: '/faq',
-  };
-
-  const navLinks = Object.entries(siteConfig.features)
-    .filter(([key, feature]) => feature.enabled && key !== 'homepage' && routes[key])
-    .map(([key, feature]) => ({ key, path: routes[key], label: feature.label }));
-
-  const isActive = (path) => location.pathname === path;
-  const navText = scrolled ? 'text-apple-gray-900' : 'text-white';
+const Navbar = ({ activeTab, setActiveTab }) => {
+  // Navigation tabs definition
+  const navItems = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'story', label: 'Our Story', icon: Heart },
+    { id: 'events', label: 'Events & RSVP', icon: Calendar },
+    { id: 'gallery', label: 'Gallery', icon: Image },
+    { id: 'blessings', label: 'Blessings & Shagun', icon: MessageSquare },
+  ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-ivory/95 backdrop-blur-apple shadow-apple' : 'bg-maroon/75 backdrop-blur-apple'}`}>
-      <div className="section-container">
-        <div className="flex justify-between items-center py-3">
-          <Link to="/" className={`font-script text-2xl lg:text-3xl ${navText}`}>
-            {siteConfig.couple.displayName}
-          </Link>
-
-          <button onClick={() => setIsOpen(!isOpen)} className={`lg:hidden p-2 ${navText}`} aria-label="Toggle menu">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
-            </svg>
-          </button>
-
-          <div className="hidden lg:flex items-center gap-5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.key}
-                to={link.path}
-                className={`text-sm font-medium transition-colors ${isActive(link.path) ? 'text-gold font-semibold' : `${navText} opacity-85 hover:opacity-100`}`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* 🌟 Floating Top Branding Pill */}
+      <div className="flex justify-center mb-2">
+        <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-md border border-amber-100 flex items-center space-x-2 animate-bounce-slow">
+          <span className="text-xs font-semibold tracking-widest text-amber-700 uppercase">
+            Shrijeet ♾️ Shivangi
+          </span>
         </div>
-
-        {isOpen && (
-          <div className={`lg:hidden pb-5 space-y-1 ${scrolled ? 'text-apple-gray-900' : 'text-white'}`}>
-            <Link to="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 rounded-lg">Home</Link>
-            {navLinks.map((link) => (
-              <Link key={link.key} to={link.path} onClick={() => setIsOpen(false)} className={`block py-2 px-3 rounded-lg ${isActive(link.path) ? 'bg-maroon/10 text-maroon font-semibold' : ''}`}>
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
-    </nav>
+
+      {/* 📱 Main Bottom Navigation Bar */}
+      {/* pb-8 (Padding Bottom) lifts the entire bar safely above the Netlify floating badge */}
+      <nav className="bg-white/95 backdrop-blur-md border-t border-amber-100 shadow-xl px-4 pt-3 pb-8 md:pb-4">
+        <div className="max-w-md mx-auto flex justify-between items-center">
+          {navItems.map((item) => {
+            const IconElement = item.icon;
+            const isActive = activeTab === item.id;
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className="flex flex-col items-center flex-1 justify-center transition-all duration-300 relative group"
+              >
+                {/* Visual Active Anchor Indicator */}
+                {isActive && (
+                  <span className="absolute -top-3 w-1.5 h-1.5 bg-amber-600 rounded-full" />
+                )}
+
+                {/* 🌟 Bigger Icons (w-8 h-8) for easy physical tapping on mobile devices */}
+                <IconElement
+                  className={`w-8 h-8 stroke-[1.5] transition-transform duration-300 group-hover:scale-110 ${
+                    isActive 
+                      ? 'text-amber-600 fill-amber-50' 
+                      : 'text-gray-400 group-hover:text-amber-500'
+                  }`}
+                />
+
+                {/* Scannable Micro Text Labels */}
+                <span
+                  className={`text-[10px] font-medium mt-1 tracking-tight transition-colors duration-300 ${
+                    isActive ? 'text-amber-700 font-semibold' : 'text-gray-500'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
-}
+};
 
 export default Navbar;
