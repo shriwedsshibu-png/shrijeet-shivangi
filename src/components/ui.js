@@ -6,7 +6,12 @@ export function Card({ children, className = '', ...rest }) {
 }
 
 export function Divider({ symbol = '✦' }) {
-  return <div className="divider" aria-hidden="true"><span>{symbol}</span></div>;
+  return <div className="divider" aria-hidden="true"><span>{symbol === '✦' ? (
+    <svg className="orn" viewBox="0 0 52 32" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round">
+      <path d="M26 4c4 5 4 11 0 16-4-5-4-11 0-16z" fill="currentColor" fillOpacity=".25" />
+      <path d="M26 20c-6-1-11-5-13-11 6 0 11 3 13 8zM26 20c6-1 11-5 13-11-6 0-11 3-13 8z" />
+      <path d="M26 20v8M20 28h12" /><circle cx="26" cy="2.5" r="1.3" fill="currentColor" />
+    </svg>) : symbol}</span></div>;
 }
 
 export function PageHeader({ eyebrow, title, subtitle }) {

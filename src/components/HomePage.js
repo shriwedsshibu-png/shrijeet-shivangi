@@ -31,6 +31,7 @@ export default function HomePage() {
       {/* ---------- Invitation ---------- */}
       <section className={`hero ${photoHero ? 'hero-photo' : ''}`} style={photoHero ? { backgroundImage: `linear-gradient(180deg, rgba(50,10,22,.15) 0%, rgba(50,10,22,.25) 30%, rgba(40,8,18,.9) 62%, rgba(40,8,18,.95) 100%), url(${hp.heroImage})` } : undefined}>
         {!photoHero && <div className="hero-pattern" />}
+        <div className="hero-toran" />
         <div className="relative wrap-narrow fade-in">
           {hp.invocation && <p className="deva" style={{ color: '#e7cf98', fontSize: '1.15rem', marginBottom: '1.2rem' }}>{hp.invocation}</p>}
 

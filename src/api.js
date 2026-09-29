@@ -2,9 +2,12 @@ import siteConfig from './siteConfig';
 
 const baseUrl = () => String(siteConfig.backend?.scriptUrl || process.env.REACT_APP_BACKEND_URL || '').trim();
 
-export const backendReady = () => baseUrl().length > 0;
+const looksValid = () => /^https:\/\/script\.google(usercontent)?\.com\/(a\/[^/]+\/)?macros\/s\/[^/]+\/exec(\?.*)?$/.test(baseUrl()) || /^https?:\/\/localhost/.test(baseUrl());
+export const backendReady = () => baseUrl().length > 0 && looksValid();
 
-export const NOT_READY_MESSAGE = 'This section is opening very soon. Please try again in a little while.';
+export const NOT_READY_MESSAGE = baseUrl().length > 0
+  ? 'Setup not finished: the link in siteConfig.js (scriptUrl) must be the Web app link that ends with /exec, not the editor link. See Guide 1.'
+  : 'This section is opening very soon. Please try again in a little while.';
 const NETWORK_MESSAGE = 'We could not reach the server. Please check your internet and try again.';
 
 async function readJson(response) {
