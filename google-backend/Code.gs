@@ -17,11 +17,6 @@ var TIMEZONE = 'Asia/Kolkata';
 var MAX_PHOTO_BASE64 = 14 * 1024 * 1024;   // ~10 MB photo after base64
 var MAX_FACES_PER_PHOTO = 25;
 
-// Email alerts. Leave '' to send to the Google account that owns this script.
-// Put an address between the quotes to send somewhere else, e.g. 'name@gmail.com'.
-var NOTIFY_EMAIL = '';
-// Photos: at most one "new photos" email per this many minutes (so your inbox is not flooded).
-var PHOTO_ALERT_MINUTES = 15;
 
 var TABS = {
   RSVP: [
@@ -351,34 +346,6 @@ function cleanFaces_(faces) {
 }
 
 
-/* ------------------------------------------------------------------ */
-/*  EMAIL ALERTS  (never allowed to break a guest's submission)         */
-/* ------------------------------------------------------------------ */
-function notify_(subject, body) {
-  try {
-    var to = NOTIFY_EMAIL || Session.getEffectiveUser().getEmail();
-    if (!to) return;
-    MailApp.sendEmail(to, '[Wedding site] ' + subject, String(body) + '\n\n— Shrijeet & Shivangi wedding website');
-  } catch (e) {}
-}
-
-function notifyPhoto_(event) {
-  try {
-    var props = PropertiesService.getScriptProperties();
-    var pending = (Number(props.getProperty('pendingPhotos')) || 0) + 1;
-    var last = Number(props.getProperty('lastPhotoMail')) || 0;
-    var now = new Date().getTime();
-    if (now - last >= PHOTO_ALERT_MINUTES * 60000) {
-      notify_(pending + ' new photo' + (pending > 1 ? 's' : '') + ' uploaded', 'Latest celebration: ' + event + '\nOpen your Drive folder "' + ROOT_FOLDER_NAME + '" to see them.');
-      props.setProperty('pendingPhotos', '0');
-      props.setProperty('lastPhotoMail', String(now));
-    } else {
-      props.setProperty('pendingPhotos', String(pending));
-    }
-  } catch (e) {}
-}
-
-/* Run this once from the editor to test that email alerts reach you. */
-function testEmail() {
-  notify_('Test alert', 'If you can read this, wedding alerts are working.');
-}
+/* Email alerts are switched off (they would need an extra Google permission).  */
+function notify_() {}
+function notifyPhoto_() {}
