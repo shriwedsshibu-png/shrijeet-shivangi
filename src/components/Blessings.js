@@ -1,206 +1,145 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import QRCode from 'qrcode';
 import siteConfig from '../siteConfig';
-import Card from './ui/Card';
-import Input from './ui/Input';
-import Button from './ui/Button';
+import { Card, Button, Field, Notice, PageHeader, Divider } from './ui';
+import Icon from '../icons';
+import { submitBlessing, backendReady, NOT_READY_MESSAGE } from '../api';
+import { copyText, getDeviceId, loadSaved, save } from '../utils';
 
-function Blessings() {
-  const [formData, setFormData] = useState({ name: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+const SAVE_KEY = 'wedding_blessing_v1';
+
+function BlessingCard() {
+  const cfg = siteConfig.blessings;
+  const saved = loadSaved(SAVE_KEY);
+  const [name, setName] = useState(saved?.name || '');
+  const [message, setMessage] = useState(saved?.message || '');
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [copied, setCopied] = useState(false);
-
-  // 📝 EDIT YOUR PAYMENT DETAILS HERE:
-  const yourUPIID = "shrijeet.singh@okaxis"; // <-- Replace this with your exact UPI ID string!
-  const payeeName = "Shrijeet and Shivangi";    // <-- Your display name inside their bank apps
-
-  // Automated string constructor making the smartphone app auto-launch link
-  const upiDeepLink = `upi://pay?pa=${yourUPIID}&pn=${encodeURIComponent(payeeName)}&cu=INR`;
-
-  const handleCopyUPI = () => {
-    navigator.clipboard.writeText(yourUPIID);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
-  };
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.message.trim()) {
-      setErrorMessage('Please enter your name and blessing.');
-      return;
-    }
+    setError('');
+    if (!name.trim() || !message.trim()) { setError('Please write your name and your blessing.'); return; }
     setLoading(true);
-    setErrorMessage('');
     try {
-      const response = await fetch('/.netlify/functions/submit-blessings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await response.json();
-      if (!response.ok || !result.success) throw new Error(result.message || 'Something went wrong.');
-      setSubmitted(true);
-      setFormData({ name: '', message: '' });
-    } catch (error) {
-      setErrorMessage(error.message || 'Unable to send your blessing. Please try again.');
+      await submitBlessing({ name, message, deviceId: getDeviceId() });
+      save(SAVE_KEY, { name, message });
+      setDone(true);
+    } catch (err) {
+      setError(err.message || 'Could not send your blessing. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen wedding-surface pt-24 pb-24 md:pt-28 md:pb-20">
-      <div className="section-container max-w-6xl mx-auto px-4">
-        
-        {/* Page Top Heading */}
-        <div className="text-center mb-10">
-          <p className="eyebrow tracking-widest text-amber-700 uppercase font-semibold text-xs">Tokens of Love & Wishes</p>
-          <h1 className="section-title text-3xl md:text-4xl font-bold font-display text-gray-900 mt-2">Blessings & Shagun</h1>
-          <p className="section-subtitle text-gray-600 mt-2 max-w-xl mx-auto">
-            Your love, presence, and blessings are the greatest gifts we could receive. If you wish to honor us with a token, choices are available below.
-          </p>
+    <Card>
+      <h2 className="form-title flex items-center gap-2"><Icon name="heart" size={26} /> {cfg.blessingHeading}</h2>
+      {done ? (
+        <div className="text-center py-6 fade-in">
+          <div style={{ fontSize: '3rem' }}>🙏</div>
+          <h3 className="script mt-2" style={{ fontSize: '2.8rem', color: 'var(--maroon)', lineHeight: 1.1 }}>Thank you</h3>
+          <p className="mt-2 text-muted">Your blessing has reached us. We will treasure your words forever.</p>
+          <div className="mt-5"><Button variant="ghost" onClick={() => setDone(false)}>Edit my blessing</Button></div>
         </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="grid gap-4" noValidate>
+          <p className="text-muted">{cfg.blessingHint}</p>
+          <Field label="Your name" required>
+            <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" autoComplete="name" />
+          </Field>
+          <Field label="Your blessing" required>
+            <textarea className="input" style={{ minHeight: '9rem' }} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write your good wishes or prayers here…" />
+          </Field>
+          {!backendReady() && <Notice kind="info">{NOT_READY_MESSAGE}</Notice>}
+          {error && <Notice kind="error">{error}</Notice>}
+          <Button type="submit" variant="primary" block disabled={loading || !backendReady()}>{loading ? 'Sending…' : saved ? 'Update my blessing' : 'Send my blessing'}</Button>
+        </form>
+      )}
+    </Card>
+  );
+}
 
-        {/* Split Screen Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          
-          {/* 💌 LEFT COLUMN: Digital Blessings Form */}
-          <div className="w-full">
-            <Card className="p-6 md:p-8 border border-amber-100/60 shadow-sm bg-white">
-              <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <span>💌</span> Leave a Digital Blessing
-              </h2>
-              
-              {!submitted ? (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name</label>
-                    <Input 
-                      type="text" 
-                      value={formData.name} 
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
-                      placeholder="Enter your full name" 
-                      required 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Your Blessing</label>
-                    <textarea 
-                      value={formData.message} 
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })} 
-                      className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 min-h-[150px] resize-none text-base" 
-                      placeholder="Write your beautiful wishes or prayers for us here…" 
-                      required 
-                    />
-                  </div>
-                  
-                  {errorMessage && (
-                    <div className="p-4 rounded-xl bg-red-50 text-red-700 text-sm font-medium">
-                      {errorMessage}
-                    </div>
-                  )}
-                  
-                  <Button 
-                    type="submit" 
-                    variant="primary" 
-                    size="lg" 
-                    disabled={loading} 
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition-all duration-300"
-                  >
-                    {loading ? 'Sending…' : 'Submit Blessing'}
-                  </Button>
-                </form>
-              ) : (
-                <div className="text-center py-6">
-                  <div className="text-5xl mb-4">🙏</div>
-                  <h3 className="font-display text-2xl font-bold text-gray-900">Blessing Received!</h3>
-                  <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                    Thank you so much! Your heartfelt words have been saved and will remain a cherished memory for both of us forever.
-                  </p>
-                  <button 
-                    onClick={() => setSubmitted(false)} 
-                    className="mt-6 text-amber-700 font-semibold text-sm hover:underline hover:text-amber-800"
-                  >
-                    Write another blessing
-                  </button>
-                </div>
-              )}
-            </Card>
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+function ShagunCard() {
+  const s = siteConfig.shagun;
+  const [copied, setCopied] = useState(false);
+  const [qr, setQr] = useState(s.qrImage || '');
+  const ios = useMemo(() => isIOS(), []);
+
+  const query = useMemo(() => {
+    let q = `pa=${s.upiId}&pn=${encodeURIComponent(s.payeeName)}&cu=INR`;
+    if (s.note) q += `&tn=${encodeURIComponent(s.note)}`;
+    return q;
+  }, [s]);
+  const upiLink = `upi://pay?${query}`;
+
+  useEffect(() => {
+    if (s.qrImage) return undefined;
+    let alive = true;
+    QRCode.toDataURL(upiLink, { width: 480, margin: 2, color: { dark: '#4a1120', light: '#ffffff' } })
+      .then((url) => { if (alive) setQr(url); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [upiLink, s.qrImage]);
+
+  const copy = async () => {
+    const ok = await copyText(s.upiId);
+    if (ok) { setCopied(true); setTimeout(() => setCopied(false), 2500); }
+  };
+
+  return (
+    <Card id="shagun" className="text-center">
+      <h2 className="form-title flex items-center justify-center gap-2"><Icon name="phone" size={26} /> {s.heading}</h2>
+      <p className="font-display font-bold" style={{ fontSize: '1.5rem', color: 'var(--gold-deep, #8f6a26)', lineHeight: 1.25 }}>{s.optionalNote}</p>
+
+      <div className="mt-6 grid gap-3">
+        <a className="btn btn-primary btn-block" style={{ minHeight: '3.6rem', fontSize: '1.12rem' }} href={upiLink}>Pay by UPI</a>
+        <p className="hint" style={{ margin: 0 }}>Tap the button, choose your UPI app (GPay, PhonePe, Paytm, BHIM…), type any amount and send.</p>
+        {ios && (
+          <div className="grid grid-cols-3 gap-2">
+            <a className="btn btn-ghost" style={{ padding: '.4rem', fontSize: '.9rem' }} href={`gpay://upi/pay?${query}`}>GPay</a>
+            <a className="btn btn-ghost" style={{ padding: '.4rem', fontSize: '.9rem' }} href={`phonepe://pay?${query}`}>PhonePe</a>
+            <a className="btn btn-ghost" style={{ padding: '.4rem', fontSize: '.9rem' }} href={`paytmmp://pay?${query}`}>Paytm</a>
           </div>
-
-          {/* 🪙 RIGHT COLUMN: Digital Shagun UPI QR Code & Instant Links */}
-          <div className="w-full">
-            <Card className="p-6 md:p-8 border border-amber-100/60 shadow-sm bg-white text-center">
-              <h2 className="text-xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
-                <span>✨</span> Digital Shagun
-              </h2>
-              <p className="text-xs text-amber-700 uppercase tracking-widest font-semibold mb-6">(Optional Box)</p>
-              
-              <div className="bg-amber-50/50 rounded-2xl p-5 border border-amber-100/40 max-w-sm mx-auto shadow-inner space-y-5">
-                
-                {/* ⚡ NEW FEATURE: Smartphone One-Click Deep Link Button */}
-                <div className="block">
-                  <a 
-                    href={upiDeepLink}
-                    className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all duration-300 transform active:scale-95 text-base w-full"
-                  >
-                    <span>📱</span> Pay via Any UPI App
-                  </a>
-                  <p className="text-[11px] text-gray-500 mt-1.5">Works perfectly when browsing directly on your mobile device!</p>
-                </div>
-
-                <div className="relative flex items-center justify-center">
-                  <div className="border-t border-gray-200 w-full"></div>
-                  <span className="absolute bg-amber-50/100 px-3 text-xs text-gray-400 font-medium">OR SCAN QR</span>
-                </div>
-
-                {/* QR Code Display Area */}
-                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm inline-block">
-                  <img 
-                    src="/images/qr-code.jpg" 
-                    alt="Wedding Shagun UPI QR Code" 
-                    className="w-48 h-48 mx-auto object-contain rounded-lg"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      // Backs up with a dynamic QR generation pointing exactly to your specific user IDs
-                      e.target.src = `https://qrserver.com{encodeURIComponent(upiDeepLink)}`; 
-                    }}
-                  />
-                </div>
-
-                {/* ⚡ NEW FEATURE: Visible UPI ID Text and Copy Mechanism */}
-                <div className="bg-white rounded-xl p-3 border border-gray-100 flex items-center justify-between shadow-xs">
-                  <div className="text-left pl-1">
-                    <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">UPI ID</p>
-                    <p className="text-sm font-mono font-bold text-gray-700 select-all">{yourUPIID}</p>
-                  </div>
-                  <button 
-                    onClick={handleCopyUPI}
-                    className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all ${
-                      copied 
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
-                    }`}
-                  >
-                    {copied ? '✅ Copied!' : '📋 Copy'}
-                  </button>
-                </div>
-                
-              </div>
-
-              {/* Massive Optional Shagun Text at Bottom */}
-              <div className="mt-6 pt-4 border-t border-gray-100">
-                <p className="text-lg md:text-xl font-bold tracking-wide text-amber-800 uppercase font-display">
-                  Shagun Box ♾️ Best Wishes
-                </p>
-                <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto leading-relaxed">
-                  For your convenience, you can tap the green button, scan the QR code, or copy the UPI ID directly. Thank you for your kindness!
-                </p>
-              </div>
-            </Card>
-          </div>
-
-        </div>
-        
+        )}
       </div>
+
+      <Divider symbol="or" />
+
+      <div className="mx-auto" style={{ maxWidth: '20rem' }}>
+        <p className="label" style={{ textAlign: 'center' }}>Copy our UPI ID</p>
+        <div className="flex items-center gap-2 rounded-2xl" style={{ background: 'var(--cream)', border: '1px solid rgba(184,137,59,.5)', padding: '.5rem .5rem .5rem 1rem' }}>
+          <span className="flex-1 font-bold select-all break-all text-left" style={{ fontSize: '1.05rem' }}>{s.upiId}</span>
+          <button onClick={copy} className="btn btn-primary" style={{ minHeight: '2.8rem', padding: '.3rem 1rem', fontSize: '.95rem' }} aria-label="Copy UPI ID">
+            <Icon name={copied ? 'check' : 'copy'} size={18} /> {copied ? 'Copied' : 'Copy'}
+          </button>
+        </div>
+      </div>
+
+      {qr && (
+        <div className="mt-7">
+          <p className="label" style={{ textAlign: 'center' }}>Or scan this QR from any UPI app</p>
+          <img src={qr} alt={`UPI QR code for ${s.payeeName}`} className="mx-auto" style={{ width: '13rem', height: '13rem', borderRadius: '1rem', border: '1px solid rgba(184,137,59,.5)', padding: '.5rem', background: '#fff' }} />
+        </div>
+      )}
+    </Card>
+  );
+}
+
+export default function Blessings() {
+  const cfg = siteConfig.blessings;
+  return (
+    <main className="page">
+      <div className="wrap-narrow">
+        <PageHeader eyebrow="With love" title={cfg.title} subtitle={cfg.subtitle} />
+        <div className="grid gap-7">
+          <BlessingCard />
+          <ShagunCard />
+        </div>
+      </div>
+    </main>
+  );
+}

@@ -1,46 +1,37 @@
 import React from 'react';
 import siteConfig from '../siteConfig';
-import Card from './ui/Card';
+import { Card, PageHeader } from './ui';
 
-function FamilyColumn({ title, members }) {
+function Column({ title, members }) {
   return (
     <div>
-      <h2 className="script-section-title text-center mb-8">{title}</h2>
-      <div className="grid gap-4">
-        {members.length > 0 ? members.map((member, index) => (
-          <Card key={index} className="p-5 text-center">
-            {/* Renders Relation and Name directly together on a single line */}
-            <p className="text-base text-apple-gray-900 font-medium">
-              <span className="text-amber-800 font-semibold">{member.relation || member.relationship}:</span> {member.name}
-            </p>
+      <h2 className="script text-center mb-5" style={{ fontSize: '2.8rem', color: 'var(--maroon)', lineHeight: 1.1 }}>{title}</h2>
+      <div className="grid gap-3">
+        {members.map((m, i) => (
+          <Card key={`${m.name}-${i}`} style={{ padding: '1rem 1.1rem', textAlign: 'center' }}>
+            <p className="eyebrow" style={{ letterSpacing: '.18em' }}>{m.relation || m.relationship}</p>
+            <p className="font-display font-bold" style={{ fontSize: '1.45rem', color: 'var(--ink)', lineHeight: 1.2 }}>{m.name}</p>
           </Card>
-        )) : (
-          <Card className="p-7 text-center">
-            <p className="text-apple-gray-600">Family details will be added here.</p>
-          </Card>
-        )}
+        ))}
       </div>
     </div>
   );
 }
 
-function OurFamilies() {
-  const families = siteConfig.families || {};
+export default function OurFamilies() {
+  const f = siteConfig.families;
+  const groom = f.shrijeet || [];
+  const bride = f.shivangi || [];
+  const both = groom.length > 0 && bride.length > 0;
   return (
-    <main className="min-h-screen wedding-surface pt-28 pb-20">
-      <div className="section-container">
-        <div className="text-center mb-14">
-          <p className="eyebrow">With love & blessings</p>
-          <h1 className="section-title">{families.title}</h1>
-          <p className="section-subtitle">{families.subtitle}</p>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
-          <FamilyColumn title="Shrijeet's Family" members={families.shrijeet || []} />
-          <FamilyColumn title="Shivangi's Family" members={families.shivangi || []} />
+    <main className="page">
+      <div className={both ? 'wrap' : 'wrap-narrow'}>
+        <PageHeader eyebrow="With love & blessings" title={f.title} subtitle={f.subtitle} />
+        <div className={both ? 'grid gap-10 lg:grid-cols-2 max-w-5xl mx-auto' : ''}>
+          {groom.length > 0 && <Column title={`${siteConfig.couple.name1}'s Family`} members={groom} />}
+          {bride.length > 0 && <Column title={`${siteConfig.couple.name2}'s Family`} members={bride} />}
         </div>
       </div>
     </main>
   );
 }
-
-export default OurFamilies;

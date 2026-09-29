@@ -1,45 +1,181 @@
-// Shivangi & Shrijeet — Wedding Website Configuration
+// ============================================================================
+//  Shrijeet & Shivangi — Wedding Website
+//  THIS IS THE ONLY FILE YOU NEED TO EDIT FOR TEXT, DATES, LINKS AND NAMES.
+//  Change the words between the "quotation marks", save (commit) on GitHub,
+//  and the live website updates by itself in about a minute.
+//  Be careful not to delete any quotation marks, commas or brackets.
+// ============================================================================
 
 const siteConfig = {
-  weddingType: "hindu",
-
-  features: {
-    homepage: { enabled: true, label: "Home" },
-    rsvp: { enabled: true, label: "RSVP" },
-    ourStory: { enabled: true, label: "Our Story" },
-    events: { enabled: true, label: "Events" },
-    photoGallery: { enabled: true, label: "Gallery" },
-    uploadPhotos: { enabled: true, label: "Share Your Moments" },
-    blessings: { enabled: true, label: "Blessings & Shagun" },
-    families: { enabled: true, label: "Our Families" },
-    tokenOfLove: { enabled: true, label: "A Token of Love" },
-    travel: { enabled: true, label: "Explore Vizag" },
-    faq: { enabled: true, label: "FAQ" },
+  // --------------------------------------------------------------------------
+  // 1. GOOGLE BACKEND  (RSVP, Blessings and Photos are saved through this)
+  //    After you finish GUIDE-1-GOOGLE-SETUP.md, paste the long "Web app URL" here.
+  // --------------------------------------------------------------------------
+  backend: {
+    scriptUrl: "",
   },
 
+  // --------------------------------------------------------------------------
+  // 2. SHOW / HIDE PAGES
+  //    enabled: true  -> page and its buttons are visible to everyone
+  //    enabled: false -> page and every button/link to it disappears
+  //    (the text stays safely saved here, so you can switch it on again anytime)
+  // --------------------------------------------------------------------------
+  features: {
+    events:    { enabled: true, label: "Events" },
+    rsvp:      { enabled: true, label: "RSVP" },
+    photos:    { enabled: true, label: "Photos" },
+    blessings: { enabled: true, label: "Blessings" },
+    ourStory:  { enabled: true, label: "Our Story" },
+    families:  { enabled: true, label: "Our Families" },
+    travel:    { enabled: true, label: "Explore Vizag" },
+    faq:       { enabled: true, label: "FAQ" },
+  },
+
+  // --------------------------------------------------------------------------
+  // 3. NAMES, DATE, PLACE
+  // --------------------------------------------------------------------------
   couple: {
     name1: "Shrijeet",
     name2: "Shivangi",
-    displayName: "Shivangi & Shrijeet",
-    name1Image: "/images/shrijeet.jpg",
-    name2Image: "/images/shivangi.jpg",
+    displayName: "Shivangi & Shrijeet", // small name used in the top bar and footer
   },
 
   wedding: {
-    date: "2026-12-02T21:00:00+05:30",
-    location: "Aarif Seaside Resort, Visakhapatnam, India",
+    // The countdown runs until this moment (Indian time, +05:30).
+    countdownTo: "2026-12-03T02:30:00+05:30",
+    dateLine: "30 November – 3 December 2026",
+    city: "Visakhapatnam",
+    venueName: "Aarif Seaside Resort",
     mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
   },
 
+  // --------------------------------------------------------------------------
+  // 4. HOME PAGE  (one invitation message — the names are shown big)
+  // --------------------------------------------------------------------------
   homepage: {
-    title: "Shivangi & Shrijeet",
-    subtitle: "With the blessings of our families, we invite you to celebrate, share and be a part of our special moments.",
-    ctaButton: "Share Your Moments",
-    backgroundImage: "/images/our-image.jpg",
-    showCountdown: true,
+    invocation: "॥ श्री गणेशाय नमः ॥",
+    invitationTop:
+      "With the blessings of our elders and the love of our families, we joyfully invite you to bless the wedding of",
+    invitationBottom:
+      "Your presence will be our greatest joy and your blessings our greatest gift. Please come, celebrate with us, and make these days unforgettable.",
+    welcomeHindi: "आपका हार्दिक स्वागत है",
+    countdownTitle: "Counting down to forever",
+    countdownPoem: "Two hearts, two families, one beautiful beginning.",
   },
 
-    ourStory: {
+  // --------------------------------------------------------------------------
+  // 5. EVENTS  (time is Indian time)
+  // --------------------------------------------------------------------------
+  events: {
+    title: "Celebrate With Us",
+    subtitle: "Six joyful celebrations, one beautiful journey. Every function is at the same lovely place by the sea.",
+    events: [
+      {
+        id: 1,
+        name: "Faldaan",
+        date: "2026-11-30",
+        time: "06:00 PM",
+        dressCode: "Semi-formal",
+        description: "An evening of blessings as our two families come together.",
+      },
+      {
+        id: 2,
+        name: "Mehndi",
+        date: "2026-12-01",
+        time: "08:30 AM",
+        dressCode: "Traditional",
+        description: "A morning of henna, colour, laughter and songs.",
+      },
+      {
+        id: 3,
+        name: "Engagement & Sangeet",
+        date: "2026-12-01",
+        time: "06:30 PM",
+        dressCode: "Party wear",
+        description: "An evening of music, dance and family performances.",
+      },
+      {
+        id: 4,
+        name: "Haldi",
+        date: "2026-12-02",
+        time: "08:30 AM",
+        dressCode: "Traditional",
+        description: "A joyful morning of haldi, blessings and fun.",
+      },
+      {
+        id: 5,
+        name: "Varmaala",
+        date: "2026-12-02",
+        time: "07:30 PM",
+        dressCode: "Traditional",
+        description: "Two hearts exchange garlands and welcome a new beginning.",
+      },
+      {
+        id: 6,
+        name: "Shaadi",
+        date: "2026-12-03",
+        time: "02:30 AM",
+        dateNote: "Late night of 2 December",
+        dressCode: "Traditional",
+        description: "The sacred pheras and vows, where our forever begins.",
+      },
+    ],
+  },
+
+  // --------------------------------------------------------------------------
+  // 6. RSVP
+  // --------------------------------------------------------------------------
+  rsvp: {
+    title: "Kindly Confirm Your Presence",
+    subtitle: "A few details will help us welcome you warmly with meals, rooms and cabs ready. You can come back and change your answer anytime — just use the same mobile number.",
+  },
+
+  // --------------------------------------------------------------------------
+  // 7. PHOTOS
+  // --------------------------------------------------------------------------
+  photos: {
+    title: "Share & Relive Our Moments",
+    subtitle: "Add the photos you click during the celebrations, and enjoy everyone else's too. Find your own pictures with a quick selfie.",
+    // Photographer's professional face-search gallery (add link after the wedding)
+    photographerGalleryUrl: "",
+    // Your own photos shown at the top of the gallery (files are in public/images)
+    ourPhotosLabel: "Shrijeet & Shivangi",
+    ourPhotos: [
+      "/images/our-image.jpg",
+      "/images/our2.jpg",
+      "/images/shrijeet.jpg",
+      "/images/shivangi.jpg",
+    ],
+  },
+
+  // --------------------------------------------------------------------------
+  // 8. BLESSINGS & SHAGUN
+  // --------------------------------------------------------------------------
+  blessings: {
+    title: "Blessings & Shagun",
+    subtitle: "Your love and blessings are the most precious gift we can receive.",
+    blessingHeading: "Leave a Blessing",
+    blessingHint: "Write a few kind words, a prayer or a memory for the couple.",
+  },
+
+  shagun: {
+    heading: "Digital Shagun",
+    optionalNote: "Completely optional — your presence and blessings mean the most to us.",
+    upiId: "7356045315@yescred",
+    payeeName: "Shrijeet & Shivangi",
+    note: "Shagun",
+    // Optional: to show your own QR picture instead of the automatic one,
+    // put the picture in public/images and write its name here, e.g. "/images/my-upi-qr.png"
+    qrImage: "",
+  },
+
+  // --------------------------------------------------------------------------
+  // 9. OUR STORY
+  // --------------------------------------------------------------------------
+  ourStory: {
+    title: "Our Story",
+    subtitle: "A little of how we found each other.",
     partner1Story: {
       name: "Shrijeet's Story",
       image: "/images/shrijeet.jpg",
@@ -53,7 +189,7 @@ Phones weren't allowed, so I found my own little ways of trying to get your atte
 
 Days became weeks, weeks became months, and somehow, even while being in Kochi, we could barely manage to meet.
 
-I remember one day deciding to cycle all the way to your college. I didn't even have a bike then, but apparently that wasn't enough of a reason to stay away. Somewhere along the way, those outings to cafés and Alleppey beach, the lighthouse, and all those conversations that weren't officially called \"dates\" became some of the memories I treasure most.
+I remember one day deciding to cycle all the way to your college. I didn't even have a bike then, but apparently that wasn't enough of a reason to stay away. Somewhere along the way, those outings to cafés and Alleppey beach, the lighthouse, and all those conversations that weren't officially called "dates" became some of the memories I treasure most.
 
 I was always in awe of your beauty. But with time, I realised that it was never just that. I admired the person behind it.
 
@@ -89,7 +225,6 @@ Here's to you, Shibu.
 Here's to us.
 And here's to all the journeys still waiting for us.`,
     },
-
     partner2Story: {
       name: "Shivangi's Story",
       image: "/images/shivangi.jpg",
@@ -97,118 +232,15 @@ And here's to all the journeys still waiting for us.`,
     },
     howWeMet: {
       enabled: true,
-      title: "How We Met",
+      title: "Two lives, one journey",
       story: "Somewhere along the way, two people became a family, and a journey that began with two separate lives slowly became one shared future.",
     },
-    memories: {
-      intro: "A few special moments from our journey together.",
-      images: [
-        "/images/our-image.jpg",
-        "/images/our2.jpg",
-        "/images/shrijeet.jpg",
-        "/images/shivangi.jpg",
-      ],
-    },
-    milestones: [],
-    backgroundImage: "/images/our2.jpg",
   },
 
-  events: {
-    title: "Celebrate With Us",
-    subtitle: "Five cherished celebrations, leading to our wedding day in Visakhapatnam.",
-    mapLinkLabel: "Open location in Google Maps",
-    events: [
-      {
-        id: 1,
-        name: "Faldaan",
-        date: "2026-11-30",
-        time: "06:00 PM",
-        venue: "Aarif Seaside Resort, Visakhapatnam, India",
-        mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
-        dressCode: "Semi-formal",
-        description: "Join us for our introduction ceremony.",
-        category: "pre-wedding",
-      },
-      {
-        id: 2,
-        name: "Mehndi",
-        date: "2026-12-01",
-        time: "08:30 AM",
-        venue: "Aarif Seaside Resort, Visakhapatnam, India",
-        mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
-        dressCode: "Traditional",
-        description: "A morning of henna, colour and celebration.",
-        category: "pre-wedding",
-      },
-      {
-        id: 3,
-        name: "Engagement & Sangeet",
-        date: "2026-12-01",
-        time: "06:30 PM",
-        venue: "Aarif Seaside Resort, Visakhapatnam, India",
-        mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
-        dressCode: "Party Wear",
-        description: "An evening of music, dance and family performances.",
-        category: "wedding",
-      },
-      {
-        id: 4,
-        name: "Haldi",
-        date: "2026-12-02",
-        time: "08:30 AM",
-        venue: "Aarif Seaside Resort, Visakhapatnam, India",
-        mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
-        dressCode: "Traditional",
-        description: "A joyful morning of haldi and blessings.",
-        category: "wedding",
-      },
-      {
-        id: 5,
-        name: "Varmaala & Wedding Ceremony",
-        date: "2026-12-02",
-        time: "07:30 PM",
-        venue: "Aarif Seaside Resort, Visakhapatnam, India",
-        mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
-        dressCode: "Traditional",
-        description: "Varmaala ceremony followed by the main wedding ceremony.",
-        category: "wedding",
-      },
-    ],
-  },
-
-  photoGallery: {
-    title: "Wedding Gallery",
-    subtitle: "Our photographs together with the moments captured and shared by family and friends.",
-    showUploadedPhotos: true,
-    staticPhotos: [
-      "/images/our-image.jpg",
-      "/images/our2.jpg",
-      "/images/shrijeet.jpg",
-      "/images/shivangi.jpg",
-    ],
-    enableFiltering: true,
-    enableDownload: true,
-  },
-
-  uploadPhotos: {
-    title: "Share Your Moments",
-    subtitle: "Choose the celebration and upload your photographs. No caption, no account — just the moments you want us to remember.",
-    backgroundImage: "/images/our2.jpg",
-    maxFileSize: 10,
-    allowedTypes: ["image/jpeg", "image/png", "image/webp"],
-    requireCategory: true,
-  },
-
-  blessings: {
-    title: "Digital Blessings",
-    subtitle: "Your words, wishes and blessings will become a part of the memories we carry with us forever.",
-    backgroundImage: "/images/our2.jpg",
-    showAllBlessings: false,
-    enableSearch: false,
-    enableLikes: false,
-  },
-
-    families: {
+  // --------------------------------------------------------------------------
+  // 10. OUR FAMILIES  (add or remove people freely; keep the same shape)
+  // --------------------------------------------------------------------------
+  families: {
     title: "Our Families",
     subtitle: "With the love and blessings of our families, we request the pleasure of your presence at our wedding celebrations.",
     shrijeet: [
@@ -285,123 +317,67 @@ And here's to all the journeys still waiting for us.`,
         relation: "Jiju"
       }
     ],
-    shivangi: [
-      {
-        name: "Father's Name Go Here",
-        relation: "Father of the Bride"
-      },
-      {
-        name: "Mother's Name Go Here",
-        relation: "Mother of the Bride"
-      },
-      {
-        name: "Sibling or Elder Name (Optional)",
-        relation: "Brother / Sister / Elder"
-      }
-    ],
+    // Shivangi's side — fill this in when ready. Example of one person:
+    //   { name: "Full Name", relation: "Papa" },
+    // While this list is empty, only Shrijeet's family is shown.
+    shivangi: [],
   },
 
-
-
-  tokenOfLove: {
-  title: "A Token of Love",
-  subtitle: "Your presence and blessings are the greatest gifts we could ask for.",
-  message: "If you would still like to bless us with a token of love, you may do so here.",
-  upiId: "yourname@upi", // 1. Paste your exact UPI ID string here (e.g. shrijeet@okaxis)
-  upiName: "Shivangi & Shrijeet",
-  upiQrImage: "/images/upi-qr.jpg", // 2. Place your physical QR image inside public/images/
-  amazonGiftCardUrl: "https://amazon.in", // 3. Corrected production link
-},
-
-
-  rsvp: {
-    title: "Confirm You Are Coming",
-    subtitle: "A few details will help us plan meals, rooms and cabs comfortably for everyone.",
-  },
-
+  // --------------------------------------------------------------------------
+  // 11. EXPLORE VIZAG / WHERE TO STAY
+  // --------------------------------------------------------------------------
   travel: {
     title: "Explore Vizag",
-    subtitle: "A little time around the celebrations? Here are a few places worth exploring.",
+    subtitle: "Where to stay, where to shop, and a few lovely places to see while you are in Visakhapatnam.",
     venueName: "Aarif Seaside Resort",
     venueAddress: "Visakhapatnam, Andhra Pradesh, India",
     venueMapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
     venueEmbedUrl: "https://www.google.com/maps?q=Aarif%20Seaside%20Resort%2C%20Visakhapatnam&output=embed",
+    stays: [
+      {
+        name: "Hotel FantaSea",
+        note: "Comfortable stay for our guests.",
+        mapLink: "https://maps.app.goo.gl/t9wvFRQ3nxergAsVA",
+      },
+    ],
+    nearbyMalls: [
+      { name: "CMR Mall", mapLink: "https://share.google/4zt147SDw6ndapzci" },
+      { name: "Another popular mall nearby", mapLink: "https://share.google/APngNog11RdrbWnTE" },
+    ],
     attractions: [
       {
         name: "Incredible India — Visakhapatnam",
-        description: "Official tourism guide to beaches, heritage, museums, viewpoints and places around Vizag.",
+        description: "The official tourism guide to beaches, temples, museums and viewpoints around Vizag.",
         website: "https://www.incredibleindia.gov.in/en/andhra-pradesh/visakhapatnam",
       },
     ],
-    stays: [
-      { name: "Hotel location", mapLink: "https://maps.app.goo.gl/pJ2UPiyD7dDm2oKJ8" },
-      { name: "Bungalow location", mapLink: "" },
-    ],
-    NearbyMall: [
-      { name: "CMR MALL", mapLink: "https://share.google/4zt147SDw6ndapzci" },
-      { name: "Bungalow location", mapLink: "" },
-    ],
-    photographerGalleryUrl: "",
   },
 
+  // --------------------------------------------------------------------------
+  // 12. FAQ
+  // --------------------------------------------------------------------------
   faq: {
-    title: "Frequently Asked Questions",
-    subtitle: "A few useful details for the celebrations.",
+    title: "Good to Know",
+    subtitle: "Answers to the questions guests ask us most.",
     questions: [
-      {
-        title: "Where is the wedding?",
-        content: "Our wedding celebrations will take place at Aarif Seaside Resort in Visakhapatnam.",
-      },
-      {
-        title: "What should I wear?",
-        content: "Dress codes for each celebration are mentioned on the Events page.",
-      },
-      {
-        title: "How do I RSVP?",
-        content: "Use the RSVP section and tell us who is coming, your arrival and departure details, whether accommodation or a cab is required, and any food requirements. This helps us plan your stay and meals.",
-      },
-      {
-        title: "Can I change my RSVP later?",
-        content: "Yes. You can submit the RSVP again with your updated details. Please use the same main guest name and WhatsApp number so we can identify the latest response.",
-      },
-      {
-        title: "How do I upload photographs?",
-        content: "Use Share Your Moments or scan the wedding QR code, choose the celebration and upload your photographs. No caption or account is required.",
-      },
-      {
-        title: "Will photographs be sorted by celebration?",
-        content: "Yes. Please choose the celebration while uploading. This lets us organise the guest gallery by Faldaan, Mehndi, Engagement & Sangeet, Haldi and Varmaala & Wedding Ceremony.",
-      },
-      {
-        title: "How will I find my professional wedding photographs?",
-        content: "After the wedding, we plan to add our photographer's face-search gallery here. You will be able to use that separate gallery to find photographs of yourself and download them.",
-      },
-      {
-        title: "Can I share my photographs?",
-        content: "Yes! Scan the QR code or use Share Your Moments on the website to upload photographs from the celebrations.",
-      },
-      {
-        title: "How can I send my blessings?",
-        content: "Use the Digital Blessings section to leave your wishes for Shivangi & Shrijeet.",
-      },
+      { title: "Where will the celebrations happen?", content: "All functions are at Aarif Seaside Resort, Visakhapatnam. The Events page has a map button for each one." },
+      { title: "What should I wear?", content: "The dress idea for every function is written on the Events page. Comfortable traditional clothes are perfect." },
+      { title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form. Tell us who is coming, when you arrive and leave, and whether you need a room or a cab." },
+      { title: "I need to change my RSVP. What do I do?", content: "No problem. Fill the RSVP form again with the same mobile number. Your new answer replaces the old one." },
+      { title: "How do I share my photos?", content: "Scan the wedding QR code or open the Photos page, choose the celebration, and add your photos. No login and no caption needed." },
+      { title: "How can I find photos of myself?", content: "On the Photos page, open the Gallery and tap 'Find my photos'. Take a quick selfie and we will show the photos you are in. Your selfie stays on your phone and is never saved." },
+      { title: "How can I send my blessings?", content: "Open the Blessings page and write a few words for us. If you wish to send shagun, you can do that there too — it is completely optional." },
     ],
-  },
-
-  navigation: {
-    mobileBottom: ["home", "rsvp", "events", "uploadPhotos", "photoGallery"],
   },
 
   footer: {
     tagline: "With love, laughter and the blessings of our families.",
-    },
   },
 
   app: {
-    name: "Shivangi & Shrijeet Wedding",
-    shortName: "Shivangi & Shrijeet",
-    description: "The digital wedding hub of Shivangi & Shrijeet",
+    name: "Shrijeet & Shivangi — Wedding",
+    description: "The wedding invitation of Shrijeet & Shivangi — Visakhapatnam, 30 November to 3 December 2026.",
   },
 };
 
 export default siteConfig;
-Update grandparents details and locations

@@ -1,67 +1,18 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { enabledPages } from '../pages';
+import Icon from '../icons';
 
-const MobileBottomNav = ({ activeTab, setActiveTab }) => {
-  // Navigation tabs definition using native emojis
-  const navItems = [
-    { id: 'home', label: 'Home', icon: '🏠' },
-    { id: 'story', label: 'Our Story', icon: '❤️' },
-    { id: 'events', label: 'Events & RSVP', icon: '📅' },
-    { id: 'gallery', label: 'Gallery', icon: '🖼️' },
-    { id: 'blessings', label: 'Blessings & Shagun', icon: '💌' },
-  ];
-
+export default function MobileBottomNav() {
+  const items = [{ key: 'home', path: '/', icon: 'home', short: 'Home' }, ...enabledPages().filter((p) => p.bottom)];
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
-      {/* 🌟 Floating Top Branding Pill */}
-      <div className="flex justify-center mb-2">
-        <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-md border border-amber-100 flex items-center space-x-2">
-          <span className="text-xs font-semibold tracking-widest text-amber-700 uppercase">
-            Shrijeet ♾️ Shivangi
-          </span>
-        </div>
-      </div>
-
-      {/* 📱 Main Bottom Navigation Bar */}
-      {/* pb-8 lifts the navigation targets cleanly above the Netlify floating badge layout */}
-      <nav className="bg-white/95 backdrop-blur-md border-t border-amber-100 shadow-xl px-4 pt-3 pb-8 md:pb-4">
-        <div className="max-w-md mx-auto flex justify-between items-center">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className="flex flex-col items-center flex-1 justify-center transition-all duration-300 relative group"
-              >
-                {/* Visual Active Anchor Dots */}
-                {isActive && (
-                  <span className="absolute -top-2 w-1.5 h-1.5 bg-amber-600 rounded-full" />
-                )}
-
-                {/* Extra Large Interactive Emojis for clean mobile tapping */}
-                <span className={`text-2xl transition-transform duration-300 group-hover:scale-110 ${
-                  isActive ? 'opacity-100 filter drop-shadow-sm' : 'opacity-50 group-hover:opacity-80'
-                }`}>
-                  {item.icon}
-                </span>
-
-                {/* Scannable Micro Text Labels */}
-                <span
-                  className={`text-[10px] font-medium mt-1 tracking-tight transition-colors duration-300 ${
-                    isActive ? 'text-amber-700 font-bold' : 'text-gray-500'
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-    </div>
+    <nav className="bottom-nav" aria-label="Quick navigation">
+      {items.map((item) => (
+        <NavLink key={item.key} to={item.path} end={item.path === '/'} className={({ isActive }) => `bottom-link ${isActive ? 'active' : ''}`}>
+          <span className="bottom-icon"><Icon name={item.icon} size={28} strokeWidth={1.9} /></span>
+          <span>{item.short}</span>
+        </NavLink>
+      ))}
+    </nav>
   );
-};
-
-export default MobileBottomNav;
-Fix mobile bottom nav package error
+}

@@ -1,5 +1,6 @@
-import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { PAGES } from './pages';
 import siteConfig from './siteConfig';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -8,63 +9,60 @@ import MobileBottomNav from './components/MobileBottomNav';
 
 const OurStory = lazy(() => import('./components/OurStory'));
 const EventPage = lazy(() => import('./components/EventPage'));
-const PhotoGallery = lazy(() => import('./components/PhotoGallery'));
-const UploadPhotos = lazy(() => import('./components/UploadPhotos'));
+const Photos = lazy(() => import('./components/Photos'));
 const Blessings = lazy(() => import('./components/Blessings'));
 const OurFamilies = lazy(() => import('./components/OurFamilies'));
-const TokenOfLove = lazy(() => import('./components/TokenOfLove'));
 const Travel = lazy(() => import('./components/Travel'));
 const FAQ = lazy(() => import('./components/FAQ'));
 const RSVPPage = lazy(() => import('./components/RSVPPage'));
 
+const components = {
+  ourStory: OurStory,
+  events: EventPage,
+  photos: Photos,
+  blessings: Blessings,
+  families: OurFamilies,
+  travel: Travel,
+  faq: FAQ,
+  rsvp: RSVPPage,
+};
+
 const Loading = () => (
-  <div className="min-h-screen flex items-center justify-center wedding-surface">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-apple-blue-600 mx-auto mb-4" />
-      <p className="text-apple-gray-600">Loading...</p>
-    </div>
+  <div className="page flex items-center justify-center">
+    <p className="script" style={{ fontSize: '2rem', color: 'var(--maroon)' }}>Loading…</p>
   </div>
 );
 
-const routeMap = {
-  ourStory: { path: '/our-story', Component: OurStory },
-  events: { path: '/events', Component: EventPage },
-  photoGallery: { path: '/gallery', Component: PhotoGallery },
-  uploadPhotos: { path: '/upload-photos', Component: UploadPhotos },
-  blessings: { path: '/blessings', Component: Blessings },
-  families: { path: '/our-families', Component: OurFamilies },
-  tokenOfLove: { path: '/token-of-love', Component: TokenOfLove },
-  travel: { path: '/explore-vizag', Component: Travel },
-  faq: { path: '/faq', Component: FAQ },
-  rsvp: { path: '/rsvp', Component: RSVPPage },
-};
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
 
-function App() {
-  const routes = Object.entries(siteConfig.features)
-    .filter(([key, feature]) => feature.enabled && routeMap[key])
-    .map(([key]) => {
-      const { path, Component } = routeMap[key];
-      return (
-        <Route
-          key={key}
-          path={path}
-          element={
-            <Suspense fallback={<Loading />}>
-              <Component />
-            </Suspense>
-          }
-        />
-      );
-    });
+// Old links from earlier versions of the site keep working
+const legacy = [
+  ['/gallery', '/photos'],
+  ['/upload-photos', '/photos'],
+  ['/token-of-love', '/blessings'],
+];
+
+export default function App() {
+  const routes = PAGES.filter((p) => siteConfig.features?.[p.key]?.enabled).map((p) => {
+    const Component = components[p.key];
+    return <Route key={p.key} path={p.path} element={<Suspense fallback={<Loading />}><Component /></Suspense>} />;
+  });
 
   return (
     <Router>
-      <div className="App flex flex-col min-h-screen wedding-surface">
+      <ScrollToTop />
+      <div className="flex flex-col min-h-screen">
         <Navbar />
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             {routes}
+            {legacy.map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
         <Footer />
@@ -73,5 +71,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
