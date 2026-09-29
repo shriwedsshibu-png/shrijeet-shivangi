@@ -43,8 +43,8 @@ const siteConfig = {
 
   wedding: {
     // The countdown runs until this moment (Indian time, +05:30).
-    countdownTo: "2026-12-03T02:30:00+05:30",
-    dateLine: "30 November – 3 December 2026",
+    countdownTo: "2026-12-02T21:00:00+05:30",
+    dateLine: "30 Nov – 2 Dec 2026",
     city: "Visakhapatnam",
     venueName: "Aarif Seaside Resort",
     mapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
@@ -56,9 +56,9 @@ const siteConfig = {
   homepage: {
     invocation: "॥ श्री गणेशाय नमः ॥",
     invitationTop:
-      "With the blessings of our elders and the love of our families, we joyfully invite you to bless the wedding of",
+      "With the blessings of our families, we joyfully invite you to celebrate the wedding of",
     invitationBottom:
-      "Your presence will be our greatest joy and your blessings our greatest gift. Please come, celebrate with us, and make these days unforgettable.",
+      "Your presence will be our greatest joy and your blessings our greatest gift.",
     welcomeHindi: "आपका हार्दिक स्वागत है",
     countdownTitle: "Counting down to forever",
     countdownPoem: "Two hearts, two families, one beautiful beginning.",
@@ -372,11 +372,16 @@ And here's to all the journeys still waiting for us.`,
 
   footer: {
     tagline: "With love, laughter and the blessings of our families.",
+    // The bond line at the bottom, with a hashtag on each side
+    bondLeft: "Shivangi",
+    bondRight: "Shrijeet",
+    hashtagLeft: "#jeetugotshibu",
+    hashtagRight: "#u2bethere",
   },
 
   app: {
     name: "Shrijeet & Shivangi — Wedding",
-    description: "The wedding invitation of Shrijeet & Shivangi — Visakhapatnam, 30 November to 3 December 2026.",
+    description: "The wedding invitation of Shrijeet & Shivangi — Visakhapatnam, 30 November to 2 December 2026.",
   },
 };
 

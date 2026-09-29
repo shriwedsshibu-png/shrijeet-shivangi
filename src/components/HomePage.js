@@ -45,7 +45,7 @@ export default function HomePage() {
 
           <div className="hero-date">
             <span className="font-display font-bold" style={{ fontSize: '1.6rem', color: '#ffe2a3', lineHeight: 1.1 }}>{wedding.dateLine}</span>
-            <span style={{ color: '#f1e2c4', fontSize: '1rem' }}>{wedding.venueName} · {wedding.city}</span>
+            <span style={{ color: '#f1e2c4', fontSize: '1.05rem', letterSpacing: '.12em', textTransform: 'uppercase' }}>{wedding.city}</span>
           </div>
 
           {hp.welcomeHindi && <p className="deva mt-5" style={{ color: '#e7cf98', fontSize: '1.1rem' }}>{hp.welcomeHindi}</p>}
