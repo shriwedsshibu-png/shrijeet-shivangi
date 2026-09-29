@@ -12,7 +12,7 @@ const siteConfig = {
   //    After you finish GUIDE-1-GOOGLE-SETUP.md, paste the long "Web app URL" here.
   // --------------------------------------------------------------------------
   backend: {
-    scriptUrl: "",
+    scriptUrl: "https://script.google.com/u/1/home/projects/1e5bSRIY_aJSGUhQ4CE7Cl_PM0uA5Odud3LtuxJUpTsr_5bPvWTF6DXRp/edit",
   },
 
   // --------------------------------------------------------------------------
