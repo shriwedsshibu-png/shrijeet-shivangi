@@ -341,7 +341,7 @@ And here's to all the journeys still waiting for us.`,
       },
     ],
     nearbyMalls: [
-      { name: "CMR Mall", mapLink: "https://maps.app.goo.gl/A8icEosB1jrsTcJ9A" },
+      { name: "CMR Central Mall", mapLink: "https://maps.app.goo.gl/A8icEosB1jrsTcJ9A" },
       { name: "Another popular mall nearby", mapLink: "https://share.google/APngNog11RdrbWnTE" },
     ],
     attractions: [
