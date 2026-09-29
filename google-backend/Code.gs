@@ -17,6 +17,12 @@ var TIMEZONE = 'Asia/Kolkata';
 var MAX_PHOTO_BASE64 = 14 * 1024 * 1024;   // ~10 MB photo after base64
 var MAX_FACES_PER_PHOTO = 25;
 
+// Email alerts. Leave '' to send to the Google account that owns this script.
+// Put an address between the quotes to send somewhere else, e.g. 'name@gmail.com'.
+var NOTIFY_EMAIL = '';
+// Photos: at most one "new photos" email per this many minutes (so your inbox is not flooded).
+var PHOTO_ALERT_MINUTES = 15;
+
 var TABS = {
   RSVP: [
     'Last Updated', 'First Submitted', 'Main Guest', 'Phone', 'Attending',
@@ -124,6 +130,9 @@ function handleRsvp_(b) {
       sheet.getRange(row, 1, 1, n).setValues([values]);
     }
     sheet.getRange(row, 4).setNumberFormat('@').setValue(phoneKey);
+    notify_((times > 1 ? 'RSVP updated: ' : 'New RSVP: ') + name + (attending === 'No' ? ' (cannot come)' : ''),
+      name + ' | ' + phoneKey + ' | ' + (attending === 'No' ? 'Cannot attend' : 'Attending') +
+      (attending === 'Yes' ? '\nAdults: ' + num_(b.adults) + '  Children: ' + num_(b.children) + '\nFunctions: ' + events : ''));
     return { success: true, updated: times > 1, message: times > 1 ? 'RSVP updated.' : 'RSVP saved.' };
   } finally {
     lock.releaseLock();
@@ -156,9 +165,11 @@ function handleBlessing_(b) {
     if (row) {
       var old = sheet.getRange(row, 1, 1, n).getValues()[0];
       sheet.getRange(row, 1, 1, n).setValues([[now, old[1] || now, name, message, (Number(old[4]) || 1) + 1, device]]);
+      notify_('Blessing updated: ' + name, message);
       return { success: true, updated: true, message: 'Blessing updated.' };
     }
     sheet.appendRow([now, now, name, message, 1, device]);
+    notify_('New blessing from ' + name, message);
     return { success: true, updated: false, message: 'Blessing saved.' };
   } finally {
     lock.releaseLock();
@@ -198,6 +209,7 @@ function handleUpload_(b) {
   } finally {
     lock.releaseLock();
   }
+  notifyPhoto_(event);
   return { success: true, id: id };
 }
 
@@ -324,4 +336,37 @@ function cleanFaces_(faces) {
     if (ok) out.push(r);
   }
   return out;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  EMAIL ALERTS  (never allowed to break a guest's submission)         */
+/* ------------------------------------------------------------------ */
+function notify_(subject, body) {
+  try {
+    var to = NOTIFY_EMAIL || Session.getEffectiveUser().getEmail();
+    if (!to) return;
+    MailApp.sendEmail(to, '[Wedding site] ' + subject, String(body) + '\n\n— Shrijeet & Shivangi wedding website');
+  } catch (e) {}
+}
+
+function notifyPhoto_(event) {
+  try {
+    var props = PropertiesService.getScriptProperties();
+    var pending = (Number(props.getProperty('pendingPhotos')) || 0) + 1;
+    var last = Number(props.getProperty('lastPhotoMail')) || 0;
+    var now = new Date().getTime();
+    if (now - last >= PHOTO_ALERT_MINUTES * 60000) {
+      notify_(pending + ' new photo' + (pending > 1 ? 's' : '') + ' uploaded', 'Latest celebration: ' + event + '\nOpen your Drive folder "' + ROOT_FOLDER_NAME + '" to see them.');
+      props.setProperty('pendingPhotos', '0');
+      props.setProperty('lastPhotoMail', String(now));
+    } else {
+      props.setProperty('pendingPhotos', String(pending));
+    }
+  } catch (e) {}
+}
+
+/* Run this once from the editor to test that email alerts reach you. */
+function testEmail() {
+  notify_('Test alert', 'If you can read this, wedding alerts are working.');
 }

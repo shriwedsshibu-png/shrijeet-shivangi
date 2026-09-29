@@ -70,3 +70,18 @@ The script creates its own tabs and Drive folder the first time it is used, so y
 - **Please don't rename or delete** the tabs RSVP / Blessings / Photos / Faces or the Drive folder while the wedding is on.
 - **Photo space:** photos are stored in good quality (about 1–2 MB each), so 15 GB holds several thousand. Check *Google One → Storage* if you expect very many.
 - **Privacy:** anyone with the link to a photo can view it (that is how the gallery shows them), but the folder is not searchable.
+
+---
+
+## Step 7 — Get an alert on your phone for every RSVP, blessing and photo
+The updated `Code.gs` emails you (from your own Google account) whenever:
+- someone sends or changes an **RSVP**  · someone sends or edits a **blessing**  · guests upload **photos** (one email per 15 minutes, saying how many new photos).
+
+Install it (2 minutes):
+1. In Apps Script, select all, delete, and paste the new `google-backend/Code.gs` from GitHub. Save.
+2. In the function dropdown choose **testEmail** → **▶ Run** → allow the new "send email" permission (Advanced → Go to … → Allow). A test email arrives in Gmail.
+3. **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy.** (Without this, the website keeps using the old script. The `/exec` URL stays the same.)
+4. On your phone, keep the **Gmail app** notifications on. Tip: in Gmail create a filter for subject `[Wedding site]` with a special label/notification sound.
+5. To send alerts to another address (e.g. Shivangi's), write it in `NOTIFY_EMAIL = ''` near the top of the script, then repeat step 3.
+
+Gmail's free limit is about 100 alert emails a day, which is plenty. WhatsApp alerts are not possible for free, so email is the easy route.
