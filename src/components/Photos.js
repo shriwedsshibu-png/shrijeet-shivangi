@@ -99,7 +99,7 @@ function SharePanel({ onUploaded, openGallery }) {
         }
       }
     };
-    await Promise.all([worker(), worker()]);
+    await Promise.all([worker(), worker(), worker()]);
     setBusy(false);
     const failed = queue.length - ok;
     setSummary(failed ? `${ok} photo${ok === 1 ? '' : 's'} added. ${failed} did not go through — please press Upload again to retry.` : `${ok} photo${ok === 1 ? '' : 's'} added to our wedding gallery. Thank you! ❤️`);

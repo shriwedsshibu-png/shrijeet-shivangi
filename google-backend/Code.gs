@@ -99,6 +99,7 @@ function handleRsvp_(b) {
   var attending = String(b.attending) === 'no' ? 'No' : 'Yes';
   var now = new Date();
 
+  var note = null;
   var lock = LockService.getScriptLock();
   lock.waitLock(25000);
   try {
@@ -130,12 +131,13 @@ function handleRsvp_(b) {
       sheet.getRange(row, 1, 1, n).setValues([values]);
     }
     sheet.getRange(row, 4).setNumberFormat('@').setValue(phoneKey);
-    notify_((times > 1 ? 'RSVP updated: ' : 'New RSVP: ') + name + (attending === 'No' ? ' (cannot come)' : ''),
+    note = [(times > 1 ? 'RSVP updated: ' : 'New RSVP: ') + name + (attending === 'No' ? ' (cannot come)' : ''),
       name + ' | ' + phoneKey + ' | ' + (attending === 'No' ? 'Cannot attend' : 'Attending') +
-      (attending === 'Yes' ? '\nAdults: ' + num_(b.adults) + '  Children: ' + num_(b.children) + '\nFunctions: ' + events : ''));
+      (attending === 'Yes' ? '\nAdults: ' + num_(b.adults) + '  Children: ' + num_(b.children) + '\nFunctions: ' + events : '')];
     return { success: true, updated: times > 1, message: times > 1 ? 'RSVP updated.' : 'RSVP saved.' };
   } finally {
     lock.releaseLock();
+    if (note) notify_(note[0], note[1]);
   }
 }
 
@@ -148,6 +150,7 @@ function handleBlessing_(b) {
   var device = clean_(b.deviceId, 60);
   if (!name || !message) return { success: false, message: 'Please enter your name and your blessing.' };
   var now = new Date();
+  var note = null;
 
   var lock = LockService.getScriptLock();
   lock.waitLock(25000);
@@ -165,14 +168,15 @@ function handleBlessing_(b) {
     if (row) {
       var old = sheet.getRange(row, 1, 1, n).getValues()[0];
       sheet.getRange(row, 1, 1, n).setValues([[now, old[1] || now, name, message, (Number(old[4]) || 1) + 1, device]]);
-      notify_('Blessing updated: ' + name, message);
+      note = ['Blessing updated: ' + name, message];
       return { success: true, updated: true, message: 'Blessing updated.' };
     }
     sheet.appendRow([now, now, name, message, 1, device]);
-    notify_('New blessing from ' + name, message);
+    note = ['New blessing from ' + name, message];
     return { success: true, updated: false, message: 'Blessing saved.' };
   } finally {
     lock.releaseLock();
+    if (note) notify_(note[0], note[1]);
   }
 }
 
@@ -276,10 +280,18 @@ function getRootFolder_() {
 function getEventFolder_(event) {
   var root = getRootFolder_();
   var name = safeName_(event);
+  var props = PropertiesService.getScriptProperties();
+  var cachedId = props.getProperty('FOLDER_' + name);
+  if (cachedId) { try { return DriveApp.getFolderById(cachedId); } catch (e) {} }
   var it = root.getFoldersByName(name);
-  if (it.hasNext()) return it.next();
-  var folder = root.createFolder(name);
-  try { folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (e) {}
+  var folder;
+  if (it.hasNext()) {
+    folder = it.next();
+  } else {
+    folder = root.createFolder(name);
+    try { folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (e) {}
+  }
+  props.setProperty('FOLDER_' + name, folder.getId());
   return folder;
 }
 

@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
 import MobileBottomNav from './components/MobileBottomNav';
+import { warmUp } from './api';
 
 const OurStory = lazy(() => import('./components/OurStory'));
 const EventPage = lazy(() => import('./components/EventPage'));
@@ -36,6 +37,7 @@ const Loading = () => (
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => { warmUp(); }, []);
   return null;
 }
 

@@ -54,7 +54,7 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
             {isFeatureOn('rsvp') && <ButtonLink to="/rsvp" variant="gold">Confirm Your Presence</ButtonLink>}
-            {isFeatureOn('events') && <ButtonLink to="/events" variant="light">See All Celebrations</ButtonLink>}
+            {isFeatureOn('photos') && <ButtonLink to="/photos" variant="light">Share Your Photos</ButtonLink>}
           </div>
         </div>
       </section>

@@ -60,3 +60,11 @@ export const fetchFaces = async () => (await get('faces')).faces || [];
 export const thumbUrl = (id, size = 600) => `https://drive.google.com/thumbnail?id=${id}&sz=w${size}`;
 export const fullUrl = (id) => `https://drive.google.com/thumbnail?id=${id}&sz=w2000`;
 export const downloadUrl = (id) => `https://drive.google.com/uc?export=download&id=${id}`;
+
+// Wakes the Google script up in the background so the first RSVP / photo is not slow.
+let warmed = false;
+export function warmUp() {
+  if (warmed || !backendReady()) return;
+  warmed = true;
+  try { fetch(`${baseUrl()}?action=ping&t=${Date.now()}`, { mode: 'no-cors' }).catch(() => {}); } catch (e) { /* ignore */ }
+}
