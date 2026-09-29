@@ -10,7 +10,7 @@ This is a mobile-first wedding invitation website with:
 | Events | All six celebrations with map + "Add to calendar" buttons |
 | RSVP | Guests confirm. **Saved live to your Google Sheet.** Sending again with the same mobile number *replaces* the old answer |
 | Photos | One page: **Share Photos** (upload) and **Gallery** (grouped by celebration, plus *Find my photos* by selfie) |
-| Blessings & Shagun | Blessing form (saved live to the Sheet) + optional shagun with **Pay by UPI** button, copyable UPI ID and QR |
+| Digital Blessings | Blessing form (saved live to the Sheet). The optional Shagun (UPI) section is switched off; turn on with `shagun.enabled: true` |
 | Our Story, Our Families, Explore Vizag, FAQ | Extra pages — any of them can be hidden with one word |
 
 ## Read these guides in order (no coding needed)

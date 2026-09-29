@@ -131,13 +131,14 @@ function ShagunCard() {
 
 export default function Blessings() {
   const cfg = siteConfig.blessings;
+  const showShagun = !!siteConfig.shagun?.enabled;
   return (
     <main className="page">
-      <div className="wrap" style={{ maxWidth: '64rem' }}>
+      <div className={showShagun ? 'wrap' : 'wrap-narrow'} style={showShagun ? { maxWidth: '64rem' } : undefined}>
         <PageHeader eyebrow="With love" title={cfg.title} subtitle={cfg.subtitle} />
-        <div className="grid gap-7 md:grid-cols-2 items-start">
+        <div className={`grid gap-7 ${showShagun ? 'md:grid-cols-2' : ''} items-start`}>
           <BlessingCard />
-          <ShagunCard />
+          {showShagun && <ShagunCard />}
         </div>
       </div>
     </main>

@@ -72,7 +72,7 @@ export default function HomePage() {
         <div className="grid gap-4 mt-6">
           {isFeatureOn('rsvp') && <ActionCard to="/rsvp" icon="mail" title="RSVP" text="Tell us you are coming, and help us welcome you well." />}
           {isFeatureOn('photos') && <ActionCard to="/photos" icon="camera" title="Photos" text="Share your photos and find your own with a selfie." />}
-          {isFeatureOn('blessings') && <ActionCard to="/blessings" icon="heart" title="Blessings & Shagun" text="Leave your blessings and good wishes for us." />}
+          {isFeatureOn('blessings') && <ActionCard to="/blessings" icon="heart" title="Digital Blessings" text="Leave your blessings and good wishes for us." />}
         </div>
       </section>
 

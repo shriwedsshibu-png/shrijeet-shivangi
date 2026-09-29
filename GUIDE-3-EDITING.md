@@ -15,7 +15,7 @@ Almost everything is in one file: **`src/siteConfig.js`**.
 | Countdown time | `countdownTo` |
 | Dates line on home page | `dateLine` |
 | Events, times, dress code | `events:` |
-| UPI ID / name shown for shagun | `shagun:` |
+| Turn Shagun (UPI) back on / its UPI ID | `shagun:` (`enabled: true`) |
 | Your story text | `ourStory:` |
 | Family names | `families:` |
 | Hotel / mall / places | `travel:` |

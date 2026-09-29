@@ -21,26 +21,29 @@ It costs nothing and needs no secret keys. Do this once. It takes about 10 minut
 3. On GitHub, open the file `google-backend/Code.gs` in your repo, click the **Copy raw file** button (two-squares icon, top right of the file), and **paste** into the Apps Script box (Ctrl+V).
 4. Click the **Save** (disk) icon.
 
-## Step 3 — Run the one-time setup
-1. At the top of the Apps Script page there is a dropdown showing a function name. Choose **setup**.
-2. Click **▶ Run**.
-3. Google will say **"Authorization required"** → click **Review permissions** → choose your account.
-4. You will see *"Google hasn't verified this app"*. This is normal because you wrote it for yourself. Click **Advanced → Go to Untitled project (unsafe) → Allow**.
-5. Wait for **"Execution completed"** at the bottom. 
-   - Your Sheet now has four tabs: **RSVP, Blessings, Photos, Faces**.
-   - Your Google Drive now has a folder **Shrijeet & Shivangi - Wedding Photos**.
+## Step 3 — Authorise and publish (this is the step where Google asks permission)
+The script creates its own tabs and Drive folder the first time it is used, so you do **not** need to run "setup" separately. If Step 3 (Run) gets stuck, skip it and go straight to publishing:
 
-## Step 4 — Publish it as a "web app"
 1. Click the blue **Deploy** button (top right) → **New deployment**.
 2. Click the ⚙ gear next to "Select type" → choose **Web app**.
 3. Fill in:
    - Description: `Wedding`
    - **Execute as: Me**
    - **Who has access: Anyone**
-4. Click **Deploy** (allow access again if asked).
-5. Copy the **Web app URL** (it ends with `/exec`). Keep it — you need it next.
+4. Click **Deploy**. Click **Authorize access** → choose your Google account.
+5. Google shows *"Google hasn't verified this app"*. This is normal (you wrote it yourself). Click the small grey **Advanced** link at the bottom-left → **Go to (project name) (unsafe)** → **Allow**.
+6. Copy the **Web app URL** (ends with `/exec`).
+7. Open that URL in a new tab. You should see `{"success":true,"message":"Wedding backend is running."}`
+8. Back in Apps Script, choose **setup** in the function dropdown → **▶ Run** (optional). It just creates the Sheet tabs and Drive folder early; if you skip it, the first RSVP creates them.
 
-> Quick check: paste that URL in a new browser tab. You should see `{"success":true,"message":"Wedding backend is running."}`
+### If the permission screen is stuck or will not appear
+- Use **one** Google account only: open the page in a **Chrome Incognito window**, sign in with just the wedding Gmail, and repeat.
+- Turn off pop-up blocking for script.google.com (the permission window is a pop-up).
+- Rename the project (top-left "Untitled project" → `Wedding`) and Save before running.
+- If you only see "Back to safety" and no Advanced link, you are on a school/office Google account. Use a normal @gmail.com account instead.
+- Still stuck? Take a screenshot of the screen and send it to Claude.
+
+## Step 4 — (merged into Step 3 above)
 
 ## Step 5 — Give the URL to the website
 1. On GitHub open `src/siteConfig.js`, click the ✏️ pencil icon.

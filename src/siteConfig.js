@@ -108,20 +108,11 @@ const siteConfig = {
       },
       {
         id: 5,
-        name: "Varmaala",
+        name: "Varmala & Shaadi",
         date: "2026-12-02",
-        time: "07:30 PM",
+        time: "07:30 PM onwards",
         dressCode: "Traditional",
-        description: "Two hearts exchange garlands and welcome a new beginning.",
-      },
-      {
-        id: 6,
-        name: "Shaadi",
-        date: "2026-12-03",
-        time: "02:30 AM",
-        dateNote: "Late night of 2 December",
-        dressCode: "Traditional",
-        description: "The sacred pheras and vows, where our forever begins.",
+        description: "Two hearts exchange garlands, and the sacred pheras and vows begin our forever.",
       },
     ],
   },
@@ -153,16 +144,18 @@ const siteConfig = {
   },
 
   // --------------------------------------------------------------------------
-  // 8. BLESSINGS & SHAGUN
+  // 8. DIGITAL BLESSINGS
   // --------------------------------------------------------------------------
   blessings: {
-    title: "Blessings & Shagun",
+    title: "Digital Blessings",
     subtitle: "Your love and blessings are the most precious gift we can receive.",
     blessingHeading: "Leave a Blessing",
     blessingHint: "Write a few kind words, a prayer or a memory for the couple.",
   },
 
   shagun: {
+    // Set to true to show the Digital Shagun (UPI) section on the Blessings page again.
+    enabled: false,
     heading: "Digital Shagun",
     optionalNote: "Completely optional — your presence and blessings mean the most to us.",
     upiId: "7356045315@yescred",
@@ -372,7 +365,7 @@ And here's to all the journeys still waiting for us.`,
       { title: "I need to change my RSVP. What do I do?", content: "No problem. Fill the RSVP form again with the same mobile number. Your new answer replaces the old one." },
       { title: "How do I share my photos?", content: "Scan the wedding QR code or open the Photos page, choose the celebration, and add your photos. No login and no caption needed." },
       { title: "How can I find photos of myself?", content: "On the Photos page, open the Gallery and tap 'Find my photos'. Take a quick selfie and we will show the photos you are in. Your selfie stays on your phone and is never saved." },
-      { title: "How can I send my blessings?", content: "Open the Blessings page and write a few words for us. If you wish to send shagun, you can do that there too — it is completely optional." },
+      { title: "How can I send my blessings?", content: "Open the Digital Blessings page and write a few words for us. Your love and good wishes are the only gift we ask for." },
     ],
   },
 
