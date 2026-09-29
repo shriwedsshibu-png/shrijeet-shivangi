@@ -24,16 +24,17 @@ function ActionCard({ to, icon, title, text }) {
 export default function HomePage() {
   const { homepage: hp, wedding, couple } = siteConfig;
   const events = sortedEvents();
+  const photoHero = hp.heroStyle === 'photo';
 
   return (
     <main>
       {/* ---------- Invitation ---------- */}
-      <section className="hero">
-        <div className="hero-pattern" />
+      <section className={`hero ${photoHero ? 'hero-photo' : ''}`} style={photoHero ? { backgroundImage: `linear-gradient(180deg, rgba(50,10,22,.15) 0%, rgba(50,10,22,.25) 30%, rgba(40,8,18,.9) 62%, rgba(40,8,18,.95) 100%), url(${hp.heroImage})` } : undefined}>
+        {!photoHero && <div className="hero-pattern" />}
         <div className="relative wrap-narrow fade-in">
           {hp.invocation && <p className="deva" style={{ color: '#e7cf98', fontSize: '1.15rem', marginBottom: '1.2rem' }}>{hp.invocation}</p>}
 
-          <div className="arch"><img src="/images/our2.jpg" alt={`${couple.name1} and ${couple.name2}`} /></div>
+          {!photoHero && <div className="arch"><img src="/images/our2.jpg" alt={`${couple.name1} and ${couple.name2}`} /></div>}
 
           <p className="hero-text">{hp.invitationTop}</p>
           <h1 className="hero-names mt-2">
@@ -80,7 +81,7 @@ export default function HomePage() {
         <section className="wrap-narrow" style={{ padding: '2rem 1.1rem' }}>
           <div className="text-center mb-6">
             <p className="eyebrow">The celebrations</p>
-            <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>Six days of joy</h2>
+            <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>Our celebrations</h2>
           </div>
           <Card>
             <ul className="divide-y" style={{ borderColor: 'rgba(184,137,59,.3)' }}>

@@ -13,7 +13,7 @@ const blank = () => ({
   adults: '1',
   children: '0',
   guestNames: '',
-  eventsAttending: sortedEvents().map((e) => e.name),
+  eventsAttending: [],
   arrivalDate: '',
   arrivalTime: '',
   departureDate: '',

@@ -26,33 +26,11 @@ export default function Travel() {
         <PageHeader eyebrow="Stay · Shop · Explore" title={t.title} subtitle={t.subtitle} />
 
         <div className="grid gap-5">
-          <Card>
-            <p className="eyebrow flex items-center gap-2"><Icon name="pin" size={18} /> Wedding venue</p>
-            <h3 className="font-display font-bold mt-1" style={{ fontSize: '1.9rem', color: 'var(--maroon)' }}>{t.venueName}</h3>
-            <p className="text-muted mt-1">{t.venueAddress}</p>
-            {t.venueEmbedUrl && (
-              <div className="mt-4 overflow-hidden" style={{ borderRadius: '1rem', border: '1px solid rgba(184,137,59,.4)' }}>
-                <iframe title="Venue map" src={t.venueEmbedUrl} loading="lazy" style={{ border: 0, width: '100%', height: '15rem' }} referrerPolicy="no-referrer-when-downgrade" />
-              </div>
-            )}
-            <div className="mt-4"><ButtonLink href={t.venueMapLink} variant="primary"><Icon name="pin" size={18} /> Open in Google Maps</ButtonLink></div>
-          </Card>
+          <PlaceCard eyebrow="Wedding venue" icon="pin" name={t.venueName} note={t.venueAddress} href={t.venueMapLink} cta="Open in Google Maps" />
 
-          {stays.map((s) => <PlaceCard key={s.name} eyebrow="Where to stay" icon="bed" name={s.name} note={s.note} href={s.mapLink} cta={`Open ${s.name} in Maps`} />)}
+          {stays.map((s) => <PlaceCard key={s.name} eyebrow="Where to stay" icon="bed" name={s.name} note={s.note} href={s.mapLink} cta="Open in Google Maps" />)}
 
-          {malls.length > 0 && (
-            <Card>
-              <p className="eyebrow flex items-center gap-2"><Icon name="bag" size={18} /> Nearby malls</p>
-              <div className="grid gap-4 mt-3">
-                {malls.map((m) => (
-                  <div key={m.name} className="flex items-center justify-between gap-3 flex-wrap">
-                    <span className="font-display font-bold" style={{ fontSize: '1.5rem', color: 'var(--maroon)' }}>{m.name}</span>
-                    <ButtonLink href={m.mapLink} variant="ghost" style={{ minHeight: '2.7rem', padding: '.4rem 1.1rem', fontSize: '.95rem' }}><Icon name="pin" size={18} /> Map</ButtonLink>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+          {malls.map((m) => <PlaceCard key={m.name} eyebrow="Nearby mall" icon="bag" name={m.name} note={m.note} href={m.mapLink} cta="Open in Google Maps" />)}
 
           {attractions.map((a) => (
             <PlaceCard key={a.name} eyebrow="Explore Vizag" icon="compass" name={a.name} note={a.description} href={a.website} cta="Open the tourism guide" />

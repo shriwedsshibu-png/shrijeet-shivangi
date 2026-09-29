@@ -54,6 +54,9 @@ const siteConfig = {
   // 4. HOME PAGE  (one invitation message — the names are shown big)
   // --------------------------------------------------------------------------
   homepage: {
+    // "photo" = big full-screen photo behind the invitation.  "arch" = small framed photo.
+    heroStyle: "photo",
+    heroImage: "/images/our2.jpg",
     invocation: "॥ श्री गणेशाय नमः ॥",
     invitationTop:
       "With the blessings of our families, we joyfully invite you to celebrate the wedding of",
@@ -69,7 +72,7 @@ const siteConfig = {
   // --------------------------------------------------------------------------
   events: {
     title: "Celebrate With Us",
-    subtitle: "Six joyful celebrations, one beautiful journey. Every function is at the same lovely place by the sea.",
+    subtitle: "Every function is at the same lovely place by the sea.",
     events: [
       {
         id: 1,
@@ -320,7 +323,11 @@ And here's to all the journeys still waiting for us.`,
     // Shivangi's side — fill this in when ready. Example of one person:
     //   { name: "Full Name", relation: "Papa" },
     // While this list is empty, only Shrijeet's family is shown.
-    shivangi: [],
+    shivangi: [
+      { name: "Shailendra Kumar", relation: "Father" },
+      { name: "Anju Kumari", relation: "Mother" },
+      { name: "Sourabh", relation: "Brother" },
+    ],
   },
 
   // --------------------------------------------------------------------------

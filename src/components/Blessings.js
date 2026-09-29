@@ -133,9 +133,9 @@ export default function Blessings() {
   const cfg = siteConfig.blessings;
   return (
     <main className="page">
-      <div className="wrap-narrow">
+      <div className="wrap" style={{ maxWidth: '64rem' }}>
         <PageHeader eyebrow="With love" title={cfg.title} subtitle={cfg.subtitle} />
-        <div className="grid gap-7">
+        <div className="grid gap-7 md:grid-cols-2 items-start">
           <BlessingCard />
           <ShagunCard />
         </div>
