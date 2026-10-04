@@ -16,6 +16,16 @@ const siteConfig = {
   },
 
   // --------------------------------------------------------------------------
+  // 1b. INVITATION FILM  (the animated invite that opens first)
+  //     enabled: false -> the old website opens directly, exactly as before.
+  //     firstVisitOnly: true -> plays once for each new visitor on the main link;
+  //     the link  yoursite/invite  always plays it. Guests can Skip or Replay.
+  //     firstVisitOnly: false -> only the /invite link plays it; the home page is unchanged.
+  //     homeButton: true -> shows a "Watch the Invitation" button on the home page.
+  // --------------------------------------------------------------------------
+  inviteFilm: { enabled: true, firstVisitOnly: false, homeButton: false },
+
+  // --------------------------------------------------------------------------
   // 2. SHOW / HIDE PAGES
   //    enabled: true  -> page and its buttons are visible to everyone
   //    enabled: false -> page and every button/link to it disappears

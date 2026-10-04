@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import HomePage from './components/HomePage';
 import MobileBottomNav from './components/MobileBottomNav';
 import { warmUp } from './api';
+import InviteFilm, { SEEN_KEY } from './components/InviteFilm';
 
 const OurStory = lazy(() => import('./components/OurStory'));
 const EventPage = lazy(() => import('./components/EventPage'));
@@ -33,6 +34,16 @@ const Loading = () => (
     <p className="script" style={{ fontSize: '2rem', color: 'var(--maroon)' }}>Loading…</p>
   </div>
 );
+
+// First-time visitors on the main link see the invitation film once.
+function FirstVisit() {
+  const { pathname, search } = useLocation();
+  const cfg = siteConfig.inviteFilm || {};
+  let seen = true;
+  try { seen = !!localStorage.getItem(SEEN_KEY); } catch (e) { seen = true; }
+  if (cfg.enabled && cfg.firstVisitOnly && pathname === '/' && !seen && !/skip/.test(search)) return <Navigate to="/invite" replace />;
+  return <HomePage />;
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -61,7 +72,8 @@ export default function App() {
         <Navbar />
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<FirstVisit />} />
+            {siteConfig.inviteFilm?.enabled && <Route path="/invite" element={<InviteFilm />} />}
             {routes}
             {legacy.map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
             <Route path="*" element={<Navigate to="/" replace />} />

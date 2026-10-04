@@ -55,6 +55,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
             {isFeatureOn('rsvp') && <ButtonLink to="/rsvp" variant="gold">Confirm Your Presence</ButtonLink>}
             {isFeatureOn('photos') && <ButtonLink to="/photos" variant="light">Share Your Photos</ButtonLink>}
+            {siteConfig.inviteFilm?.enabled && siteConfig.inviteFilm?.homeButton && <ButtonLink to="/invite" variant="light">▶ Watch the Invitation</ButtonLink>}
           </div>
         </div>
       </section>
