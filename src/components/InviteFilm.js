@@ -23,21 +23,6 @@ const fmtDate = (iso) =>
   new Date(iso + 'T12:00:00+05:30').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'Asia/Kolkata' });
 
 /* ---------- small illustrations (original, drawn in SVG) ---------- */
-const GOLD = '#e7b94f';
-
-function Lantern({ x, y, s = 1, d = 0 }) {
-  return (
-    <g transform={`translate(${x} ${y}) scale(${s})`}>
-      <g className="iv-float" style={{ animationDelay: d + 's' }}>
-        <line x1="0" y1="-30" x2="0" y2="-10" stroke="#ffd98a" strokeWidth="1" />
-        <circle cx="0" cy="6" r="26" fill="url(#glow)" opacity=".7" />
-        <ellipse cx="0" cy="6" rx="11" ry="15" fill="#ffb347" />
-        <rect x="-6" y="-11" width="12" height="4" rx="1.5" fill={GOLD} />
-        <rect x="-5" y="19" width="10" height="3" rx="1.5" fill={GOLD} />
-      </g>
-    </g>
-  );
-}
 
 function Couple({ scale = 1 }) {
   // Original illustration. Groom: short dark hair, light stubble, ivory sherwani. Bride: long black hair, round glasses, red lehenga.
@@ -215,50 +200,53 @@ function Diyas({ y = 760 }) {
   );
 }
 
+function Paisley({ x, y, s = 1, r = 0, o = 0.5 }) {
+  return <path transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} d="M0 0 C10 -16 30 -12 28 6 C26 22 8 28 -2 14 C-8 6 -6 -2 0 0Z M6 4 C12 -4 20 -2 19 6 C18 13 10 14 7 9" fill="none" stroke="#c9a24a" strokeWidth="1.6" opacity={o} />;
+}
+
 function CoverBG() {
   return (
     <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
       <defs>
-        <radialGradient id="glow"><stop offset="0" stopColor="#fff4c4" stopOpacity=".95" /><stop offset="1" stopColor="#ff9d2e" stopOpacity="0" /></radialGradient>
         <radialGradient id="bulbg2"><stop offset="0" stopColor="#ffe9a0" stopOpacity=".9" /><stop offset="1" stopColor="#ffd060" stopOpacity="0" /></radialGradient>
-        <radialGradient id="sunG" cx=".5" cy=".5" r=".5"><stop offset="0" stopColor="#fff1d6" stopOpacity=".95" /><stop offset="1" stopColor="#fbd9b8" stopOpacity="0" /></radialGradient>
-        <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#d3dfe9" /><stop offset="1" stopColor="#a9c2d6" /></linearGradient>
+        <radialGradient id="royalG" cx=".5" cy=".45" r=".6"><stop offset="0" stopColor="#fff8e6" /><stop offset="1" stopColor="#f3e2c8" stopOpacity="0" /></radialGradient>
       </defs>
-      <circle cx="195" cy="560" r="230" fill="url(#sunG)" />
-      <rect x="0" y="560" width="390" height="240" fill="url(#seaG)" opacity=".85" />
-      {[580, 604, 630, 660, 692].map((y, i) => <path key={y} d={`M0 ${y} Q48 ${y - 5} 97 ${y} T195 ${y} T292 ${y} T390 ${y}`} stroke="#fff" strokeWidth="1.2" fill="none" opacity={0.55 - i * 0.06} />)}
-      {/* distant naval ship on the horizon */}
-      <g transform="translate(286 540)" fill="#5d7189" opacity=".75"><path d="M0 18 L66 18 L58 25 L8 25Z" /><rect x="12" y="10" width="26" height="8" /><rect x="22" y="3" width="10" height="7" /><rect x="27" y="-6" width="2" height="9" /><path d="M42 18 L52 10 L56 18Z" /></g>
-      <path d="M0 560 L390 560" stroke="#fff" strokeWidth="1" opacity=".6" />
-      <Toran y={34} />
-      <Toran y={60} color="#f0b4a8" alt="#f8dcd5" n={9} sag={16} />
-      <Lantern x={34} y={170} s={1.05} d={0} /><Lantern x={356} y={200} s={1.15} d={0.6} /><Lantern x={50} y={470} s={0.8} d={1.1} /><Lantern x={344} y={440} s={0.85} d={0.4} />
-      <Diyas y={768} />
-      {/* gold frame with corner flourishes */}
+      <rect width="390" height="800" fill="#f8efdf" />
+      <ellipse cx="195" cy="430" rx="260" ry="420" fill="url(#royalG)" />
+      {/* large mughal arch frame */}
+      <path d="M44 800 L44 330 Q44 170 195 96 Q346 170 346 330 L346 800" fill="none" stroke="#c9a24a" strokeWidth="2" opacity=".55" />
+      <path d="M58 800 L58 336 Q58 184 195 114 Q332 184 332 336 L332 800" fill="none" stroke="#c9a24a" strokeWidth=".9" strokeDasharray="1 5" opacity=".7" />
+      {/* paisley border rows */}
+      {Array.from({ length: 7 }).map((_, i) => <Paisley key={'b' + i} x={34 + i * 52} y={742} s={0.8} r={-20} o={0.5} />)}
+      {[[28, 130, 20], [362, 130, -20], [24, 260, 200], [366, 260, 160]].map(([x, y, r], i) => <Paisley key={'c' + i} x={x} y={y} s={0.9} r={r} o={0.55} />)}
+      <Toran y={20} sag={12} n={12} />
+      <Diyas y={788} />
       <rect x="10" y="10" width="370" height="780" rx="14" fill="none" stroke="#c9a24a" strokeWidth="1.6" />
       <rect x="17" y="17" width="356" height="766" rx="10" fill="none" stroke="#e7cf98" strokeWidth=".9" />
       {[[10, 10, 1, 1], [380, 10, -1, 1], [10, 790, 1, -1], [380, 790, -1, -1]].map(([x, y, sx, sy], i) => (
-        <g key={i} transform={`translate(${x} ${y}) scale(${sx} ${sy})`}><path d="M0 34 Q0 0 34 0" fill="none" stroke="#c9a24a" strokeWidth="2.4" /><path d="M0 22 Q0 0 22 0" fill="none" stroke="#c9a24a" strokeWidth="1.2" /><circle cx="9" cy="9" r="3" fill="#c9a24a" /></g>
+        <g key={i} transform={`translate(${x} ${y}) scale(${sx} ${sy})`}><path d="M0 40 Q0 0 40 0" fill="none" stroke="#c9a24a" strokeWidth="2.6" /><path d="M0 26 Q0 0 26 0" fill="none" stroke="#c9a24a" strokeWidth="1.2" /><circle cx="10" cy="10" r="3.4" fill="#c9a24a" /></g>
       ))}
     </svg>
   );
 }
 
-/* Madhubani-style fish pair around an anchor: Bihar's auspicious motif + the Navy */
+/* Royal divider: lotus with gold vine scrolls */
 function Ornament({ color = '#b8893b', width = 230 }) {
-  const Fish = ({ flip }) => (
-    <g transform={flip ? 'translate(220 0) scale(-1 1)' : ''}>
-      <path d="M8 22 Q32 0 64 22 Q32 44 8 22Z" fill="none" stroke={color} strokeWidth="1.6" />
-      <path d="M64 22 L82 8 L82 36Z" fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" />
-      <circle cx="22" cy="19" r="2.2" fill={color} />
-      {[34, 42, 50].map((x) => <circle key={x} cx={x} cy="22" r="2" fill={color} opacity=".75" />)}
-      <path d="M30 14 Q40 9 52 15 M30 30 Q40 35 52 29" stroke={color} strokeWidth="1" fill="none" />
+  const Side = ({ flip }) => (
+    <g transform={flip ? 'translate(220 0) scale(-1 1)' : ''} stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round">
+      <path d="M92 22 Q70 22 56 22 Q40 22 34 14 Q30 8 36 6 Q42 5 42 11" />
+      <path d="M92 22 Q72 30 58 30 Q42 30 36 36 Q32 41 38 42" />
+      <circle cx="12" cy="22" r="2.2" fill={color} /><path d="M18 22 L28 22" />
     </g>
   );
   return (
     <svg viewBox="0 0 220 44" width={width} height={width * 0.2} aria-hidden>
-      <Fish /><Fish flip />
-      <g stroke={color} strokeWidth="1.8" fill="none" strokeLinecap="round"><circle cx="110" cy="8" r="3.2" /><line x1="110" y1="11" x2="110" y2="36" /><line x1="102" y1="17" x2="118" y2="17" /><path d="M98 28 Q110 42 122 28" /><path d="M98 28 l-3 -4 M122 28 l3 -4" /></g>
+      <Side /><Side flip />
+      <g fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round">
+        <path d="M110 6 Q101 18 110 34 Q119 18 110 6Z" fill={color} fillOpacity=".18" />
+        <path d="M110 34 Q92 32 90 18 Q102 20 110 34Z" /><path d="M110 34 Q128 32 130 18 Q118 20 110 34Z" />
+        <path d="M110 34 Q84 36 80 26 Q98 26 110 34Z" /><path d="M110 34 Q136 36 140 26 Q122 26 110 34Z" />
+      </g>
     </svg>
   );
 }
