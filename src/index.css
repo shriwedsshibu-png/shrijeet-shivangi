@@ -176,6 +176,7 @@
 .iv-green{background:linear-gradient(160deg,#e7efe0,#d3e1cb)}
 .iv-plum{background:linear-gradient(160deg,#ece8f3,#dcd5ea)}
 .iv-sun{background:linear-gradient(160deg,#faf1d3,#f2e1a9)}
+.iv-plum{background:linear-gradient(170deg,#fbefc4,#f6dc8a 55%,#f2cd6a)}
 .iv-royal{background:linear-gradient(160deg,#e4edf3,#cddde8)}
 .iv-sea{background:linear-gradient(#d9e8ef,#b9d3e0)}
 .iv-night.fin{background:linear-gradient(#1f3350,#2c4a6e);color:#fbf3e6}
@@ -227,6 +228,9 @@
 .iv-when{display:flex;flex-direction:column;gap:.15rem;border-top:1px solid #e7cf98;border-bottom:1px solid #e7cf98;padding:.65rem 0;margin:.2rem 0}
 .iv-when b{font-family:'Cinzel',serif;font-size:1.05rem}.iv-when span{font-size:1.05rem;color:var(--golddeep)}
 .iv-dress{font-size:.92rem;color:#6a5a45;margin-top:.5rem}
+.iv-orn{color:#c9a24a;font-size:1.3rem;letter-spacing:.4em;margin:.1rem 0 .2rem}
+.iv-spin{animation:ivspin 140s linear infinite}@keyframes ivspin{to{transform:rotate(360deg)}}
+.iv-fall{animation:ivfall 9s ease-in-out infinite alternate}@keyframes ivfall{from{transform:translate(0,-8px) rotate(0)}to{transform:translate(14px,16px) rotate(40deg)}}
 .iv-compass{width:5.2rem;height:5.2rem;opacity:.95}
 .iv-rope{width:60%;height:6px;border-radius:6px;background:repeating-linear-gradient(90deg,#e7cf98 0 6px,transparent 6px 10px);opacity:.8}
 @media(prefers-reduced-motion:reduce){.rv{transition:none;opacity:1;transform:none}.iv-float,.iv-tw,.iv-waves path,.iv-next{animation:none}}

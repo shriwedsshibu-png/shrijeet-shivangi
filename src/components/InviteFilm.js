@@ -129,17 +129,63 @@ function CoupleArt() {
   return (<div className="iv-art"><img src="/images/couple-art.jpg" alt="Shrijeet and Shivangi, watercolour illustration" onError={() => setBad(true)} /></div>);
 }
 
-function Icon({ name, size = 120 }) {
-  const c = { width: size, height: size, viewBox: '0 0 120 120', 'aria-hidden': true };
-  if (name === 'kalash')
-    return (<svg {...c}><path d="M38 52 Q36 100 60 104 Q84 100 82 52Z" fill="#c9962f" /><rect x="40" y="44" width="40" height="9" rx="4" fill="#e7b94f" /><ellipse cx="60" cy="38" rx="15" ry="11" fill="#7a9a3a" /><circle cx="60" cy="30" r="10" fill="#8b5a2b" /><path d="M46 66 Q60 80 74 66" stroke="#7a1f31" strokeWidth="4" fill="none" /><circle cx="60" cy="86" r="5" fill="#7a1f31" /></svg>);
-  if (name === 'hand')
-    return (<svg {...c}><path d="M44 104 L40 62 Q38 50 46 50 Q50 50 50 58 L50 36 Q50 28 57 28 Q63 28 63 36 L63 30 Q63 22 70 22 Q76 22 76 30 L76 36 Q82 34 84 42 L84 74 Q84 100 66 106Z" fill="#e3b08c" /><g stroke="#7a2c12" strokeWidth="2.4" fill="none" strokeLinecap="round"><path d="M56 70 q6 -8 12 0 q6 8 12 0" /><circle cx="66" cy="86" r="5" /><path d="M57 40 v14 M70 34 v18 M78 44 v12" /><circle cx="66" cy="86" r="1.4" fill="#7a2c12" /></g></svg>);
-  if (name === 'dhol')
-    return (<svg {...c}><ellipse cx="60" cy="60" rx="38" ry="22" fill="#a8541f" /><rect x="22" y="48" width="76" height="24" fill="#c7692a" /><ellipse cx="22" cy="60" rx="9" ry="22" fill="#e9c27a" /><ellipse cx="98" cy="60" rx="9" ry="22" fill="#e9c27a" /><path d="M30 44 L44 76 M46 44 L60 76 M62 44 L76 76 M78 44 L92 76" stroke="#7a1f31" strokeWidth="3" /><path d="M96 20 q8 -6 8 6 M88 14 q8 -6 8 6" stroke="#e7b94f" strokeWidth="3" fill="none" strokeLinecap="round" /></svg>);
-  if (name === 'marigold')
-    return (<svg {...c}>{[0, 45, 90, 135, 180, 225, 270, 315].map((a) => <ellipse key={a} cx="60" cy="32" rx="11" ry="20" fill="#f5a300" transform={`rotate(${a} 60 60)`} />)}{[22, 67, 112, 157, 202, 247, 292, 337].map((a) => <ellipse key={a} cx="60" cy="38" rx="8" ry="15" fill="#ffc933" transform={`rotate(${a} 60 60)`} />)}<circle cx="60" cy="60" r="11" fill="#c46a00" /></svg>);
-  return (<svg {...c}><path d="M18 104 L18 56 Q60 8 102 56 L102 104Z" fill="#e8c36a" /><path d="M28 104 L28 62 Q60 24 92 62 L92 104Z" fill="#7a1f31" /><path d="M20 58 Q60 14 100 58" stroke="#fff3c9" strokeWidth="3" fill="none" strokeDasharray="2 6" strokeLinecap="round" /><path d="M36 104 Q60 58 84 104Z" fill="#f4a62a" opacity=".92" /><path d="M42 74 Q60 90 78 74" stroke="#e8792b" strokeWidth="5" fill="none" strokeDasharray="1 8" strokeLinecap="round" /></svg>);
+/* ---------- soft background art for two functions + the finale ---------- */
+function SangeetBG() {
+  const wires = [[0, 20, 195, 70, 390, 14], [0, 90, 195, 140, 390, 80]];
+  return (
+    <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <defs><radialGradient id="bulbg"><stop offset="0" stopColor="#fff6c8" stopOpacity="1" /><stop offset=".35" stopColor="#ffd966" stopOpacity=".75" /><stop offset="1" stopColor="#ffc233" stopOpacity="0" /></radialGradient></defs>
+      {[[70, 560, 46], [320, 600, 56], [190, 690, 40], [40, 700, 34], [350, 720, 38], [120, 620, 30], [270, 520, 30]].map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} fill="url(#bulbg)" opacity=".5" className="iv-tw" style={{ animationDelay: i * 0.5 + 's' }} />)}
+      {wires.map(([x0, y0, cx, cy, x1, y1], w) => (
+        <g key={w}>
+          <path d={`M${x0} ${y0} Q${cx} ${cy} ${x1} ${y1}`} stroke="#b08a3a" strokeWidth="1.4" fill="none" opacity=".7" />
+          {Array.from({ length: 9 }).map((_, i) => {
+            const t = (i + 0.5) / 9, x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1, y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * cy + t * t * y1;
+            return (<g key={i}><circle cx={x} cy={y + 12} r="22" fill="url(#bulbg)" className="iv-tw" style={{ animationDelay: (i * 0.3 + w * 0.5) + 's' }} /><ellipse cx={x} cy={y + 11} rx="5.2" ry="7.2" fill="#ffe27a" /><rect x={x - 2.6} y={y + 2} width="5.2" height="4" fill="#9a7a30" /></g>);
+          })}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function MandapBG() {
+  const dots = [];
+  const col = ['#f4b7b0', '#fbe3a8', '#f7cfa0', '#ffffff', '#e8a7b5'];
+  [[70, 760], [320, 760]].forEach(([px], k) => { for (let i = 0; i < 16; i++) dots.push(<circle key={k + '-' + i} cx={px + Math.sin(i * 1.7) * 7} cy={300 + i * 28} r={6 + (i % 3)} fill={col[(i + k) % 5]} />); });
+  const top = []; for (let i = 0; i < 14; i++) top.push(<circle key={'t' + i} cx={52 + i * 22.5} cy={176 + Math.sin(i * 0.9) * 9} r="8" fill={col[i % 5]} />);
+  const petals = []; for (let i = 0; i < 18; i++) petals.push(<ellipse key={'p' + i} cx={(i * 67) % 390} cy={(i * 131) % 760} rx="5" ry="3" fill={col[i % 5]} opacity=".7" className="iv-fall" style={{ animationDelay: (i % 9) * 0.7 + 's' }} />);
+  return (
+    <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <g opacity=".62" transform="translate(0 -70)">
+        <path d="M40 160 Q195 70 350 160 L350 190 Q195 110 40 190Z" fill="#e7cf98" />
+        <path d="M40 190 Q195 110 350 190 L350 205 Q195 128 40 205Z" fill="#c9a24a" opacity=".6" />
+        {Array.from({ length: 13 }).map((_, i) => <path key={i} d={`M${46 + i * 24.2} 196 q12 22 24 0`} fill="#f6e8c4" stroke="#c9a24a" strokeWidth="1" />)}
+        <rect x="52" y="200" width="14" height="560" fill="#e7cf98" /><rect x="324" y="200" width="14" height="560" fill="#e7cf98" />
+        <rect x="46" y="740" width="26" height="20" rx="3" fill="#c9a24a" /><rect x="318" y="740" width="26" height="20" rx="3" fill="#c9a24a" />
+        {dots}{top}
+        {[110, 160, 230, 280].map((x, i) => (<g key={x}><line x1={x} y1="205" x2={x} y2={236 + (i % 2) * 22} stroke="#e8a7b5" strokeWidth="2" strokeDasharray="1 5" /><circle cx={x} cy={242 + (i % 2) * 22} r="6" fill="#f4b7b0" /></g>))}
+        <path d="M0 800 Q195 700 390 800Z" fill="#f4d7cf" />
+      </g>
+      {petals}
+    </svg>
+  );
+}
+
+function FinaleBG() {
+  const ring = (r, n, pr, rot) => Array.from({ length: n }).map((_, i) => <ellipse key={r + '-' + i} cx="195" cy={400 - r} rx={pr} ry={pr * 2.2} fill="none" stroke="#e7cf98" strokeWidth="1.2" transform={`rotate(${(360 / n) * i + rot} 195 400)`} />);
+  return (
+    <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <defs><radialGradient id="warm"><stop offset="0" stopColor="#f6e4b0" stopOpacity=".28" /><stop offset="1" stopColor="#f6e4b0" stopOpacity="0" /></radialGradient></defs>
+      <circle cx="195" cy="400" r="330" fill="url(#warm)" />
+      <g opacity=".28" className="iv-spin" style={{ transformOrigin: '195px 400px' }}>
+        {ring(70, 12, 14, 0)}{ring(120, 16, 16, 11)}{ring(170, 20, 17, 0)}{ring(225, 24, 18, 7)}
+        <circle cx="195" cy="400" r="46" fill="none" stroke="#e7cf98" strokeWidth="1.2" /><circle cx="195" cy="400" r="270" fill="none" stroke="#e7cf98" strokeWidth=".8" strokeDasharray="2 6" />
+      </g>
+      {[[40, 90], [350, 70], [60, 720], [335, 740]].map(([x, y], i) => <g key={i}>{[0, 60, 120, 180, 240, 300].map((a) => <ellipse key={a} cx={x} cy={y - 11} rx="5" ry="10" fill="#f0c36a" opacity=".55" transform={`rotate(${a} ${x} ${y})`} />)}<circle cx={x} cy={y} r="5" fill="#d99a3d" opacity=".7" /></g>)}
+      {Array.from({ length: 26 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 89) % 390} cy={(i * 61) % 780} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
+    </svg>
+  );
 }
 
 /* ---------- scratch-to-reveal date ---------- */
@@ -284,15 +330,13 @@ export default function InviteFilm() {
           </div>
         </section>
 
-        {/* 3. message */}
+        {/* 3. message: one heading-cum-message */}
         <section className="iv-sec iv-cream" data-i={idx++}>
           <div className="iv-in">
-            <p className="iv-small dark rv">Your invitation</p>
-            <h2 className="iv-h rv" style={{ '--d': '.15s' }}>You are warmly invited</h2>
-            <p className="iv-p rv" style={{ '--d': '.3s' }}>{siteConfig.homepage.invitationTop}</p>
-            <p className="iv-names2 rv" style={{ '--d': '.45s' }}>{names.name1} <em>&amp;</em> {names.name2}</p>
-            <p className="iv-p rv" style={{ '--d': '.6s' }}>{siteConfig.homepage.invitationBottom}</p>
-            <p className="iv-deva rv" style={{ '--d': '.75s' }}>{siteConfig.homepage.welcomeHindi}</p>
+            <p className="iv-p rv" style={{ '--d': '.1s', fontSize: '1.2rem' }}>{siteConfig.homepage.invitationTop}</p>
+            <p className="iv-names2 rv" style={{ '--d': '.3s' }}>{names.name1} <em>&amp;</em> {names.name2}</p>
+            <p className="iv-p rv" style={{ '--d': '.5s' }}>{siteConfig.homepage.invitationBottom}</p>
+            <p className="iv-deva rv" style={{ '--d': '.7s' }}>{siteConfig.homepage.welcomeHindi}</p>
           </div>
         </section>
 
@@ -301,10 +345,12 @@ export default function InviteFilm() {
           const l = LINES[ev.name] || { hing: ev.description, icon: 'mandap' };
           return (
             <section key={ev.id} className={'iv-sec ' + ['iv-teal', 'iv-green', 'iv-plum', 'iv-sun', 'iv-royal'][k % 5]} data-i={idx++}>
+              {/sangeet/i.test(ev.name) && <SangeetBG />}
+              {/shaadi|varmala/i.test(ev.name) && <MandapBG />}
               <div className="iv-in">
                 <p className="iv-small rv">Function {k + 1} of {events.length}</p>
                 <div className="iv-card rv" style={{ '--d': '.15s' }}>
-                  <div className="iv-ico"><Icon name={l.icon} /></div>
+                  <div className="iv-orn" aria-hidden>❖</div>
                   <h2>{ev.name}</h2>
                   <p className="iv-hing">{l.hing}</p>
                   <div className="iv-when"><b>{fmtDate(ev.date)}</b><span>{ev.time}</span></div>
@@ -329,16 +375,11 @@ export default function InviteFilm() {
 
         {/* finale */}
         <section className="iv-sec iv-night fin" data-i={idx++}>
-          <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
-            {Array.from({ length: 34 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 89) % 390} cy={(i * 61) % 520} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
-          </svg>
+          <FinaleBG />
           <div className="iv-in">
-            <svg className="iv-compass rv" viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="44" fill="none" stroke="#e7cf98" strokeWidth="1.5" /><circle cx="50" cy="50" r="38" fill="none" stroke="#e7cf98" strokeWidth=".8" strokeDasharray="1 3" /><path d="M50 8 L58 50 L50 92 L42 50Z" fill="#e7cf98" /><path d="M8 50 L50 42 L92 50 L50 58Z" fill="#e7cf98" opacity=".6" /><circle cx="50" cy="50" r="4" fill="#1f3350" stroke="#e7cf98" /></svg>
-            <p className="iv-small rv" style={{ '--d': '.1s' }}>An invitation to our voyage</p>
-            <h2 className="iv-names rv" style={{ '--d': '.2s', fontSize: 'clamp(2.8rem,13vw,4rem)' }}>Set sail with us</h2>
-            <div className="iv-rope rv" style={{ '--d': '.3s' }} />
-            <p className="iv-p rv" style={{ '--d': '.4s' }}>Two hearts, one horizon. Kindly confirm your presence and join us as our journey together begins.</p>
-            <div className="iv-btns rv" style={{ '--d': '.6s' }}>
+            <h2 className="iv-names rv" style={{ '--d': '.1s', fontSize: 'clamp(2.6rem,12vw,3.6rem)' }}>Aap aayenge na?</h2>
+            <p className="iv-p rv" style={{ '--d': '.3s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
+            <div className="iv-btns rv" style={{ '--d': '.5s' }}>
               {rsvpOn && <button className="iv-cta gold" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
               <button className="iv-cta ghost" onClick={() => leave('/')}>Explore the Wedding Website</button>
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
