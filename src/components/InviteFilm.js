@@ -12,11 +12,11 @@ export const SEEN_KEY = 'ss_invite_seen';
 const MUSIC_SRC = '/audio/invite.mp3'; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
-  Faldaan: { hing: 'Two families, one promise', icon: 'kalash' },
+  Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
   Mehndi: { hing: 'Henna, laughter and lots of colour', icon: 'hand' },
   'Engagement & Sangeet': { hing: 'Music, dance and the whole family', icon: 'dhol' },
   Haldi: { hing: 'Yellow hands, golden blessings', icon: 'marigold' },
-  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan, ek zindagi', icon: 'mandap' },
+  'Varmala & Shaadi': { hing: 'Two hearts, seven vows, one forever', icon: 'mandap' },
 };
 
 const fmtDate = (iso) =>
@@ -43,13 +43,13 @@ function Lantern({ x, y, s = 1, d = 0 }) {
 function Couple({ scale = 1 }) {
   // Original illustration. Groom: short dark hair, light stubble, ivory sherwani. Bride: long black hair, round glasses, red lehenga.
   const marigolds = [];
-  for (let i = 0; i < 9; i++) marigolds.push(<circle key={'a' + i} cx={52 + i * 24.5} cy={58 + Math.sin(i * 0.9) * 9 + (i % 2) * 5} r="7" fill={i % 2 ? '#f5a300' : '#ff7a1a'} />);
+  for (let i = 0; i < 9; i++) marigolds.push(<circle key={'a' + i} cx={52 + i * 24.5} cy={58 + Math.sin(i * 0.9) * 9 + (i % 2) * 5} r="7" fill={i % 2 ? '#f2c874' : '#f0b684'} />);
   return (
     <svg viewBox="0 0 300 340" width={300 * scale} height={340 * scale} role="img" aria-label="Illustration of the couple under a floral arch">
       <defs>
         <radialGradient id="aura" cx=".5" cy=".45" r=".6"><stop offset="0" stopColor="#ffd98a" stopOpacity=".55" /><stop offset="1" stopColor="#ffd98a" stopOpacity="0" /></radialGradient>
         <linearGradient id="sherG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff6dd" /><stop offset="1" stopColor="#e6cd92" /></linearGradient>
-        <linearGradient id="lehG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#d81f45" /><stop offset="1" stopColor="#7d0b24" /></linearGradient>
+        <linearGradient id="lehG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#eaa9ae" /><stop offset="1" stopColor="#c8808c" /></linearGradient>
         <linearGradient id="skinG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#d49a70" /><stop offset="1" stopColor="#bd8259" /></linearGradient>
         <linearGradient id="skinB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#efc3a2" /><stop offset="1" stopColor="#dca883" /></linearGradient>
         <linearGradient id="archG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#c9962f" /><stop offset=".5" stopColor="#f6dc8c" /><stop offset="1" stopColor="#c9962f" /></linearGradient>
@@ -59,7 +59,7 @@ function Couple({ scale = 1 }) {
       <path d="M30 330 L30 130 Q30 22 150 22 Q270 22 270 130 L270 330" fill="none" stroke="url(#archG)" strokeWidth="7" strokeLinecap="round" />
       <path d="M44 330 L44 134 Q44 38 150 38 Q256 38 256 134 L256 330" fill="none" stroke="#f6dc8c" strokeWidth="1.6" strokeDasharray="2 7" strokeLinecap="round" />
       <g>{marigolds}</g>
-      {[70, 108, 150, 192, 232].map((x, i) => (<g key={x}><line x1={x} y1={64 + (i % 2) * 6} x2={x} y2={92 + (i % 3) * 8} stroke="#f5a300" strokeWidth="2.4" strokeDasharray="1 5" strokeLinecap="round" /><circle cx={x} cy={96 + (i % 3) * 8} r="5" fill="#ff7a1a" /></g>))}
+      {[70, 108, 150, 192, 232].map((x, i) => (<g key={x}><line x1={x} y1={64 + (i % 2) * 6} x2={x} y2={92 + (i % 3) * 8} stroke="#f2c874" strokeWidth="2.4" strokeDasharray="1 5" strokeLinecap="round" /><circle cx={x} cy={96 + (i % 3) * 8} r="5" fill="#f0b684" /></g>))}
       <ellipse cx="150" cy="326" rx="118" ry="10" fill="#000" opacity=".25" />
 
       {/* groom */}
@@ -68,7 +68,7 @@ function Couple({ scale = 1 }) {
         <path d="M106 160 L106 330" stroke="#c9962f" strokeWidth="2" strokeDasharray="2 6" />
         {[196, 220, 244, 268].map((y) => <circle key={y} cx="106" cy={y} r="2.6" fill="#c9962f" />)}
         <path d="M76 176 Q66 232 74 262 L90 262 Q88 220 92 184Z" fill="#f0e0b3" />
-        <path d="M84 168 Q108 190 140 172 L146 200 Q112 214 78 196Z" fill="#7a1f31" />
+        <path d="M84 168 Q108 190 140 172 L146 200 Q112 214 78 196Z" fill="#27406a" />
         <path d="M84 168 Q108 190 140 172" stroke="#e9c14f" strokeWidth="2" fill="none" />
         <rect x="97" y="138" width="18" height="26" rx="7" fill="url(#skinG)" />
         <path d="M95 160 Q106 170 117 160 L115 172 Q106 178 97 172Z" fill="#f6e8c4" />
@@ -91,37 +91,43 @@ function Couple({ scale = 1 }) {
         <path d="M152 318 L260 318" stroke="#fff3c9" strokeWidth="1.6" strokeDasharray="2 5" />
         {[0, 1, 2, 3, 4, 5].map((i) => <path key={i} d={`M${166 + i * 16} 296 q4 -12 8 0 q-4 6 -8 0Z`} fill="#f0c75a" opacity=".85" />)}
         <path d="M160 190 Q196 214 234 190" stroke="#f0c75a" strokeWidth="3" fill="none" />
-        <path d="M156 186 Q130 230 128 268 L142 268 Q146 226 168 196Z" fill="#e9a42b" opacity=".0" />
-        <path d="M150 186 Q196 210 244 186 L250 214 Q196 236 144 212Z" fill="#c41539" />
+        <path d="M156 186 Q130 230 128 268 L142 268 Q146 226 168 196Z" fill="#e4bd6a" opacity=".0" />
+        <path d="M150 186 Q196 210 244 186 L250 214 Q196 236 144 212Z" fill="#d98d99" />
         <path d="M150 186 Q196 210 244 186" stroke="#f0c75a" strokeWidth="2.4" fill="none" />
         <path d="M232 190 Q262 230 258 290 L240 290 Q240 238 222 200Z" fill="#e8b84b" opacity=".92" />
         <path d="M160 128 Q138 210 150 290 Q176 266 180 150Z" fill="#120e0d" />
         <path d="M234 128 Q256 214 244 288 Q218 262 214 150Z" fill="#120e0d" />
         <rect x="187" y="150" width="16" height="26" rx="7" fill="url(#skinB)" />
-        <path d="M180 170 Q196 192 212 170" stroke="#f0c75a" strokeWidth="3.4" fill="none" /><path d="M184 176 Q196 196 208 176" stroke="#e9a42b" strokeWidth="2" fill="none" />
-        <circle cx="196" cy="193" r="3.4" fill="#c41539" stroke="#f0c75a" strokeWidth="1.4" />
+        <path d="M180 170 Q196 192 212 170" stroke="#f0c75a" strokeWidth="3.4" fill="none" /><path d="M184 176 Q196 196 208 176" stroke="#e4bd6a" strokeWidth="2" fill="none" />
+        <circle cx="196" cy="193" r="3.4" fill="#d98d99" stroke="#f0c75a" strokeWidth="1.4" />
         <ellipse cx="196" cy="128" rx="22" ry="27" fill="url(#skinB)" />
         <path d="M172 120 Q170 90 196 88 Q222 90 220 120 Q214 100 196 100 Q178 100 172 120Z" fill="#120e0d" />
-        <path d="M168 112 Q196 70 224 112 Q232 150 226 176 L214 150 Q220 118 196 98 Q172 118 178 150 L166 176 Q160 150 168 112Z" fill="#e9a42b" opacity=".0" />
-        <path d="M164 118 Q192 66 228 118 L226 136 Q222 112 196 94 Q170 112 166 136Z" fill="#d81f45" opacity=".72" />
+        <path d="M168 112 Q196 70 224 112 Q232 150 226 176 L214 150 Q220 118 196 98 Q172 118 178 150 L166 176 Q160 150 168 112Z" fill="#e4bd6a" opacity=".0" />
+        <path d="M164 118 Q192 66 228 118 L226 136 Q222 112 196 94 Q170 112 166 136Z" fill="#eaa9ae" opacity=".72" />
         <path d="M164 118 Q192 66 228 118" stroke="#f0c75a" strokeWidth="2" fill="none" />
-        <path d="M196 90 L196 100" stroke="#f0c75a" strokeWidth="2" /><circle cx="196" cy="103" r="3" fill="#c41539" stroke="#f0c75a" strokeWidth="1.3" />
+        <path d="M196 90 L196 100" stroke="#f0c75a" strokeWidth="2" /><circle cx="196" cy="103" r="3" fill="#d98d99" stroke="#f0c75a" strokeWidth="1.3" />
         <path d="M181 120 q6 -4 12 0 M199 120 q6 -4 12 0" stroke="#2a1a12" strokeWidth="2.2" fill="none" strokeLinecap="round" />
         <circle cx="187" cy="129" r="8.4" fill="#fff" fillOpacity=".25" stroke="#3b2a22" strokeWidth="1.8" /><circle cx="205" cy="129" r="8.4" fill="#fff" fillOpacity=".25" stroke="#3b2a22" strokeWidth="1.8" /><path d="M195.4 128 q1.6 -1.4 3.2 0" stroke="#3b2a22" strokeWidth="1.8" fill="none" />
         <circle cx="187" cy="130" r="3" fill="#2a1a12" /><circle cx="205" cy="130" r="3" fill="#2a1a12" /><circle cx="188" cy="129" r="1" fill="#fff" /><circle cx="206" cy="129" r="1" fill="#fff" />
-        <path d="M188 142 Q196 150 204 142" stroke="#b02a3a" strokeWidth="3" fill="none" strokeLinecap="round" />
+        <path d="M188 142 Q196 150 204 142" stroke="#b45b64" strokeWidth="3" fill="none" strokeLinecap="round" />
         <circle cx="175" cy="136" r="2.6" fill="#f0c75a" /><circle cx="217" cy="136" r="2.6" fill="#f0c75a" />
-        <circle cx="181" cy="141" r="3.6" fill="#f08a8a" opacity=".35" /><circle cx="211" cy="141" r="3.6" fill="#f08a8a" opacity=".35" />
+        <circle cx="181" cy="141" r="3.6" fill="#f2a3a3" opacity=".35" /><circle cx="211" cy="141" r="3.6" fill="#f2a3a3" opacity=".35" />
       </g>
 
       {/* joined hands + garland */}
       <path d="M126 214 Q148 232 170 214" stroke="#d99a3d" strokeWidth="2" fill="none" />
       <ellipse cx="148" cy="226" rx="15" ry="9" fill="#d9a07a" /><ellipse cx="148" cy="226" rx="15" ry="9" fill="none" stroke="#f0c75a" strokeWidth="2" strokeDasharray="1 4" />
-      <path d="M104 178 Q150 262 198 182" stroke="#f5a300" strokeWidth="9" strokeLinecap="round" fill="none" strokeDasharray="1 8" />
-      <path d="M104 178 Q150 262 198 182" stroke="#ff6f1a" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="1 14" strokeDashoffset="6" />
-      {[[52, 300], [250, 296], [72, 318], [236, 316], [150, 322]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={4 + (i % 2)} fill={i % 2 ? '#ff7a1a' : '#f5a300'} opacity=".9" />)}
+      <path d="M104 178 Q150 262 198 182" stroke="#f2c874" strokeWidth="9" strokeLinecap="round" fill="none" strokeDasharray="1 8" />
+      <path d="M104 178 Q150 262 198 182" stroke="#eeb07c" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="1 14" strokeDashoffset="6" />
+      {[[52, 300], [250, 296], [72, 318], [236, 316], [150, 322]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={4 + (i % 2)} fill={i % 2 ? '#f0b684' : '#f2c874'} opacity=".9" />)}
     </svg>
   );
+}
+
+function CoupleArt() {
+  const [bad, setBad] = useState(false);
+  if (bad) return <Couple scale={0.86} />;
+  return (<div className="iv-art"><img src="/images/couple-art.jpg" alt="Shrijeet and Shivangi, watercolour illustration" onError={() => setBad(true)} /></div>);
 }
 
 function Icon({ name, size = 120 }) {
@@ -191,7 +197,7 @@ export default function InviteFilm() {
   const audio = useRef(null);
   const [opened, setOpened] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
-  const [hasMusic, setHasMusic] = useState(false);
+  const [hasMusic, setHasMusic] = useState(true);
   const [revealed, setRevealed] = useState(false);
   const [active, setActive] = useState(0);
   const cd = useCountdown(siteConfig.wedding.countdownTo);
@@ -205,7 +211,7 @@ export default function InviteFilm() {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     const a = new Audio(MUSIC_SRC); a.loop = true; a.volume = 0.6; audio.current = a;
-    a.addEventListener('canplaythrough', () => setHasMusic(true), { once: true });
+    a.preload = 'auto'; a.addEventListener('error', () => setHasMusic(false));
     return () => { document.body.style.overflow = ''; a.pause(); };
   }, []);
 
@@ -222,7 +228,7 @@ export default function InviteFilm() {
 
   const open = () => {
     setOpened(true);
-    if (audio.current && hasMusic) audio.current.play().then(() => setMusicOn(true)).catch(() => {});
+    if (audio.current) audio.current.play().then(() => setMusicOn(true)).catch(() => setMusicOn(false));
     setTimeout(() => root.current && root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }), 150);
   };
   const toggleMusic = () => {
@@ -238,26 +244,25 @@ export default function InviteFilm() {
   return (
     <div className="iv" ref={root} role="dialog" aria-label="Wedding invitation">
       <button className="iv-skip" onClick={() => leave('/')}>Skip <span>· go to website</span></button>
-      {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊' : '🔈'}</button>}
+      {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊 Music on' : '🔈 Play music'}</button>}
       {opened && <div className="iv-dots" aria-hidden>{Array.from({ length: total }).map((_, i) => <i key={i} className={i === active ? 'on' : ''} />)}</div>}
 
       {/* 1. cover */}
       <section className="iv-sec iv-night in" data-i={idx++}>
         <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
           <defs><radialGradient id="glow"><stop offset="0" stopColor="#fff4c4" stopOpacity=".95" /><stop offset="1" stopColor="#ff9d2e" stopOpacity="0" /></radialGradient></defs>
-          {Array.from({ length: 36 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 97) % 390} cy={(i * 53) % 420} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
-          <Lantern x={50} y={90} s={1.1} d={0} /><Lantern x={150} y={150} s={0.8} d={0.7} /><Lantern x={250} y={80} s={1} d={1.2} /><Lantern x={340} y={170} s={1.2} d={0.3} />
-          <Lantern x={95} y={240} s={0.7} d={1.5} /><Lantern x={300} y={290} s={0.8} d={0.9} /><Lantern x={30} y={320} s={0.9} d={0.4} />
-          <path d="M0 640 Q100 600 200 640 T390 630 L390 800 L0 800Z" fill="#1d1348" />
-          <path d="M0 690 Q120 660 220 690 T390 680 L390 800 L0 800Z" fill="#2a1a5c" />
+          
+          <Lantern x={34} y={150} s={1.1} d={0} /><Lantern x={356} y={190} s={1.2} d={0.6} /><Lantern x={40} y={420} s={0.8} d={1.1} /><Lantern x={352} y={470} s={0.9} d={0.4} />
+          
+          <path d="M0 700 Q100 670 200 700 T390 690 L390 800 L0 800Z" fill="#cfdde8" opacity=".7" />
         </svg>
         <div className="iv-in">
           <p className="iv-small rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
-          <p className="iv-small rv" style={{ '--d': '.5s', marginTop: '.8rem' }}>Hum shaadi kar rahe hain!</p>
+          <p className="iv-small rv" style={{ '--d': '.5s', marginTop: '.8rem' }}>We are getting married</p>
           <h1 className="iv-names rv" style={{ '--d': '.9s' }}>{names.name1}<span>&amp;</span>{names.name2}</h1>
-          <div className="rv" style={{ '--d': '1.3s' }}><Couple scale={0.86} /></div>
+          <div className="rv" style={{ '--d': '1.3s' }}><CoupleArt /></div>
           {!opened
-            ? <button className="iv-cta rv" style={{ '--d': '1.7s' }} onClick={open}>✉ Tap to open your invitation</button>
+            ? <button className="iv-cta rv" style={{ '--d': '1.7s' }} onClick={open}>Open Your Invitation</button>
             : <p className="iv-small">scroll ↓</p>}
         </div>
       </section>
@@ -316,9 +321,9 @@ export default function InviteFilm() {
         <section className="iv-sec iv-sea" data-i={idx++}>
           <svg className="iv-waves" viewBox="0 0 390 120" preserveAspectRatio="none" aria-hidden><path className="w1" d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V120 H0Z" fill="#ffffff22" /><path className="w2" d="M0 80 Q50 50 100 80 T200 80 T300 80 T400 80 V120 H0Z" fill="#ffffff2e" /></svg>
           <div className="iv-in">
-            <p className="iv-small rv">Where we celebrate</p>
+            <p className="iv-small rv">The Venue</p>
             <h2 className="iv-h light rv" style={{ '--d': '.15s' }}>{siteConfig.wedding.venueName}</h2>
-            <p className="iv-p light rv" style={{ '--d': '.3s' }}>{siteConfig.wedding.city} · by the sea, with every function at one lovely place</p>
+            <p className="iv-p light rv" style={{ '--d': '.3s' }}>{siteConfig.wedding.city}, by the Bay of Bengal</p>
             <a className="iv-cta rv" style={{ '--d': '.5s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
           </div>
         </section>
@@ -326,15 +331,17 @@ export default function InviteFilm() {
         {/* finale */}
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
-            {Array.from({ length: 30 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 89) % 390} cy={(i * 61) % 500} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
-            <Lantern x={60} y={120} s={1} d={0.2} /><Lantern x={330} y={100} s={1.1} d={0.8} /><Lantern x={200} y={60} s={0.8} d={0.5} />
+            {Array.from({ length: 34 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 89) % 390} cy={(i * 61) % 520} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
           </svg>
           <div className="iv-in">
-            <h2 className="iv-names rv" style={{ fontSize: 'clamp(2.4rem,11vw,3.6rem)' }}>Aap aayenge na?</h2>
-            <p className="iv-p light rv" style={{ '--d': '.2s' }}>The celebration is incomplete without you. Let us know in one tap.</p>
-            <div className="iv-btns rv" style={{ '--d': '.4s' }}>
-              {rsvpOn && <button className="iv-cta gold" onClick={() => leave('/rsvp')}>💌 Confirm RSVP</button>}
-              <button className="iv-cta" onClick={() => leave('/')}>🪔 Explore the website</button>
+            <svg className="iv-compass rv" viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="44" fill="none" stroke="#e7cf98" strokeWidth="1.5" /><circle cx="50" cy="50" r="38" fill="none" stroke="#e7cf98" strokeWidth=".8" strokeDasharray="1 3" /><path d="M50 8 L58 50 L50 92 L42 50Z" fill="#e7cf98" /><path d="M8 50 L50 42 L92 50 L50 58Z" fill="#e7cf98" opacity=".6" /><circle cx="50" cy="50" r="4" fill="#1f3350" stroke="#e7cf98" /></svg>
+            <p className="iv-small rv" style={{ '--d': '.1s' }}>An invitation to our voyage</p>
+            <h2 className="iv-names rv" style={{ '--d': '.2s', fontSize: 'clamp(2.8rem,13vw,4rem)' }}>Set sail with us</h2>
+            <div className="iv-rope rv" style={{ '--d': '.3s' }} />
+            <p className="iv-p rv" style={{ '--d': '.4s' }}>Two hearts, one horizon. Kindly confirm your presence and join us as our journey together begins.</p>
+            <div className="iv-btns rv" style={{ '--d': '.6s' }}>
+              {rsvpOn && <button className="iv-cta gold" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
+              <button className="iv-cta ghost" onClick={() => leave('/')}>Explore the Wedding Website</button>
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
             </div>
           </div>
