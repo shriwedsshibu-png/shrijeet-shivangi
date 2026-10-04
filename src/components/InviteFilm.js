@@ -173,17 +173,92 @@ function MandapBG() {
 }
 
 function FinaleBG() {
-  const ring = (r, n, pr, rot) => Array.from({ length: n }).map((_, i) => <ellipse key={r + '-' + i} cx="195" cy={400 - r} rx={pr} ry={pr * 2.2} fill="none" stroke="#e7cf98" strokeWidth="1.2" transform={`rotate(${(360 / n) * i + rot} 195 400)`} />);
   return (
     <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
-      <defs><radialGradient id="warm"><stop offset="0" stopColor="#f6e4b0" stopOpacity=".28" /><stop offset="1" stopColor="#f6e4b0" stopOpacity="0" /></radialGradient></defs>
-      <circle cx="195" cy="400" r="330" fill="url(#warm)" />
-      <g opacity=".28" className="iv-spin" style={{ transformOrigin: '195px 400px' }}>
-        {ring(70, 12, 14, 0)}{ring(120, 16, 16, 11)}{ring(170, 20, 17, 0)}{ring(225, 24, 18, 7)}
-        <circle cx="195" cy="400" r="46" fill="none" stroke="#e7cf98" strokeWidth="1.2" /><circle cx="195" cy="400" r="270" fill="none" stroke="#e7cf98" strokeWidth=".8" strokeDasharray="2 6" />
-      </g>
-      {[[40, 90], [350, 70], [60, 720], [335, 740]].map(([x, y], i) => <g key={i}>{[0, 60, 120, 180, 240, 300].map((a) => <ellipse key={a} cx={x} cy={y - 11} rx="5" ry="10" fill="#f0c36a" opacity=".55" transform={`rotate(${a} ${x} ${y})`} />)}<circle cx={x} cy={y} r="5" fill="#d99a3d" opacity=".7" /></g>)}
-      {Array.from({ length: 26 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 89) % 390} cy={(i * 61) % 780} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
+      <defs>
+        <radialGradient id="bulbg2"><stop offset="0" stopColor="#ffe9a0" stopOpacity=".9" /><stop offset="1" stopColor="#ffd060" stopOpacity="0" /></radialGradient>
+        <radialGradient id="warm"><stop offset="0" stopColor="#f6e4b0" stopOpacity=".22" /><stop offset="1" stopColor="#f6e4b0" stopOpacity="0" /></radialGradient>
+      </defs>
+      <ellipse cx="195" cy="420" rx="260" ry="360" fill="url(#warm)" />
+      {/* jharokha-style arch */}
+      <path d="M50 800 L50 330 Q50 150 195 70 Q340 150 340 330 L340 800" fill="none" stroke="#e7cf98" strokeWidth="1.6" opacity=".4" />
+      <path d="M70 800 L70 335 Q70 175 195 100 Q320 175 320 335 L320 800" fill="none" stroke="#e7cf98" strokeWidth=".9" strokeDasharray="2 6" opacity=".45" />
+      <g opacity=".5"><Toran y={20} /></g>
+      <g opacity=".5"><Toran y={44} color="#f0b4a8" alt="#f8dcd5" n={9} sag={14} /></g>
+      <Diyas y={770} />
+      {Array.from({ length: 24 }).map((_, i) => <circle key={i} className="iv-tw" cx={(i * 89) % 390} cy={120 + ((i * 61) % 520)} r={(i % 3) * 0.5 + 0.7} fill="#fff" style={{ animationDelay: (i % 7) * 0.4 + 's' }} />)}
+    </svg>
+  );
+}
+
+/* ---------- cover: full-bleed dusk scene (Bihari torans + naval horizon) ---------- */
+function Toran({ y = 0, color = '#f2b45a', alt = '#f6d58a', n = 11, sag = 22 }) {
+  const items = [];
+  for (let i = 0; i < n; i++) {
+    const t = (i + 0.5) / n, x = 14 + t * 362, yy = y + 4 * Math.sin(Math.PI * t) * sag / 4 + Math.sin(Math.PI * t) * sag;
+    items.push(<g key={i}><circle cx={x} cy={yy} r="7.5" fill={i % 2 ? alt : color} /><circle cx={x} cy={yy} r="3" fill="#d98a2b" opacity=".6" /><line x1={x} y1={yy + 7} x2={x} y2={yy + 16 + (i % 3) * 4} stroke="#d9a73a" strokeWidth="1.6" /><circle cx={x} cy={yy + 19 + (i % 3) * 4} r="2.6" fill="#d9a73a" /></g>);
+  }
+  return <g>{items}</g>;
+}
+
+function Diyas({ y = 760 }) {
+  return (
+    <g>
+      {[44, 100, 156, 234, 290, 346].map((x, i) => (
+        <g key={x} className="iv-tw" style={{ animationDelay: i * 0.35 + 's' }}>
+          <ellipse cx={x} cy={y - 10} rx="9" ry="14" fill="url(#bulbg2)" />
+          <path d={`M${x} ${y - 20} q5 8 0 14 q-5 -6 0 -14Z`} fill="#ffcf5a" />
+          <path d={`M${x - 11} ${y} q11 12 22 0 z`} fill="#c98a3a" />
+        </g>
+      ))}
+    </g>
+  );
+}
+
+function CoverBG() {
+  return (
+    <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <defs>
+        <radialGradient id="glow"><stop offset="0" stopColor="#fff4c4" stopOpacity=".95" /><stop offset="1" stopColor="#ff9d2e" stopOpacity="0" /></radialGradient>
+        <radialGradient id="bulbg2"><stop offset="0" stopColor="#ffe9a0" stopOpacity=".9" /><stop offset="1" stopColor="#ffd060" stopOpacity="0" /></radialGradient>
+        <radialGradient id="sunG" cx=".5" cy=".5" r=".5"><stop offset="0" stopColor="#fff1d6" stopOpacity=".95" /><stop offset="1" stopColor="#fbd9b8" stopOpacity="0" /></radialGradient>
+        <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#d3dfe9" /><stop offset="1" stopColor="#a9c2d6" /></linearGradient>
+      </defs>
+      <circle cx="195" cy="560" r="230" fill="url(#sunG)" />
+      <rect x="0" y="560" width="390" height="240" fill="url(#seaG)" opacity=".85" />
+      {[580, 604, 630, 660, 692].map((y, i) => <path key={y} d={`M0 ${y} Q48 ${y - 5} 97 ${y} T195 ${y} T292 ${y} T390 ${y}`} stroke="#fff" strokeWidth="1.2" fill="none" opacity={0.55 - i * 0.06} />)}
+      {/* distant naval ship on the horizon */}
+      <g transform="translate(286 540)" fill="#5d7189" opacity=".75"><path d="M0 18 L66 18 L58 25 L8 25Z" /><rect x="12" y="10" width="26" height="8" /><rect x="22" y="3" width="10" height="7" /><rect x="27" y="-6" width="2" height="9" /><path d="M42 18 L52 10 L56 18Z" /></g>
+      <path d="M0 560 L390 560" stroke="#fff" strokeWidth="1" opacity=".6" />
+      <Toran y={34} />
+      <Toran y={60} color="#f0b4a8" alt="#f8dcd5" n={9} sag={16} />
+      <Lantern x={34} y={170} s={1.05} d={0} /><Lantern x={356} y={200} s={1.15} d={0.6} /><Lantern x={50} y={470} s={0.8} d={1.1} /><Lantern x={344} y={440} s={0.85} d={0.4} />
+      <Diyas y={768} />
+      {/* gold frame with corner flourishes */}
+      <rect x="10" y="10" width="370" height="780" rx="14" fill="none" stroke="#c9a24a" strokeWidth="1.6" />
+      <rect x="17" y="17" width="356" height="766" rx="10" fill="none" stroke="#e7cf98" strokeWidth=".9" />
+      {[[10, 10, 1, 1], [380, 10, -1, 1], [10, 790, 1, -1], [380, 790, -1, -1]].map(([x, y, sx, sy], i) => (
+        <g key={i} transform={`translate(${x} ${y}) scale(${sx} ${sy})`}><path d="M0 34 Q0 0 34 0" fill="none" stroke="#c9a24a" strokeWidth="2.4" /><path d="M0 22 Q0 0 22 0" fill="none" stroke="#c9a24a" strokeWidth="1.2" /><circle cx="9" cy="9" r="3" fill="#c9a24a" /></g>
+      ))}
+    </svg>
+  );
+}
+
+/* Madhubani-style fish pair around an anchor: Bihar's auspicious motif + the Navy */
+function Ornament({ color = '#b8893b', width = 230 }) {
+  const Fish = ({ flip }) => (
+    <g transform={flip ? 'translate(220 0) scale(-1 1)' : ''}>
+      <path d="M8 22 Q32 0 64 22 Q32 44 8 22Z" fill="none" stroke={color} strokeWidth="1.6" />
+      <path d="M64 22 L82 8 L82 36Z" fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" />
+      <circle cx="22" cy="19" r="2.2" fill={color} />
+      {[34, 42, 50].map((x) => <circle key={x} cx={x} cy="22" r="2" fill={color} opacity=".75" />)}
+      <path d="M30 14 Q40 9 52 15 M30 30 Q40 35 52 29" stroke={color} strokeWidth="1" fill="none" />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 220 44" width={width} height={width * 0.2} aria-hidden>
+      <Fish /><Fish flip />
+      <g stroke={color} strokeWidth="1.8" fill="none" strokeLinecap="round"><circle cx="110" cy="8" r="3.2" /><line x1="110" y1="11" x2="110" y2="36" /><line x1="102" y1="17" x2="118" y2="17" /><path d="M98 28 Q110 42 122 28" /><path d="M98 28 l-3 -4 M122 28 l3 -4" /></g>
     </svg>
   );
 }
@@ -294,18 +369,13 @@ export default function InviteFilm() {
 
       {/* 1. cover */}
       <section className="iv-sec iv-night in" data-i={idx++}>
-        <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
-          <defs><radialGradient id="glow"><stop offset="0" stopColor="#fff4c4" stopOpacity=".95" /><stop offset="1" stopColor="#ff9d2e" stopOpacity="0" /></radialGradient></defs>
-          
-          <Lantern x={34} y={150} s={1.1} d={0} /><Lantern x={356} y={190} s={1.2} d={0.6} /><Lantern x={40} y={420} s={0.8} d={1.1} /><Lantern x={352} y={470} s={0.9} d={0.4} />
-          
-          <path d="M0 700 Q100 670 200 700 T390 690 L390 800 L0 800Z" fill="#cfdde8" opacity=".7" />
-        </svg>
+        <CoverBG />
         <div className="iv-in">
           <p className="iv-small rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
           <p className="iv-small rv" style={{ '--d': '.5s', marginTop: '.8rem' }}>We are getting married</p>
           <h1 className="iv-names rv" style={{ '--d': '.9s' }}>{names.name1}<span>&amp;</span>{names.name2}</h1>
           <div className="rv" style={{ '--d': '1.3s' }}><CoupleArt /></div>
+          <div className="rv" style={{ '--d': '1.5s' }}><Ornament width={210} /></div>
           {!opened
             ? <button className="iv-cta rv" style={{ '--d': '1.7s' }} onClick={open}>Open Your Invitation</button>
             : <p className="iv-small">scroll ↓</p>}
@@ -333,10 +403,12 @@ export default function InviteFilm() {
         {/* 3. message: one heading-cum-message */}
         <section className="iv-sec iv-cream" data-i={idx++}>
           <div className="iv-in">
-            <p className="iv-p rv" style={{ '--d': '.1s', fontSize: '1.2rem' }}>{siteConfig.homepage.invitationTop}</p>
-            <p className="iv-names2 rv" style={{ '--d': '.3s' }}>{names.name1} <em>&amp;</em> {names.name2}</p>
-            <p className="iv-p rv" style={{ '--d': '.5s' }}>{siteConfig.homepage.invitationBottom}</p>
-            <p className="iv-deva rv" style={{ '--d': '.7s' }}>{siteConfig.homepage.welcomeHindi}</p>
+            <p className="iv-small rv">By the grace of God</p>
+            <div className="rv" style={{ '--d': '.1s' }}><Ornament /></div>
+            <p className="iv-p rv" style={{ '--d': '.25s', fontSize: '1.2rem' }}>{siteConfig.homepage.invitationTop}</p>
+            <p className="iv-names2 rv" style={{ '--d': '.45s' }}>{names.name1} <em>&amp;</em> {names.name2}</p>
+            <p className="iv-p rv" style={{ '--d': '.6s' }}>{siteConfig.homepage.invitationBottom}</p>
+            <p className="iv-deva rv" style={{ '--d': '.8s' }}>{siteConfig.homepage.welcomeHindi}</p>
           </div>
         </section>
 

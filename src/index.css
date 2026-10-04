@@ -213,7 +213,7 @@
 .iv-dots i{width:6px;height:6px;border-radius:50%;background:rgba(31,51,80,.25);transition:.3s}.iv-dots i.on{background:var(--gold);transform:scale(1.6)}
 .iv-next{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:20;width:3.1rem;height:3.1rem;border-radius:50%;border:1px solid var(--gold);background:rgba(251,247,238,.92);color:var(--navy);font-size:1.5rem;cursor:pointer;animation:ivb 1.6s ease-in-out infinite}
 @keyframes ivb{50%{transform:translate(-50%,6px)}}
-.iv-art{width:min(74vw,16.5rem);aspect-ratio:3/4;border-radius:999px 999px 1.4rem 1.4rem;overflow:hidden;box-shadow:0 14px 34px rgba(31,51,80,.22);border:3px solid #fbf7ee;outline:1.5px solid var(--gold);outline-offset:3px;background:#f3e9dc}
+.iv-art{width:min(70vw,16.5rem,calc(36dvh * .75));aspect-ratio:3/4;border-radius:999px 999px 1.4rem 1.4rem;overflow:hidden;box-shadow:0 14px 34px rgba(31,51,80,.22);border:3px solid #fbf7ee;outline:1.5px solid var(--gold);outline-offset:3px;background:#f3e9dc}
 .iv-art img{width:100%;height:100%;object-fit:cover;display:block}
 .iv-scratch{position:relative;width:min(100%,21rem);height:9.5rem;border-radius:1.2rem;overflow:hidden;background:#fffaf0;box-shadow:0 10px 26px rgba(31,51,80,.18);touch-action:none;border:2px solid #e7cf98}
 .iv-scratch canvas{position:absolute;inset:0;width:100%;height:100%;transition:opacity .8s;touch-action:none}.iv-scratch canvas.gone{opacity:0;pointer-events:none}
@@ -235,3 +235,7 @@
 .iv-rope{width:60%;height:6px;border-radius:6px;background:repeating-linear-gradient(90deg,#e7cf98 0 6px,transparent 6px 10px);opacity:.8}
 @media(prefers-reduced-motion:reduce){.rv{transition:none;opacity:1;transform:none}.iv-float,.iv-tw,.iv-waves path,.iv-next{animation:none}}
 @media(max-height:640px){.iv-sec{padding-top:3.8rem}.iv-names{font-size:2.8rem}}
+
+.iv-night.in:first-of-type,.iv-sec.iv-night:not(.fin){padding-top:6.4rem}
+@media(max-height:720px){.iv-sec.iv-night:not(.fin){padding-top:5.6rem}.iv-sec.iv-night:not(.fin) .iv-in{gap:.6rem}.iv-sec.iv-night:not(.fin) svg[viewBox='0 0 220 44']{display:none}.iv-names{font-size:2.6rem}}
+@media(max-height:720px){.iv-art{width:min(70vw,calc(30dvh * .75))}.iv-sec.iv-night:not(.fin){padding-top:4.6rem;padding-bottom:2.2rem}.iv-names{font-size:2.3rem}.iv-sec.iv-night:not(.fin) .iv-small{font-size:.7rem}}
