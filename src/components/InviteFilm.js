@@ -176,6 +176,74 @@ function FinaleBG() {
   );
 }
 
+
+/* ---------- soft blurred backgrounds for Faldaan, Mehndi, Haldi and the message page ---------- */
+function Marigold({ x, y, r = 22, a = '#f2a93b', b = '#f8c95c' }) {
+  return (<g>{Array.from({ length: 12 }).map((_, i) => <ellipse key={i} cx={x} cy={y - r * 0.55} rx={r * 0.3} ry={r * 0.55} fill={i % 2 ? a : b} transform={`rotate(${i * 30} ${x} ${y})`} />)}<circle cx={x} cy={y} r={r * 0.28} fill="#d98a1f" /></g>);
+}
+function Rose({ x, y, r = 22 }) {
+  return (<g><circle cx={x} cy={y} r={r} fill="#f1b6b0" /><circle cx={x} cy={y} r={r * 0.72} fill="#f6cbc6" /><circle cx={x} cy={y} r={r * 0.46} fill="#eea6a3" /><path d={`M${x - r * 0.3} ${y} q${r * 0.3} -${r * 0.4} ${r * 0.6} 0`} stroke="#e48f8f" strokeWidth="2" fill="none" /></g>);
+}
+function Leaf({ x, y, r, s = 1, c = '#7fa079' }) {
+  return <path transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} d="M0 0 Q14 -22 0 -52 Q-14 -22 0 0Z" fill={c} />;
+}
+
+function FaldaanBG() {
+  return (
+    <svg className="iv-sky iv-blur" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      {[[30, 60, 34], [92, 40, 26], [360, 90, 36], [320, 40, 24], [24, 150, 24], [370, 170, 26]].map(([x, y, r], i) => <Rose key={i} x={x} y={y} r={r} />)}
+      {[[20, 110, 20], [60, 100, 80], [372, 130, 120], [330, 100, 150]].map(([x, y, r], i) => <Leaf key={i} x={x} y={y} r={r} s={0.9} />)}
+      <ellipse cx="195" cy="722" rx="150" ry="40" fill="#d9ae5a" /><ellipse cx="195" cy="714" rx="132" ry="31" fill="#f3d58f" />
+      <circle cx="150" cy="700" r="24" fill="#8a5a33" /><circle cx="150" cy="696" r="9" fill="#a7774b" opacity=".6" />
+      {[[222, 710], [256, 700], [186, 722]].map(([x, y], i) => <g key={i}><ellipse cx={x} cy={y} rx="12" ry="7" fill="#c98a3a" /><path d={`M${x} ${y - 6} q5 -10 0 -18 q-5 8 0 18Z`} fill="#ffcf5a" /></g>)}
+      {[[110, 722], [290, 722], [205, 696], [175, 728]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="7" fill={i % 2 ? '#f1b6b0' : '#fbe3a8'} />)}
+      {[[40, 700, 26], [350, 710, 30], [28, 770, 22], [372, 775, 24]].map(([x, y, r], i) => <Rose key={i} x={x} y={y} r={r} />)}
+    </svg>
+  );
+}
+
+function MehndiBG() {
+  const dots = (x, y, n) => Array.from({ length: n }).map((_, i) => <circle key={x + '-' + i} cx={x + i * 12} cy={y + Math.sin(i) * 4} r="2" fill="#8a4b2a" opacity=".6" />);
+  return (
+    <svg className="iv-sky iv-blur" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      {[[20, 120, 25], [34, 150, 40], [370, 110, -25], [358, 150, -42], [26, 690, 160], [364, 700, 200], [60, 760, 140], [330, 770, 215]].map(([x, y, r], i) => <Leaf key={i} x={x} y={y} r={r} s={1.15} c={i % 2 ? '#8fb08a' : '#6f9a6a'} />)}
+      {[[40, 70, 20], [350, 60, -30], [30, 640, 200], [356, 650, 160]].map(([x, y, r], i) => <Paisley key={i} x={x} y={y} s={1.5} r={r} o={0.75} c="#8a4b2a" />)}
+      <g stroke="#8a4b2a" strokeWidth="1.8" fill="none" opacity=".6">
+        <path d="M30 720 Q195 660 360 720" /><path d="M30 736 Q195 676 360 736" strokeDasharray="1 7" strokeLinecap="round" />
+        <path d="M30 40 Q195 100 360 40" /><path d="M30 56 Q195 116 360 56" strokeDasharray="1 7" strokeLinecap="round" />
+      </g>
+      {dots(70, 700, 22)}
+    </svg>
+  );
+}
+
+function HaldiBG() {
+  return (
+    <svg className="iv-sky iv-blur" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      {[[40, 60, 36], [110, 30, 26], [340, 80, 40], [290, 30, 28], [20, 170, 28], [372, 190, 30], [60, 720, 40], [330, 730, 42], [160, 780, 30], [250, 772, 28], [18, 640, 26], [376, 620, 28]].map(([x, y, r], i) => <Marigold key={i} x={x} y={y} r={r} a={i % 2 ? '#f0a136' : '#f6b94c'} b={i % 3 ? '#f8d26e' : '#f4b542'} />)}
+      <ellipse cx="195" cy="735" rx="86" ry="24" fill="#e8b92f" /><ellipse cx="195" cy="726" rx="78" ry="17" fill="#f5d04a" />
+      {Array.from({ length: 22 }).map((_, i) => <ellipse key={i} cx={(i * 71) % 390} cy={(i * 137) % 760} rx="6" ry="3.4" fill="#f4b542" opacity=".75" className="iv-fall" style={{ animationDelay: (i % 9) * 0.6 + 's' }} />)}
+    </svg>
+  );
+}
+
+function MsgBG() {
+  return (
+    <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <defs><radialGradient id="msgG" cx=".5" cy=".5" r=".6"><stop offset="0" stopColor="#fffaf0" /><stop offset="1" stopColor="#f1e4cc" stopOpacity="0" /></radialGradient></defs>
+      <ellipse cx="195" cy="400" rx="250" ry="400" fill="url(#msgG)" />
+      <path d="M40 800 L40 320 Q40 160 195 84 Q350 160 350 320 L350 800" fill="none" stroke="#c9a24a" strokeWidth="1.8" opacity=".5" />
+      <path d="M54 800 L54 326 Q54 176 195 102 Q336 176 336 326 L336 800" fill="none" stroke="#c9a24a" strokeWidth=".9" strokeDasharray="1 5" opacity=".6" />
+      <g className="iv-blur" style={{ opacity: 0.75 }}>
+        {[[28, 740, 30], [70, 770, 24], [362, 745, 32], [320, 775, 26], [20, 660, 22], [372, 655, 24]].map(([x, y, r], i) => i % 2 ? <Rose key={i} x={x} y={y} r={r} /> : <Marigold key={i} x={x} y={y} r={r} />)}
+        {[[40, 700, 330], [350, 705, 30], [66, 735, 20], [326, 740, -20]].map(([x, y, r], i) => <Leaf key={i} x={x} y={y} r={r} c="#8fb08a" />)}
+      </g>
+      <g opacity=".7"><Toran y={22} sag={12} n={12} /></g>
+      {[[26, 150, 20], [364, 150, -20], [24, 300, 200], [366, 300, 160]].map(([x, y, r], i) => <Paisley key={i} x={x} y={y} s={0.9} r={r} o={0.5} />)}
+    </svg>
+  );
+}
+
 /* ---------- cover: full-bleed dusk scene (Bihari torans + naval horizon) ---------- */
 function Toran({ y = 0, color = '#f2b45a', alt = '#f6d58a', n = 11, sag = 22 }) {
   const items = [];
@@ -200,8 +268,8 @@ function Diyas({ y = 760 }) {
   );
 }
 
-function Paisley({ x, y, s = 1, r = 0, o = 0.5 }) {
-  return <path transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} d="M0 0 C10 -16 30 -12 28 6 C26 22 8 28 -2 14 C-8 6 -6 -2 0 0Z M6 4 C12 -4 20 -2 19 6 C18 13 10 14 7 9" fill="none" stroke="#c9a24a" strokeWidth="1.6" opacity={o} />;
+function Paisley({ x, y, s = 1, r = 0, o = 0.5, c = '#c9a24a' }) {
+  return <path transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`} d="M0 0 C10 -16 30 -12 28 6 C26 22 8 28 -2 14 C-8 6 -6 -2 0 0Z M6 4 C12 -4 20 -2 19 6 C18 13 10 14 7 9" fill="none" stroke={c} strokeWidth="1.6" opacity={o} />;
 }
 
 function CoverBG() {
@@ -390,6 +458,7 @@ export default function InviteFilm() {
 
         {/* 3. message: one heading-cum-message */}
         <section className="iv-sec iv-cream" data-i={idx++}>
+          <MsgBG />
           <div className="iv-in">
             <p className="iv-small rv">By the grace of God</p>
             <div className="rv" style={{ '--d': '.1s' }}><Ornament /></div>
@@ -405,6 +474,9 @@ export default function InviteFilm() {
           const l = LINES[ev.name] || { hing: ev.description, icon: 'mandap' };
           return (
             <section key={ev.id} className={'iv-sec ' + ['iv-teal', 'iv-green', 'iv-plum', 'iv-sun', 'iv-royal'][k % 5]} data-i={idx++}>
+              {/faldaan/i.test(ev.name) && <FaldaanBG />}
+              {/mehndi/i.test(ev.name) && <MehndiBG />}
+              {/haldi/i.test(ev.name) && <HaldiBG />}
               {/sangeet/i.test(ev.name) && <SangeetBG />}
               {/shaadi|varmala/i.test(ev.name) && <MandapBG />}
               <div className="iv-in">
