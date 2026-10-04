@@ -27,6 +27,7 @@ const components = {
   travel: Travel,
   faq: FAQ,
   rsvp: RSVPPage,
+  invite: InviteFilm,
 };
 
 const Loading = () => (
@@ -73,7 +74,6 @@ export default function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<FirstVisit />} />
-            {siteConfig.inviteFilm?.enabled && <Route path="/invite" element={<InviteFilm />} />}
             {routes}
             {legacy.map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
             <Route path="*" element={<Navigate to="/" replace />} />

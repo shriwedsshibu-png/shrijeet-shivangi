@@ -8,6 +8,7 @@ export const PAGES = [
   { key: 'blessings', path: '/blessings', icon: 'heart', bottom: true, short: 'Blessings' },
   { key: 'ourStory', path: '/our-story', icon: 'book', bottom: false, short: 'Story' },
   { key: 'families', path: '/our-families', icon: 'users', bottom: false, short: 'Families' },
+  { key: 'invite', path: '/invite', icon: 'mail', bottom: false, short: 'Invitation' },
   { key: 'travel', path: '/explore-vizag', icon: 'compass', bottom: false, short: 'Vizag' },
   { key: 'faq', path: '/faq', icon: 'help', bottom: false, short: 'FAQ' },
 ];

@@ -38,6 +38,7 @@ const siteConfig = {
     blessings: { enabled: true, label: "Blessings" },
     ourStory:  { enabled: true, label: "Our Story" },
     families:  { enabled: true, label: "Our Families" },
+    invite:    { enabled: true, label: "Our Invitation" },
     travel:    { enabled: true, label: "Explore Vizag" },
     faq:       { enabled: true, label: "FAQ" },
   },
