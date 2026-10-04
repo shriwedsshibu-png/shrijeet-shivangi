@@ -24,7 +24,6 @@ const fmtDate = (iso) =>
 
 /* ---------- small illustrations (original, drawn in SVG) ---------- */
 const GOLD = '#e7b94f';
-const MAR = '#7a1f31';
 
 function Lantern({ x, y, s = 1, d = 0 }) {
   return (

@@ -20,8 +20,10 @@ const siteConfig = {
   //     enabled: false -> the old website opens directly, exactly as before.
   //     firstVisitOnly: true -> plays once for each new visitor on the main link;
   //     the link  yoursite/invite  always plays it. Guests can Skip or Replay.
+  //     firstVisitOnly: false -> only the /invite link plays it; the home page is unchanged.
+  //     homeButton: true -> shows a "Watch the Invitation" button on the home page.
   // --------------------------------------------------------------------------
-  inviteFilm: { enabled: true, firstVisitOnly: true },
+  inviteFilm: { enabled: true, firstVisitOnly: false, homeButton: false },
 
   // --------------------------------------------------------------------------
   // 2. SHOW / HIDE PAGES
