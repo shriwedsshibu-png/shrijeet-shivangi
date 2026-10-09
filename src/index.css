@@ -305,3 +305,19 @@
 .iv-paint img{width:100%;height:100%;object-fit:cover;display:block}
 .iv-paint::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(251,247,238,.62),rgba(251,247,238,.15) 70%)}
 .iv-paint.dark::after{background:radial-gradient(ellipse at 50% 45%,rgba(20,24,48,.55),rgba(20,24,48,.1) 70%)}
+
+/* date page: compact card, big date */
+.iv-h-sm{font-size:clamp(1.7rem,7.5vw,2.2rem)}
+.iv-scratch-wrap{width:min(78vw,18.5rem)}
+.iv-scratch{height:9rem}
+.iv-date{gap:.1rem}
+.iv-date b{font-size:clamp(2.4rem,11vw,3rem);white-space:nowrap;font-weight:600;line-height:1}
+.iv-date span{font-size:.9rem}
+.iv-date .wd{font-family:'Great Vibes',cursive;font-size:1.6rem;letter-spacing:0;color:#8f6a26;margin:0}
+.iv-cd div{min-width:4rem;padding:.6rem .75rem}.iv-cd b{font-size:1.7rem}
+/* painted backgrounds: keep the pictured parts visible */
+.iv-paint img{object-position:center bottom}
+.iv-paint ~ .iv-in > .iv-p{background:rgba(251,247,238,.78);border-radius:1rem;padding:.45rem .95rem;backdrop-filter:blur(2px)}
+.iv-paint.dark ~ .iv-in > .iv-p{background:rgba(20,24,48,.55)}
+.iv-paint ~ .iv-in > .iv-small{background:rgba(251,247,238,.7);border-radius:99px;padding:.2rem .8rem}
+.iv-paint.dark ~ .iv-in > .iv-small{background:rgba(20,24,48,.5)}

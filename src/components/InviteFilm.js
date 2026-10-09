@@ -10,7 +10,7 @@ import { sortedEvents } from '../utils';
    ========================================================================== */
 
 export const SEEN_KEY = 'ss_invite_seen';
-const MUSIC_SRC = '/audio/invite.mp3?v=3'; // optional: drop a royalty-free file here to enable music
+const MUSIC_SRC = '/audio/invite.mp3?v=4'; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
   Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
@@ -373,8 +373,8 @@ function Scratch({ children, onReveal, auto, onTouch }) {
     if (x.roundRect) x.roundRect((W - pw) / 2, (H - ph) / 2, pw, ph, 26); else x.rect((W - pw) / 2, (H - ph) / 2, pw, ph);
     x.fill();
     x.textAlign = 'center'; x.fillStyle = '#6b4a12';
-    x.font = `600 ${Math.round(H * 0.075)}px Cinzel, serif`; x.fillText('OUR WEDDING DATE', W / 2, H / 2 - H * 0.06);
-    x.fillStyle = '#5a3a0c'; x.font = `${Math.round(H * 0.17)}px "Great Vibes", cursive`; x.fillText('Scratch to reveal', W / 2, H / 2 + H * 0.13);
+    x.font = `600 ${Math.round(H * 0.085)}px Cinzel, serif`; x.fillText('THE WEDDING DATE', W / 2, H / 2 - H * 0.06);
+    x.fillStyle = '#5a3a0c'; x.font = `${Math.round(H * 0.2)}px "Great Vibes", cursive`; x.fillText('Scratch to reveal', W / 2, H / 2 + H * 0.15);
   }, []);
 
   useEffect(() => {
@@ -551,16 +551,16 @@ export default function InviteFilm() {
         <section className="iv-sec iv-rose" data-i={idx++}>
           <div className="iv-in">
             <p className="iv-small dark rv">Save the date</p>
-            <h2 className="iv-h rv" style={{ '--d': '.2s' }}>Scratch to reveal the countdown to forever</h2>
+            <h2 className="iv-h rv iv-h-sm" style={{ '--d': '.2s' }}>Unveil our auspicious day</h2>
             <div className="rv" style={{ '--d': '.4s' }}>
               <Scratch onReveal={() => setRevealed(true)} auto={autoScratch} onTouch={(v) => { touching.current = v; }}>
-                <div className="iv-date"><b>2 December</b><span>2026 · Wednesday</span></div>
+                <div className="iv-date"><span className="wd">Wednesday</span><b>2 December</b><span>2026</span></div>
               </Scratch>
             </div>
-            <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.6s' }}>
+            <p className="iv-small dark rv" style={{ '--d': '.6s', marginTop: '.4rem' }}>{revealed ? 'Counting down to forever' : 'Use your finger to scratch ☝'}</p>
+            <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.8s' }}>
               {[['days', cd[0]], ['hrs', cd[1]], ['min', cd[2]], ['sec', cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
-            <p className="iv-small dark rv" style={{ '--d': '.8s' }}>{revealed ? 'Counting down to forever' : 'Use your finger to scratch ☝'}</p>
           </div>
         </section>
 
