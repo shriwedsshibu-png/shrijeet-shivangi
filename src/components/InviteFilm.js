@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import siteConfig from '../siteConfig';
 import { sortedEvents } from '../utils';
 import makeLoopPlayer from '../loopAudio';
-import { groomFirst } from '../tier';
+import { groomFirst, isFullTier } from '../tier';
 
 /* ============================================================================
    The invitation film: a full-screen, scroll-through story (made for phones).
@@ -639,24 +639,24 @@ export default function InviteFilm() {
   useEffect(() => {
     elapsed.current = 0; setProg(0); outDone.current = false;
     if (!opened || !root.current) return;
-    if (active === DATE_I) { dur.current = 12600; return; }       // 6 s to scratch + 1.6 s reveal + 5 s to see the date
+    if (active === DATE_I) { dur.current = 17000; return; }       // 8.5 s to scratch + 1.6 s reveal + 7 s to see the date
     const sec = root.current.querySelector(`.iv-sec[data-i="${active}"]`);
     const words = sec ? sec.innerText.split(/\s+/).filter(Boolean).length : 30;
-    dur.current = Math.min(16000, Math.max(9500, 4000 + words * 270)); // ~220 words a minute + time for the lines to appear
+    dur.current = Math.min(24000, Math.max(13500, 6500 + words * 380)); // unhurried: ~160 words a minute + time for the lines to appear
   }, [active, opened, DATE_I]);
-  useEffect(() => { if (revealed && active === DATE_I) elapsed.current = Math.max(elapsed.current, 7600); }, [revealed, active, DATE_I]);
+  useEffect(() => { if (revealed && active === DATE_I) elapsed.current = Math.max(elapsed.current, 10100); }, [revealed, active, DATE_I]);
   useEffect(() => {
     if (!opened) return undefined;
     const id = setInterval(() => {
       if (paused || document.hidden || active === 0 || active >= LAST) return;
       if (active === DATE_I && !revealed) {
         if (touching.current) return;
-        elapsed.current = Math.min(elapsed.current + 100, 6000);
-        if (elapsed.current >= 6000) setAutoScratch(true);
+        elapsed.current = Math.min(elapsed.current + 100, 8500);
+        if (elapsed.current >= 8500) setAutoScratch(true);
         setProg(elapsed.current / dur.current); return;
       }
       elapsed.current += 100; setProg(Math.min(1, elapsed.current / dur.current));
-      if (!outDone.current && elapsed.current >= dur.current - 900) {   // words drift away just before the page turns
+      if (!outDone.current && elapsed.current >= dur.current - 1200) {   // words drift away just before the page turns
         outDone.current = true;
         const sec = root.current && root.current.querySelector(`.iv-sec[data-i="${active}"]`);
         if (sec) sec.classList.add('out');
@@ -689,7 +689,7 @@ export default function InviteFilm() {
       <button className="iv-skip" onClick={() => leave('/')}>Skip <span>· go to website</span></button>
       <div className="iv-ctrl">
         {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
-        {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊 Music' : '🔈 Music'}</button>}
+        {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊 Music on' : '🔇 Music off'}</button>}
       </div>
       {opened && active > 0 && (
         <div className="iv-prog" aria-hidden>
@@ -785,7 +785,9 @@ export default function InviteFilm() {
             <p className="iv-small rv" style={{ '--d': '.2s' }}>The Venue</p>
             <h2 className="iv-h light rv wr" style={{ '--d': '.6s' }}>{siteConfig.wedding.venueName}</h2>
             <p className="iv-p light rv" style={{ '--d': '1.7s' }}><Typed text={siteConfig.wedding.city} d="2s" /></p>
-            <a className="iv-map rv" style={{ '--d': '3s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
+            <p className="iv-all rv" style={{ '--d': '3s' }}>{isFullTier() ? 'All the celebrations will be held here' : 'The wedding will be held here'}, at <b>{siteConfig.wedding.venueName}</b></p>
+            <p className="iv-tap rv" style={{ '--d': '3.6s' }}>Tap below to see the location</p>
+            <a className="iv-map rv" style={{ '--d': '3.9s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
           </div>
         </section>
 
@@ -793,7 +795,7 @@ export default function InviteFilm() {
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
           <div className="iv-in">
-            <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>Aap aayenge na?</h2>
+            <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>Aap aayenge na!</h2>
             <p className="iv-p rv" style={{ '--d': '1.6s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
               {rsvpOn && <button className="iv-cta gold" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
