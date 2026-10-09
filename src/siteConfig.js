@@ -104,9 +104,8 @@ const siteConfig = {
     welcomeHindi: "आपका हार्दिक स्वागत है",
     // The invitation page of the invite film (traditional card wording)
     inviteCard: {
-      // Aashirwad — the elders whose blessings open the card
-      blessingsLabel: "With the blessings of",
-      blessings: ["Smt. Jagtaran Devi", "Shri Shiv Chandra Singh & Smt. Prabha Devi"],
+      blessingsLabel: "With the blessings of our elders",
+      blessings: [], // optional: names of elders, e.g. ["Smt. Jagtaran Devi"]
       request: "our families request the pleasure of your company at the wedding of",
       brideLine: "daughter of",
       brideParents: "Smt. Anju Kumari & Shri Shailendra Kumar",

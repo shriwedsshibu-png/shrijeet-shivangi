@@ -656,7 +656,7 @@ export default function InviteFilm() {
           <PaintedBG name="message"><MsgBG /></PaintedBG>
           <div className="iv-in">
             <p className="iv-small rv">{inv.blessingsLabel}</p>
-            <p className="iv-host iv-ash rv" style={{ '--d': '.1s' }}>{inv.blessings.map((x, i) => <span key={i}>{x}</span>)}</p>
+            {inv.blessings && inv.blessings.length > 0 && <p className="iv-host iv-ash rv" style={{ '--d': '.1s' }}>{inv.blessings.map((x, i) => <span key={i}>{x}</span>)}</p>}
             <p className="iv-req rv" style={{ '--d': '.25s' }}>{inv.request}</p>
             <p className="iv-nm rv" style={{ '--d': '.4s' }}>{names.name1}</p>
             <p className="iv-req iv-of rv" style={{ '--d': '.5s' }}>{inv.brideLine}</p>
@@ -704,7 +704,7 @@ export default function InviteFilm() {
             <p className="iv-small rv">The Venue</p>
             <h2 className="iv-h light rv" style={{ '--d': '.15s' }}>{siteConfig.wedding.venueName}</h2>
             <p className="iv-p light rv" style={{ '--d': '.3s' }}>{siteConfig.wedding.city}</p>
-            <a className="iv-cta rv" style={{ '--d': '.5s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
+            <a className="iv-map rv" style={{ '--d': '.5s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
           </div>
         </section>
 

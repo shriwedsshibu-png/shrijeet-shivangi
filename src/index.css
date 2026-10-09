@@ -385,3 +385,7 @@
 .iv-toran{top:-.6%}
 .iv-paint.p-date ~ .iv-in > .iv-small{background:rgba(252,242,240,.82);border-radius:99px;padding:.2rem .85rem}
 @media(max-height:700px){.iv-msg2 svg[viewBox='0 0 220 44']{display:none}.iv-msg2 .iv-host{font-size:.88rem}.iv-msg2 .iv-req{font-size:.95rem}.iv-msg2 .iv-in{gap:.12rem}}
+/* venue: a quiet map link, so the painting stays the star */
+.iv-map{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem 1rem;border-radius:999px;border:1px solid rgba(31,51,80,.35);background:rgba(255,250,240,.72);color:#1f3350;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;text-decoration:none;backdrop-filter:blur(2px);margin-top:.2rem}
+.iv-paint.p-venue ~ .iv-in > .iv-p{font-size:1.05rem;padding:.25rem .9rem}
+.iv-msg2 .iv-in > .iv-small:first-child{letter-spacing:.09em;font-size:.8rem;white-space:nowrap}

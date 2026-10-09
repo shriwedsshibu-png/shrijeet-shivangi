@@ -5,7 +5,7 @@ import Icon from '../icons';
 import { backendReady, NOT_READY_MESSAGE, uploadPhoto, fetchPhotos, fetchFaces, thumbUrl, fullUrl, downloadUrl } from '../api';
 import { prepareForUpload, selfieCanvas } from '../photoTools';
 import { loadFaceApi, describeFaces, matchPhotos } from '../faces';
-import { sortedEvents, uploadableEvents, defaultUploadEvent } from '../utils';
+import { sortedEvents, defaultUploadEvent } from '../utils';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const withTimeout = (promise, ms) => Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -14,7 +14,7 @@ const withTimeout = (promise, ms) => Promise.race([promise, new Promise((_, rej)
    SHARE  — choose celebration, pick photos, upload
    ============================================================ */
 function SharePanel({ onUploaded, openGallery }) {
-  const events = useMemo(() => uploadableEvents(), []);
+  const events = useMemo(() => sortedEvents(true), []);   // every function, for every guest
   const [event, setEvent] = useState(defaultUploadEvent());
   const [items, setItems] = useState([]);
   const [busy, setBusy] = useState(false);
