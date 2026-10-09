@@ -5,6 +5,7 @@ import Countdown from './Countdown';
 import Icon from '../icons';
 import { Card, ButtonLink, Divider } from './ui';
 import { isFeatureOn, sortedEvents, dayAndMonth } from '../utils';
+import { dateLine, isFullTier } from '../tier';
 
 function ActionCard({ to, icon, title, text }) {
   return (
@@ -46,7 +47,7 @@ export default function HomePage() {
           <p className="hero-text mt-3">{hp.invitationBottom}</p>
 
           <div className="hero-date">
-            <span className="font-display font-bold" style={{ fontSize: '1.6rem', color: '#ffe2a3', lineHeight: 1.1 }}>{wedding.dateLine}</span>
+            <span className="font-display font-bold" style={{ fontSize: '1.6rem', color: '#ffe2a3', lineHeight: 1.1 }}>{dateLine()}</span>
             <span style={{ color: '#f1e2c4', fontSize: '1.05rem', letterSpacing: '.12em', textTransform: 'uppercase' }}>{wedding.city}</span>
           </div>
 
@@ -83,7 +84,7 @@ export default function HomePage() {
         <section className="wrap-narrow" style={{ padding: '2rem 1.1rem' }}>
           <div className="text-center mb-6">
             <p className="eyebrow">The celebrations</p>
-            <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>Our celebrations</h2>
+            <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>{isFullTier() ? 'Our celebrations' : 'The wedding'}</h2>
           </div>
           <Card>
             <ul className="divide-y" style={{ borderColor: 'rgba(184,137,59,.3)' }}>

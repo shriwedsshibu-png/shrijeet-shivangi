@@ -3,6 +3,7 @@ import siteConfig from '../siteConfig';
 import { Card, PageHeader } from './ui';
 import Icon from '../icons';
 import { sortedEvents, dayAndMonth, calendarLink } from '../utils';
+import { tierCfg } from '../tier';
 
 export default function EventPage() {
   const events = sortedEvents();
@@ -11,7 +12,7 @@ export default function EventPage() {
   return (
     <main className="page">
       <div className="wrap-narrow">
-        <PageHeader eyebrow="The celebrations" title={cfg.title} subtitle={cfg.subtitle} />
+        <PageHeader eyebrow="The celebrations" title={cfg.title} subtitle={tierCfg().eventsSubtitle || cfg.subtitle} />
 
         <div className="timeline grid gap-5">
           {events.map((e) => {

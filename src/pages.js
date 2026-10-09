@@ -1,4 +1,5 @@
 import siteConfig from './siteConfig';
+import { pageHidden } from './tier';
 
 // Order here = order in the menu. "bottom" pages also get a big button on the phone's bottom bar.
 export const PAGES = [
@@ -14,7 +15,7 @@ export const PAGES = [
 ];
 
 export const enabledPages = () =>
-  PAGES.filter((p) => siteConfig.features?.[p.key]?.enabled).map((p) => ({
+  PAGES.filter((p) => siteConfig.features?.[p.key]?.enabled && !pageHidden(p.key)).map((p) => ({
     ...p,
     label: siteConfig.features[p.key].label || p.short,
   }));

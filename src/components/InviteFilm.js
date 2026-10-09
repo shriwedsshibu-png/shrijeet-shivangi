@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import siteConfig from '../siteConfig';
+import { sortedEvents } from '../utils';
 
 /* ============================================================================
    The invitation film: a full-screen, scroll-through story (made for phones).
@@ -334,42 +335,87 @@ function Ornament({ color = '#b8893b', width = 230 }) {
   );
 }
 
-/* ---------- scratch-to-reveal date ---------- */
-function Scratch({ children, onReveal }) {
+/* ---------- scratch-to-reveal date: an embossed gold-leaf card ---------- */
+const PAISLEY = 'M0 0 C10 -16 30 -12 28 6 C26 22 8 28 -2 14 C-8 6 -6 -2 0 0Z M6 4 C12 -4 20 -2 19 6 C18 13 10 14 7 9';
+function Scratch({ children, onReveal, auto, onTouch }) {
   const ref = useRef(null);
+  const coin = useRef(null);
   const down = useRef(false);
+  const touched = useRef(false);
   const [gone, setGone] = useState(false);
 
-  useEffect(() => {
+  const draw = useCallback(() => {
     const cv = ref.current; if (!cv) return;
-    const r = cv.getBoundingClientRect();
-    cv.width = r.width * 2; cv.height = r.height * 2;
+    const r = cv.getBoundingClientRect(), W = (cv.width = Math.round(r.width * 2)), H = (cv.height = Math.round(r.height * 2));
     const x = cv.getContext('2d');
-    const g = x.createLinearGradient(0, 0, cv.width, cv.height);
-    g.addColorStop(0, '#d9a93f'); g.addColorStop(.5, '#f6e2a3'); g.addColorStop(1, '#b8893b');
-    x.fillStyle = g; x.fillRect(0, 0, cv.width, cv.height);
-    x.fillStyle = 'rgba(122,31,49,.75)'; x.textAlign = 'center';
-    x.font = `${cv.width * 0.075}px Cinzel, serif`; x.fillText('SCRATCH HERE', cv.width / 2, cv.height / 2 - 6);
-    x.font = `${cv.width * 0.055}px Lora, serif`; x.fillText('to reveal our date ✨', cv.width / 2, cv.height / 2 + cv.width * 0.075);
+    x.globalCompositeOperation = 'source-over';
+    const g = x.createLinearGradient(0, 0, W, H);
+    [['0', '#b4822c'], ['.22', '#e8c466'], ['.42', '#fff1bd'], ['.58', '#d6a845'], ['.78', '#f3d98a'], ['1', '#a8772a']].forEach(([o, c]) => g.addColorStop(+o, c));
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    for (let i = 0; i < 1400; i++) { x.fillStyle = i % 2 ? 'rgba(255,248,215,.22)' : 'rgba(120,80,20,.12)'; x.fillRect(Math.random() * W, Math.random() * H, 2, 2); }
+    const p = new Path2D(PAISLEY), step = W / 7;
+    for (let row = 0; row * step * 0.62 < H + step; row++) for (let col = -1; col * step < W + step; col++) {
+      const px = col * step + (row % 2 ? step / 2 : 0), py = row * step * 0.62 + 18;
+      x.save(); x.translate(px + 2, py + 2); x.rotate(row % 2 ? 0.5 : -0.5); x.scale(1.5, 1.5); x.strokeStyle = 'rgba(255,250,225,.45)'; x.lineWidth = 1.4; x.stroke(p); x.restore();
+      x.save(); x.translate(px, py); x.rotate(row % 2 ? 0.5 : -0.5); x.scale(1.5, 1.5); x.strokeStyle = 'rgba(110,72,18,.32)'; x.lineWidth = 1.4; x.stroke(p); x.restore();
+    }
+    x.strokeStyle = 'rgba(110,72,18,.55)'; x.lineWidth = 3; x.strokeRect(14, 14, W - 28, H - 28);
+    x.strokeStyle = 'rgba(255,248,215,.7)'; x.lineWidth = 1.5; x.strokeRect(24, 24, W - 48, H - 48);
+    const pw = W * 0.7, ph = H * 0.5;
+    x.fillStyle = 'rgba(255,246,214,.55)'; x.beginPath();
+    if (x.roundRect) x.roundRect((W - pw) / 2, (H - ph) / 2, pw, ph, 26); else x.rect((W - pw) / 2, (H - ph) / 2, pw, ph);
+    x.fill();
+    x.textAlign = 'center'; x.fillStyle = '#6b4a12';
+    x.font = `600 ${Math.round(H * 0.075)}px Cinzel, serif`; x.fillText('OUR WEDDING DATE', W / 2, H / 2 - H * 0.06);
+    x.fillStyle = '#5a3a0c'; x.font = `${Math.round(H * 0.17)}px "Great Vibes", cursive`; x.fillText('Scratch to reveal', W / 2, H / 2 + H * 0.13);
   }, []);
 
+  useEffect(() => {
+    draw();
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('40px "Great Vibes"'), document.fonts.load('600 20px Cinzel')]).then(() => { if (!touched.current) draw(); }).catch(() => {});
+  }, [draw]);
+
+  const onRevealRef = useRef(onReveal);
+  onRevealRef.current = onReveal;
+  const goneRef = useRef(false);
+  const reveal = useCallback(() => { if (goneRef.current) return; goneRef.current = true; setGone(true); if (onRevealRef.current) onRevealRef.current(); }, []);
+  const erase = (px, py, rad) => { const x = ref.current.getContext('2d'); x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.arc(px, py, rad, 0, 7); x.fill(); };
   const scratch = (e) => {
     if (!down.current || gone) return;
-    const cv = ref.current, r = cv.getBoundingClientRect(), x = cv.getContext('2d');
-    const px = ((e.clientX - r.left) / r.width) * cv.width, py = ((e.clientY - r.top) / r.height) * cv.height;
-    x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.arc(px, py, cv.width * 0.075, 0, 7); x.fill();
+    const cv = ref.current, r = cv.getBoundingClientRect();
+    erase(((e.clientX - r.left) / r.width) * cv.width, ((e.clientY - r.top) / r.height) * cv.height, cv.width * 0.075);
   };
   const check = () => {
-    down.current = false;
+    down.current = false; onTouch && onTouch(false);
     const cv = ref.current; if (!cv || gone) return;
     const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let n = 0, t = 0;
     for (let i = 3; i < d.length; i += 160) { t++; if (d[i] < 40) n++; }
-    if (n / t > 0.42) { setGone(true); onReveal && onReveal(); }
+    if (n / t > 0.42) reveal();
   };
+
+  // nobody scratched? a golden coin sweeps across by itself
+  useEffect(() => {
+    if (!auto || gone || !ref.current) return undefined;
+    const cv = ref.current, W = cv.width, H = cv.height, T = 1700, t0 = performance.now(); let raf;
+    const tick = (now) => {
+      const k = Math.min(1, (now - t0) / T), rows = 4, pos = k * rows, row = Math.floor(Math.min(pos, rows - 0.001)), f = pos - row;
+      const px = (row % 2 ? 1 - f : f) * W, py = ((row + 0.5) / rows) * H;
+      erase(px, py, W * 0.09);
+      if (coin.current) { coin.current.style.opacity = 1; coin.current.style.transform = `translate(${(px / W) * cv.clientWidth - 18}px, ${(py / H) * cv.clientHeight - 18}px)`; }
+      if (k < 1) raf = requestAnimationFrame(tick); else { if (coin.current) coin.current.style.opacity = 0; reveal(); }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [auto, gone, reveal]);
+
   return (
-    <div className="iv-scratch">
-      {children}
-      <canvas ref={ref} className={gone ? 'gone' : ''} onPointerDown={(e) => { down.current = true; e.currentTarget.setPointerCapture(e.pointerId); scratch(e); }} onPointerMove={scratch} onPointerUp={check} onPointerCancel={check} />
+    <div className="iv-scratch-wrap">
+      <div className={'iv-scratch' + (gone ? ' won' : '')}>
+        {children}
+        <canvas ref={ref} className={gone ? 'gone' : ''} onPointerDown={(e) => { down.current = true; touched.current = true; onTouch && onTouch(true); e.currentTarget.setPointerCapture(e.pointerId); scratch(e); }} onPointerMove={scratch} onPointerUp={check} onPointerCancel={check} />
+        <div ref={coin} className="iv-coin" aria-hidden />
+      </div>
+      {gone && <div className="iv-petals" aria-hidden>{Array.from({ length: 16 }).map((_, i) => <i key={i} style={{ left: (i * 37) % 100 + '%', animationDelay: (i % 8) * 0.12 + 's', background: ['#f4b7b0', '#f2c874', '#fff3d6', '#eea6a3'][i % 4] }} />)}</div>}
     </div>
   );
 }
@@ -392,9 +438,16 @@ export default function InviteFilm() {
   const [revealed, setRevealed] = useState(false);
   const [active, setActive] = useState(0);
   const cd = useCountdown(siteConfig.wedding.countdownTo);
-  const events = siteConfig.events.events;
+  const events = sortedEvents();                 // only the functions this guest is invited to
+  const [paused, setPaused] = useState(false);
+  const [prog, setProg] = useState(0);
+  const [autoScratch, setAutoScratch] = useState(false);
+  const elapsed = useRef(0);
+  const dur = useRef(10000);
+  const touching = useRef(false);
   const rsvpOn = !!siteConfig.features?.rsvp?.enabled;
   const total = 5 + events.length;
+  const DATE_I = 1, LAST = total - 1;
 
   const mark = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* ignore */ } };
   const leave = useCallback((to) => { mark(); if (audio.current) audio.current.pause(); nav(to); window.scrollTo(0, 0); }, [nav]);
@@ -426,8 +479,34 @@ export default function InviteFilm() {
     const a = audio.current; if (!a) return;
     if (musicOn) { a.pause(); setMusicOn(false); } else a.play().then(() => setMusicOn(true)).catch(() => {});
   };
-  const replay = () => { root.current.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const next = () => root.current.scrollBy({ top: root.current.clientHeight, behavior: 'smooth' });
+  const replay = () => { setAutoScratch(false); root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }); };
+  const next = useCallback(() => { if (root.current) root.current.scrollBy({ top: root.current.clientHeight, behavior: 'smooth' }); }, []);
+
+  // ---- plays by itself: each page stays for the time it takes to read it ----
+  useEffect(() => {
+    elapsed.current = 0; setProg(0);
+    if (!opened || !root.current) return;
+    if (active === DATE_I) { dur.current = 12600; return; }       // 6 s to scratch + 1.6 s reveal + 5 s to see the date
+    const sec = root.current.querySelector(`.iv-sec[data-i="${active}"]`);
+    const words = sec ? sec.innerText.split(/\s+/).filter(Boolean).length : 30;
+    dur.current = Math.min(16000, Math.max(7000, 3500 + words * 270)); // ~220 words a minute + 2 s to look + animations
+  }, [active, opened, DATE_I]);
+  useEffect(() => { if (revealed && active === DATE_I) elapsed.current = Math.max(elapsed.current, 7600); }, [revealed, active, DATE_I]);
+  useEffect(() => {
+    if (!opened) return undefined;
+    const id = setInterval(() => {
+      if (paused || document.hidden || active === 0 || active >= LAST) return;
+      if (active === DATE_I && !revealed) {
+        if (touching.current) return;
+        elapsed.current = Math.min(elapsed.current + 100, 6000);
+        if (elapsed.current >= 6000) setAutoScratch(true);
+        setProg(elapsed.current / dur.current); return;
+      }
+      elapsed.current += 100; setProg(Math.min(1, elapsed.current / dur.current));
+      if (elapsed.current >= dur.current) { elapsed.current = -100000; next(); }
+    }, 100);
+    return () => clearInterval(id);
+  }, [opened, paused, active, revealed, LAST, DATE_I, next]);
 
   const names = siteConfig.couple;
   let idx = 0;
@@ -435,8 +514,15 @@ export default function InviteFilm() {
   return (
     <div className="iv" ref={root} role="dialog" aria-label="Wedding invitation">
       <button className="iv-skip" onClick={() => leave('/')}>Skip <span>· go to website</span></button>
-      {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊 Music on' : '🔈 Play music'}</button>}
-      {opened && <div className="iv-dots" aria-hidden>{Array.from({ length: total }).map((_, i) => <i key={i} className={i === active ? 'on' : ''} />)}</div>}
+      <div className="iv-ctrl">
+        {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
+        {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊 Music' : '🔈 Music'}</button>}
+      </div>
+      {opened && active > 0 && (
+        <div className="iv-prog" aria-hidden>
+          {Array.from({ length: LAST }).map((_, k) => { const i = k + 1; const f = i < active ? 1 : i === active ? (i === LAST ? 1 : prog) : 0; return <i key={i}><b style={{ width: (f * 100) + '%' }} /></i>; })}
+        </div>
+      )}
 
       {/* 1. cover */}
       <section className="iv-sec iv-night in" data-i={idx++}>
@@ -460,14 +546,14 @@ export default function InviteFilm() {
             <p className="iv-small dark rv">Save the date</p>
             <h2 className="iv-h rv" style={{ '--d': '.2s' }}>Scratch to reveal the countdown to forever</h2>
             <div className="rv" style={{ '--d': '.4s' }}>
-              <Scratch onReveal={() => setRevealed(true)}>
+              <Scratch onReveal={() => setRevealed(true)} auto={autoScratch} onTouch={(v) => { touching.current = v; }}>
                 <div className="iv-date"><b>2 December</b><span>2026 · Wednesday</span></div>
               </Scratch>
             </div>
             <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.6s' }}>
               {[['days', cd[0]], ['hrs', cd[1]], ['min', cd[2]], ['sec', cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
-            <p className="iv-small dark rv" style={{ '--d': '.8s' }}>{revealed ? 'Counting down to forever 🎉' : 'Use your finger to scratch ☝'}</p>
+            <p className="iv-small dark rv" style={{ '--d': '.8s' }}>{revealed ? 'Counting down to forever' : 'Use your finger to scratch ☝'}</p>
           </div>
         </section>
 
@@ -495,7 +581,7 @@ export default function InviteFilm() {
               {/sangeet/i.test(ev.name) && <SangeetBG />}
               {/shaadi|varmala/i.test(ev.name) && <MandapBG />}
               <div className="iv-in">
-                <p className="iv-small rv">Function {k + 1} of {events.length}</p>
+                <p className="iv-small rv">{events.length > 1 ? `Function ${k + 1} of ${events.length}` : 'The Wedding'}</p>
                 <div className="iv-card rv" style={{ '--d': '.15s' }}>
                   <div className="iv-orn" aria-hidden>❖</div>
                   <h2>{ev.name}</h2>

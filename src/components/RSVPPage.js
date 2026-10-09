@@ -3,6 +3,7 @@ import siteConfig from '../siteConfig';
 import { Card, Button, Field, Notice, PageHeader } from './ui';
 import { submitRsvp, backendReady, NOT_READY_MESSAGE } from '../api';
 import { sortedEvents, loadSaved, save } from '../utils';
+import { isFullTier, getTier } from '../tier';
 
 const SAVE_KEY = 'wedding_rsvp_v2';
 
@@ -38,6 +39,7 @@ export default function RSVPPage() {
   const [done, setDone] = useState(null); // null | 'new' | 'updated'
   const [error, setError] = useState('');
   const events = sortedEvents();
+  const full = isFullTier();
 
   const set = (field, value) => setForm((f) => ({ ...f, [field]: value }));
   const toggleEvent = (name) => set('eventsAttending', form.eventsAttending.includes(name) ? form.eventsAttending.filter((n) => n !== name) : [...form.eventsAttending, name]);
@@ -47,10 +49,14 @@ export default function RSVPPage() {
     setError('');
     if (!form.contactName.trim()) { setError('Please enter your name.'); return; }
     if (form.phone.replace(/\D/g, '').length < 10) { setError('Please enter a valid 10-digit mobile number.'); return; }
-    if (form.attending === 'yes' && form.eventsAttending.length === 0) { setError('Please choose at least one celebration you will attend.'); return; }
+    if (full && form.attending === 'yes' && form.eventsAttending.length === 0) { setError('Please choose at least one celebration you will attend.'); return; }
     setLoading(true);
     try {
-      const result = await submitRsvp(form);
+      const payload = full ? form : {
+        ...form, eventsAttending: events.map((ev) => ev.name),
+        arrivalDate: '', arrivalTime: '', departureDate: '', departureTime: '', accommodation: 'no', nights: '', cab: 'no', pickupLocation: '',
+      };
+      const result = await submitRsvp({ ...payload, inviteType: getTier() });
       save(SAVE_KEY, form);
       setDone(result.updated ? 'updated' : 'new');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -67,7 +73,7 @@ export default function RSVPPage() {
   return (
     <main className="page">
       <div className="wrap-narrow">
-        <PageHeader eyebrow="Help us welcome you" title={cfg.title} subtitle={cfg.subtitle} />
+        <PageHeader eyebrow="Help us welcome you" title={cfg.title} subtitle={full ? cfg.subtitle : (cfg.weddingSubtitle || cfg.subtitle)} />
 
         {!backendReady() && <div className="mb-5"><Notice kind="info">{NOT_READY_MESSAGE}</Notice></div>}
 
@@ -116,6 +122,19 @@ export default function RSVPPage() {
                     </Field>
                   </section>
 
+                  {!full && (
+                    <section className="grid gap-2">
+                      <h2 className="form-title">Your invitation</h2>
+                      {events.map((ev) => (
+                        <div key={ev.id} className="choice choice-on" style={{ cursor: 'default' }}>
+                          <span style={{ fontSize: '1.05rem' }}>✓ {ev.name}</span>
+                          <span className="block" style={{ fontSize: '.85rem', fontWeight: 500, opacity: .85 }}>{ev.date.split('-').reverse().join('/')} · {ev.time}</span>
+                        </div>
+                      ))}
+                    </section>
+                  )}
+
+                  {full && (<>
                   <section className="grid gap-3">
                     <h2 className="form-title">Which celebrations will you attend?</h2>
                     <p className="hint" style={{ margin: 0 }}>Tap to select or unselect. This helps us plan food and seating.</p>
@@ -150,6 +169,8 @@ export default function RSVPPage() {
                       <Field label="Pickup / drop place"><input className="input" value={form.pickupLocation} onChange={(e) => set('pickupLocation', e.target.value)} placeholder="Airport / railway station / other" /></Field>
                     </div>
                   </section>
+
+                  </>)}
 
                   <section className="grid gap-4">
                     <h2 className="form-title">Food &amp; anything else</h2>

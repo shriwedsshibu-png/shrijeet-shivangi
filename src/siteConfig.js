@@ -26,6 +26,33 @@ const siteConfig = {
   inviteFilm: { enabled: true, firstVisitOnly: false, homeButton: false },
 
   // --------------------------------------------------------------------------
+  // 1c. TWO KINDS OF GUESTS — two invite links, one website
+  //     3-day guests get:        yoursite/invite/parivaar
+  //     Wedding-day guests get:  yoursite/invite/shubh-vivah
+  //     The site remembers which link a guest opened. Anyone who opens the
+  //     plain website without a link sees the wedding-day version ("defaultTier").
+  //     You can change the words after /invite/ below (letters, numbers, dashes).
+  // --------------------------------------------------------------------------
+  guestTiers: {
+    defaultTier: "wedding",
+    full: {
+      code: "parivaar",
+      label: "3-day",
+      events: "all",                       // every function
+      dateLine: "30 Nov – 2 Dec 2026",
+      hidePages: [],
+    },
+    wedding: {
+      code: "shubh-vivah",
+      label: "Wedding day",
+      events: ["Varmala & Shaadi"],        // only these functions are shown
+      dateLine: "Wednesday, 2 December 2026",
+      hidePages: ["travel"],               // pages hidden from the menu for these guests
+      eventsSubtitle: "Join us by the sea for the Varmala and the sacred pheras.",
+    },
+  },
+
+  // --------------------------------------------------------------------------
   // 2. SHOW / HIDE PAGES
   //    enabled: true  -> page and its buttons are visible to everyone
   //    enabled: false -> page and every button/link to it disappears
@@ -134,6 +161,8 @@ const siteConfig = {
   rsvp: {
     title: "Kindly Confirm Your Presence",
     subtitle: "A few details will help us welcome you warmly with meals, rooms and cabs ready. You can come back and change your answer anytime — just use the same mobile number.",
+    // shown to wedding-day guests (their form is short: name, number, how many, food)
+    weddingSubtitle: "A few quick details help us plan your seat and meal. You can change your answer anytime — just use the same mobile number.",
   },
 
   // --------------------------------------------------------------------------
@@ -370,9 +399,13 @@ And here's to all the journeys still waiting for us.`,
     title: "Good to Know",
     subtitle: "Answers to the questions guests ask us most.",
     questions: [
-      { title: "Where will the celebrations happen?", content: "All functions are at Aarif Seaside Resort, Visakhapatnam. The Events page has a map button for each one." },
-      { title: "What should I wear?", content: "The dress idea for every function is written on the Events page. Comfortable traditional clothes are perfect." },
-      { title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form. Tell us who is coming, when you arrive and leave, and whether you need a room or a cab." },
+      // tier: "full" = only 3-day guests see it, tier: "wedding" = only wedding-day guests, no tier = everyone
+      { tier: "full", title: "Where will the celebrations happen?", content: "All functions are at Aarif Seaside Resort, Visakhapatnam. The Events page has a map button for each one." },
+      { tier: "wedding", title: "Where is the wedding?", content: "At Aarif Seaside Resort, Visakhapatnam, on Wednesday 2 December 2026 from 7:30 PM. The Events page has a map button." },
+      { tier: "full", title: "What should I wear?", content: "The dress idea for every function is written on the Events page. Comfortable traditional clothes are perfect." },
+      { tier: "wedding", title: "What should I wear?", content: "Traditional Indian wear is perfect for the evening." },
+      { tier: "full", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form. Tell us who is coming, when you arrive and leave, and whether you need a room or a cab." },
+      { tier: "wedding", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number and how many of you are coming. It takes less than a minute." },
       { title: "I need to change my RSVP. What do I do?", content: "No problem. Fill the RSVP form again with the same mobile number. Your new answer replaces the old one." },
       { title: "How do I share my photos?", content: "Scan the wedding QR code or open the Photos page, choose the celebration, and add your photos. No login and no caption needed." },
       { title: "How can I find photos of myself?", content: "On the Photos page, open the Gallery and tap 'Find my photos'. Take a quick selfie and we will show the photos you are in. Your selfie stays on your phone and is never saved." },
@@ -391,7 +424,7 @@ And here's to all the journeys still waiting for us.`,
 
   app: {
     name: "Shrijeet & Shivangi — Wedding",
-    description: "The wedding invitation of Shrijeet & Shivangi — Visakhapatnam, 30 November to 2 December 2026.",
+    description: "The wedding invitation of Shrijeet & Shivangi — Visakhapatnam, 2 December 2026.",
   },
 };
 

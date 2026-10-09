@@ -1,4 +1,5 @@
 import siteConfig from './siteConfig';
+import { eventAllowed, pageHidden } from './tier';
 
 const IST = 'Asia/Kolkata';
 
@@ -18,8 +19,9 @@ export function eventStart(event) {
   return new Date(`${event.date}T${two(h)}:${two(m)}:00+05:30`);
 }
 
-export function sortedEvents() {
-  return [...(siteConfig.events?.events || [])].sort((a, b) => eventStart(a) - eventStart(b));
+// Events this guest is invited to (all of them for 3-day guests). Pass true to get every event.
+export function sortedEvents(everyone = false) {
+  return [...(siteConfig.events?.events || [])].filter((e) => everyone || eventAllowed(e.name)).sort((a, b) => eventStart(a) - eventStart(b));
 }
 
 export function formatLongDate(dateStr) {
@@ -58,7 +60,7 @@ export function calendarLink(event) {
 
 // Which celebration is "on now"? Used to pre-select the photo upload menu.
 export function currentEventName(now = new Date()) {
-  const list = sortedEvents();
+  const list = sortedEvents(true);
   let pick = '';
   list.forEach((e) => {
     const s = eventStart(e).getTime();
@@ -112,5 +114,5 @@ export async function copyText(text) {
 }
 
 export function isFeatureOn(key) {
-  return !!siteConfig.features?.[key]?.enabled;
+  return !!siteConfig.features?.[key]?.enabled && !pageHidden(key);
 }

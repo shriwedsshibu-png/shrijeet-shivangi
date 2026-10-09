@@ -65,3 +65,14 @@ Do these on 2 different phones (one Android, one iPhone if possible):
 - **Face search** only covers photos guests upload on this website (not the photographer's). It runs on the guest's phone; the selfie is never uploaded. It is very good but not perfect — relatives who look alike may sometimes mix.
 - The first time someone uses face features their phone downloads ~12 MB once, so on slow networks it can take a few seconds.
 - If Vercel ever shows a red **Error**, your old site stays live. Send me a screenshot of the error.
+
+## Two invite links (3-day guests and wedding-day guests)
+
+- **3-day guests:** send `https://shibugotjeetuu2bethere.vercel.app/invite/parivaar`
+- **Wedding-day guests:** send `https://shibugotjeetuu2bethere.vercel.app/invite/shubh-vivah`
+- The website remembers which link a guest opened. Wedding-day guests only see the Varmala & Shaadi (invitation film, home page, Events, RSVP) and do not see the Explore Vizag page. Their RSVP form is short (name, number, how many, food).
+- Anyone opening the plain website without a link sees the wedding-day version.
+- Photos, Blessings, Our Story and Our Families are the same for everyone, so the photo QR card works for both.
+- The RSVP tab in the Google Sheet has an **Invite Type** column (3-day / Wedding day). Filter on it for headcounts.
+- To change the link words, edit `code:` under `guestTiers` in `src/siteConfig.js` **and** the two matching lines in `vercel.json` (they give each link its own WhatsApp preview text).
+- To change which functions wedding-day guests see, edit `events:` under `wedding` in `guestTiers`, and the `WEDDING_DAY_EVENTS` line at the top of `google-backend/Code.gs`.

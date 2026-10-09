@@ -18,13 +18,16 @@ var MAX_PHOTO_BASE64 = 14 * 1024 * 1024;   // ~10 MB photo after base64
 var MAX_FACES_PER_PHOTO = 25;
 
 
+// Functions a wedding-day guest may RSVP for (must match the event names in siteConfig.js)
+var WEDDING_DAY_EVENTS = ['Varmala & Shaadi'];
+
 var TABS = {
   RSVP: [
     'Last Updated', 'First Submitted', 'Main Guest', 'Phone', 'Attending',
     'Adults', 'Children', 'Guest Names', 'Functions Attending',
     'Arrival Date', 'Arrival Time', 'Departure Date', 'Departure Time',
     'Accommodation', 'Nights', 'Cab / Transport', 'Pickup / Drop',
-    'Food Preference', 'Other Requirements', 'Times Updated'
+    'Food Preference', 'Other Requirements', 'Times Updated', 'Invite Type'
   ],
   Blessings: ['Last Updated', 'First Submitted', 'Name', 'Blessing', 'Times Edited', 'Device ID'],
   Photos: ['Uploaded At', 'File ID', 'Celebration', 'File Name', 'Faces Found'],
@@ -88,9 +91,14 @@ function handleRsvp_(b) {
   if (!name) return { success: false, message: 'Please enter your name.' };
   if (phoneKey.length < 10) return { success: false, message: 'Please enter a valid 10-digit mobile number.' };
 
-  var events = Array.isArray(b.eventsAttending)
-    ? b.eventsAttending.map(function (x) { return clean_(x, 80); }).filter(String).join(' | ')
-    : '';
+  // Wedding-day guests (from the /invite/shubh-vivah link) can only RSVP for the wedding itself.
+  var tier = String(b.inviteType) === 'full' ? 'full' : 'wedding';
+  var list = Array.isArray(b.eventsAttending) ? b.eventsAttending.map(function (x) { return clean_(x, 80); }).filter(String) : [];
+  if (tier === 'wedding') {
+    list = list.filter(function (x) { return WEDDING_DAY_EVENTS.indexOf(x) >= 0; });
+    if (!list.length) list = WEDDING_DAY_EVENTS.slice();
+  }
+  var events = list.join(' | ');
   var attending = String(b.attending) === 'no' ? 'No' : 'Yes';
   var now = new Date();
 
@@ -99,6 +107,7 @@ function handleRsvp_(b) {
   lock.waitLock(25000);
   try {
     var sheet = getTab_('RSVP');
+    ensureHeader_(sheet, 'RSVP');
     var n = TABS.RSVP.length;
     var row = findRow_(sheet, 4, phoneKey, function (v) { return phoneKey_(v); });
 
@@ -114,10 +123,15 @@ function handleRsvp_(b) {
       clean_(b.arrivalDate, 20), clean_(b.arrivalTime, 20),
       clean_(b.departureDate, 20), clean_(b.departureTime, 20),
       yesNo_(b.accommodation), num_(b.nights), yesNo_(b.cab), clean_(b.pickupLocation, 200),
-      clean_(b.foodPreference, 80), clean_(b.notes, 1000), times
+      clean_(b.foodPreference, 80), clean_(b.notes, 1000), times,
+      tier === 'full' ? '3-day' : 'Wedding day'
     ];
     if (attending === 'No') {   // a "cannot come" answer clears the travel details
       for (var i = 5; i < 19; i++) values[i] = '';
+    }
+    if (row) {   // someone already invited for 3 days keeps that, even if they later use the other link
+      var oldType = String(sheet.getRange(row, 21).getValue() || '');
+      if (oldType === '3-day') values[20] = '3-day';
     }
     if (!row) {
       sheet.appendRow(values);
@@ -128,7 +142,7 @@ function handleRsvp_(b) {
     sheet.getRange(row, 4).setNumberFormat('@').setValue(phoneKey);
     note = [(times > 1 ? 'RSVP updated: ' : 'New RSVP: ') + name + (attending === 'No' ? ' (cannot come)' : ''),
       name + ' | ' + phoneKey + ' | ' + (attending === 'No' ? 'Cannot attend' : 'Attending') +
-      (attending === 'Yes' ? '\nAdults: ' + num_(b.adults) + '  Children: ' + num_(b.children) + '\nFunctions: ' + events : '')];
+      '\nInvite: ' + (tier === 'full' ? '3-day' : 'Wedding day') + (attending === 'Yes' ? '\nAdults: ' + num_(b.adults) + '  Children: ' + num_(b.children) + '\nFunctions: ' + events : '')];
     return { success: true, updated: times > 1, message: times > 1 ? 'RSVP updated.' : 'RSVP saved.' };
   } finally {
     lock.releaseLock();
@@ -244,6 +258,12 @@ function listFaces_() {
 /* ------------------------------------------------------------------ */
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// Adds any missing header cells (e.g. the new 'Invite Type' column) to an existing tab.
+function ensureHeader_(sheet, name) {
+  var want = TABS[name], have = sheet.getRange(1, 1, 1, want.length).getValues()[0];
+  for (var i = 0; i < want.length; i++) if (!String(have[i] || '')) sheet.getRange(1, i + 1).setValue(want[i]).setFontWeight('bold');
 }
 
 function getTab_(name) {

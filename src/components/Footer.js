@@ -1,5 +1,6 @@
 import React from 'react';
 import siteConfig from '../siteConfig';
+import { dateLine } from '../tier';
 
 const gold = '#e7cf98';
 
@@ -11,7 +12,7 @@ export default function Footer() {
 
       <div className="mt-3 flex flex-col items-center gap-3 md:flex-row md:justify-between md:gap-6 max-w-3xl mx-auto">
         <span className="hidden md:block font-bold" style={{ color: gold, fontSize: '1.15rem', flex: 1, textAlign: 'left' }}>{f.hashtagLeft}</span>
-        <p className="script" style={{ fontSize: '2.7rem', color: '#ffe2a3', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+        <p className="script" style={{ fontSize: 'clamp(2rem, 10vw, 2.7rem)', color: '#ffe2a3', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
           {f.bondLeft}
           <span style={{ fontFamily: 'Georgia, "DejaVu Serif", serif', fontSize: '.85em', margin: '0 .35em', color: gold }} aria-label="and forever">∞</span>
           {f.bondRight}
@@ -25,7 +26,7 @@ export default function Footer() {
       </div>
 
       <p className="font-display italic mt-4" style={{ fontSize: '1.2rem' }}>“{f.tagline}”</p>
-      <p className="text-sm mt-3" style={{ opacity: .75 }}>{siteConfig.wedding.dateLine} · {siteConfig.wedding.city}</p>
+      <p className="text-sm mt-3" style={{ opacity: .75 }}>{dateLine()} · {siteConfig.wedding.city}</p>
     </footer>
   );
 }

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import siteConfig from '../siteConfig';
 import { Card, PageHeader } from './ui';
 import Icon from '../icons';
+import { getTier } from '../tier';
 
 export default function FAQ() {
-  const { title, subtitle, questions } = siteConfig.faq;
+  const { title, subtitle } = siteConfig.faq;
+  const questions = siteConfig.faq.questions.filter((q) => !q.tier || q.tier === getTier());
   const [open, setOpen] = useState(0);
   return (
     <main className="page">
