@@ -373,12 +373,12 @@ And here's to all the journeys still waiting for us.`,
       { name: "Shailendra Kumar", relation: "Papa" },
       { name: "Anju Kumari", relation: "Mummy" },
       { name: "Gyanendra Saurav", relation: "Bhai" },
-      { name: "Satyandra Kumar", relation: "Chacha Ji" }
-      { name: "Bharti Devi", relation: "Chachi Ji" }
-      { name: "Sangita Kumari", relation: "Didi" }
-      { name: "Sudhanshu Shekhar", relation: "Jiju" }
-      { name: "Neha Kumari", relation: "Cousin" }
-      { name: "Kishan Kumar", relation: "Cousin" }
+      { name: "Satyandra Kumar", relation: "Chacha Ji" },
+      { name: "Bharti Devi", relation: "Chachi Ji" },
+      { name: "Sangita Kumari", relation: "Didi" },
+      { name: "Sudhanshu Shekhar", relation: "Jiju" },
+      { name: "Neha Kumari", relation: "Cousin" },
+      { name: "Kishan Kumar", relation: "Cousin" },
       { name: "Sarika Priya", relation: "Cousin" }
     ],
   },
