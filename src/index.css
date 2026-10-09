@@ -446,3 +446,61 @@
 @media(min-width:640px){.hero-btns{flex-direction:row;justify-content:center}}
 @media(min-width:1024px){.hero.hero-night{min-height:100svh}}
 @media(max-height:700px) and (max-width:1023px){.hero-night .arch{--ah:15.5svh}.hero.hero-night{padding-bottom:4.5svh}.hero-night .hero-btns .btn{min-height:2.1rem}}
+
+/* ===== Invite choreography: lines come into focus one after another, names write themselves,
+   short lines type out, dividers grow, and each page's words drift away just before it turns ===== */
+.iv .rv{opacity:0;filter:blur(8px);transform:translateY(12px);transition:opacity 1.1s ease var(--d,0s),transform 1.2s cubic-bezier(.2,.7,.2,1) var(--d,0s),filter 1.1s ease var(--d,0s)}
+.iv .in .rv{opacity:1;filter:blur(0);transform:none}
+/* handwriting: a soft edge sweeps left to right */
+.iv .rv.wr{opacity:1;filter:none;transform:none;-webkit-mask-image:linear-gradient(90deg,#000 38%,transparent 62%);mask-image:linear-gradient(90deg,#000 38%,transparent 62%);-webkit-mask-size:270% 100%;mask-size:270% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:100% 0;mask-position:100% 0;transition:-webkit-mask-position 2s cubic-bezier(.45,.05,.35,1) var(--d,0s),mask-position 2s cubic-bezier(.45,.05,.35,1) var(--d,0s)}
+.iv .in .rv.wr{-webkit-mask-position:0 0;mask-position:0 0}
+/* typewriter */
+.iv .tw>span{opacity:0;transition:opacity .12s linear calc(var(--d,0s) + var(--i,0) * 48ms)}
+.iv .in .tw>span{opacity:1}
+/* dividers and ruled lines grow out from the centre */
+.iv .rv.grow{opacity:1;filter:none;transform:scaleX(0);transition:transform 1.3s cubic-bezier(.3,.7,.2,1) var(--d,0s)}
+.iv .in .rv.grow{transform:none}
+/* exit: words lift and blur away before the page turns by itself */
+.iv .iv-sec .iv-in{transition:opacity .8s ease,filter .8s ease,transform .8s ease}
+.iv .iv-sec.out .iv-in,.iv .iv-cov2.leaving .iv-in{opacity:0;filter:blur(6px);transform:translateY(-16px)}
+.iv .iv-cov2.leaving .iv-in{transition-duration:.5s}
+/* opening: the painted arch parts down the middle like two doors */
+.iv-doors{position:fixed;inset:0;z-index:10001;perspective:1500px;pointer-events:none}
+.iv-door{position:absolute;top:0;bottom:0;width:50%;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;transition:transform 1.75s cubic-bezier(.6,.03,.28,1),filter 1.75s ease;will-change:transform}
+.iv-door.l{left:0;transform-origin:0 50%;box-shadow:inset -10px 0 18px -12px rgba(120,90,40,.45)}
+.iv-door.r{right:0;transform-origin:100% 50%;box-shadow:inset 10px 0 18px -12px rgba(120,90,40,.45)}
+.iv-door .iv-paint{position:absolute;top:0;bottom:0;width:200%;left:0;inset:0 auto 0 0}
+.iv-door.r .iv-paint{left:-100%}
+.iv-doors::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:linear-gradient(180deg,transparent,#fff3cf 30%,#f1d68e 70%,transparent);box-shadow:0 0 22px 7px rgba(241,214,142,.55);opacity:0;transition:opacity .35s ease}
+.iv-doors.glow::after{opacity:1}
+.iv-doors.open::after{opacity:0;transition-delay:.25s}
+.iv-doors.open .iv-door{filter:brightness(.82)}
+.iv-doors.open .iv-door.l{transform:rotateY(-106deg)}
+.iv-doors.open .iv-door.r{transform:rotateY(106deg)}
+@media(prefers-reduced-motion:reduce){.iv .rv,.iv .rv.wr,.iv .rv.grow,.iv .tw>span{transition:none!important;opacity:1!important;filter:none!important;transform:none!important;-webkit-mask-image:none!important;mask-image:none!important}.iv .iv-sec.out .iv-in{opacity:1;filter:none;transform:none}}
+
+/* ===== Home hero, take 3: the invite's carved arch (bells, garlands, pillars, roses, diyas)
+   opening onto a twinkling night sky; everything sits inside the arch on one phone screen ===== */
+.hero.hero-night{--H:calc(var(--svh100) - var(--nav-h) - env(safe-area-inset-bottom));padding:calc(var(--H) * .225) 1.6rem calc(var(--H) * .118);background-position:50% 30%}
+.hero.hero-night::before{display:none}
+.hero-stars{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-stars i{position:absolute;border-radius:50%;background:#fff6dc;box-shadow:0 0 6px 1px rgba(255,240,200,.7);opacity:.3;animation:herotwk 3.4s ease-in-out infinite}
+@keyframes herotwk{0%,100%{opacity:.2;transform:scale(.6)}50%{opacity:1;transform:scale(1.15)}}
+.hero-frame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:1;pointer-events:none;user-select:none}
+.hero-night .hero-in{position:relative;z-index:2}
+@media(min-aspect-ratio:3/5) and (max-width:1023px){.hero-frame{object-fit:fill}}
+@media(min-width:640px){.hero-frame{object-fit:contain}}
+.hero-night .hero-inv{font-size:clamp(.7rem,calc(var(--H) * .019),1rem);margin:0 0 calc(var(--H) * .008)}
+.hero-night .arch{--ah:clamp(5rem,calc(var(--H) * .15),12.5rem);margin:0 auto calc(var(--H) * .012)}
+.hero-night .hero-text{font-size:clamp(.78rem,calc(var(--H) * .0215),1.12rem);line-height:1.3;max-width:19rem}
+.hero-night .hero-names{font-size:min(9.6vw,calc(var(--H) * .052),3.8rem);margin-top:calc(var(--H) * .004)}
+.hero-night .hero-date{margin-top:calc(var(--H) * .012);padding:calc(var(--H) * .006) 1.1rem}
+.hero-night .hero-date1{font-size:clamp(.95rem,calc(var(--H) * .026),1.4rem)}
+.hero-night .hero-date2{font-size:clamp(.62rem,calc(var(--H) * .016),.95rem)}
+.hero-night .hero-wel{font-size:clamp(.74rem,calc(var(--H) * .019),1rem);margin-top:calc(var(--H) * .008)}
+.hero-night .hero-btns{gap:calc(var(--H) * .01);margin-top:calc(var(--H) * .014)}
+.hero-night .hero-btns .btn{min-height:clamp(2.05rem,calc(var(--H) * .054),2.9rem);font-size:clamp(.72rem,calc(var(--H) * .018),.95rem);width:min(100%,14.5rem);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.hero-night .hero-text2{max-width:min(16.5rem,74vw)}
+.hero-night .hero-btns .btn{width:auto;min-width:min(100%,14.5rem);white-space:nowrap;padding:.2rem 1.4rem}
+@media(max-height:700px) and (max-width:1023px){.hero-night .hero-text2{max-width:13.6rem}}
+.hero-night .hero-btns{flex-direction:column;align-items:center}
