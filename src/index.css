@@ -299,3 +299,9 @@
 .iv-cd:not(.show){opacity:0!important}
 .iv-date b{font-size:clamp(1.8rem,8.5vw,2.3rem);white-space:nowrap}
 .iv-scratch-wrap{width:min(84vw,21rem)}
+
+/* painted (Canva) backgrounds */
+.iv-paint{position:absolute;inset:0;z-index:1;overflow:hidden}
+.iv-paint img{width:100%;height:100%;object-fit:cover;display:block}
+.iv-paint::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(251,247,238,.62),rgba(251,247,238,.15) 70%)}
+.iv-paint.dark::after{background:radial-gradient(ellipse at 50% 45%,rgba(20,24,48,.55),rgba(20,24,48,.1) 70%)}

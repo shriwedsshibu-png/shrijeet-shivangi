@@ -47,7 +47,7 @@ const siteConfig = {
       label: "Wedding day",
       events: ["Varmala & Shaadi"],        // only these functions are shown
       dateLine: "Wednesday, 2 December 2026",
-      hidePages: ["travel"],               // pages hidden from the menu for these guests
+      hidePages: [],                       // pages hidden from the menu for these guests (e.g. ["travel"])
       eventsSubtitle: "Join us by the sea for the Varmala and the sacred pheras.",
     },
   },
@@ -63,7 +63,7 @@ const siteConfig = {
     rsvp:      { enabled: true, label: "RSVP" },
     photos:    { enabled: true, label: "Photos" },
     blessings: { enabled: true, label: "Blessings" },
-    ourStory:  { enabled: true, label: "Our Story" },
+    ourStory:  { enabled: false, label: "Our Story" },
     families:  { enabled: true, label: "Our Families" },
     invite:    { enabled: true, label: "Our Invitation" },
     travel:    { enabled: true, label: "Explore Vizag" },
@@ -160,9 +160,9 @@ const siteConfig = {
   // --------------------------------------------------------------------------
   rsvp: {
     title: "Kindly Confirm Your Presence",
-    subtitle: "A few details will help us welcome you warmly with meals, rooms and cabs ready. You can come back and change your answer anytime — just use the same mobile number.",
+    subtitle: "Just a few quick details — how many of you are coming, when you arrive and whether you need a room. You can change your answer anytime with the same mobile number.",
     // shown to wedding-day guests (their form is short: name, number, how many, food)
-    weddingSubtitle: "A few quick details help us plan your seat and meal. You can change your answer anytime — just use the same mobile number.",
+    weddingSubtitle: "Just a few quick details — how many of you are coming, when you arrive and whether you need a room. You can change your answer anytime with the same mobile number.",
   },
 
   // --------------------------------------------------------------------------
@@ -404,8 +404,8 @@ And here's to all the journeys still waiting for us.`,
       { tier: "wedding", title: "Where is the wedding?", content: "At Aarif Seaside Resort, Visakhapatnam, on Wednesday 2 December 2026 from 7:30 PM. The Events page has a map button." },
       { tier: "full", title: "What should I wear?", content: "The dress idea for every function is written on the Events page. Comfortable traditional clothes are perfect." },
       { tier: "wedding", title: "What should I wear?", content: "Traditional Indian wear is perfect for the evening." },
-      { tier: "full", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form. Tell us who is coming, when you arrive and leave, and whether you need a room or a cab." },
-      { tier: "wedding", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number and how many of you are coming. It takes less than a minute." },
+      { tier: "full", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming, when you arrive and whether you need a room." },
+      { tier: "wedding", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming, when you arrive and whether you need a room. It takes less than a minute." },
       { title: "I need to change my RSVP. What do I do?", content: "No problem. Fill the RSVP form again with the same mobile number. Your new answer replaces the old one." },
       { title: "How do I share my photos?", content: "Scan the wedding QR code or open the Photos page, choose the celebration, and add your photos. No login and no caption needed." },
       { title: "How can I find photos of myself?", content: "On the Photos page, open the Gallery and tap 'Find my photos'. Take a quick selfie and we will show the photos you are in. Your selfie stays on your phone and is never saved." },

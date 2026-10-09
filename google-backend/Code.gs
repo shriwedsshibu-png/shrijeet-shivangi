@@ -24,10 +24,8 @@ var WEDDING_DAY_EVENTS = ['Varmala & Shaadi'];
 var TABS = {
   RSVP: [
     'Last Updated', 'First Submitted', 'Main Guest', 'Phone', 'Attending',
-    'Adults', 'Children', 'Guest Names', 'Functions Attending',
-    'Arrival Date', 'Arrival Time', 'Departure Date', 'Departure Time',
-    'Accommodation', 'Nights', 'Cab / Transport', 'Pickup / Drop',
-    'Food Preference', 'Other Requirements', 'Times Updated', 'Invite Type'
+    'Men', 'Women', 'Children', 'Total Guests', 'Arrival Date', 'Needs Room',
+    'Anything Else', 'Invite Type', 'Functions', 'Times Updated'
   ],
   Blessings: ['Last Updated', 'First Submitted', 'Name', 'Blessing', 'Times Edited', 'Device ID'],
   Photos: ['Uploaded At', 'File ID', 'Celebration', 'File Name', 'Faces Found'],
@@ -40,7 +38,7 @@ var TABS = {
 function setup() {
   var ss = SpreadsheetApp.getActive();
   try { ss.setSpreadsheetTimeZone(TIMEZONE); } catch (e) {}
-  Object.keys(TABS).forEach(function (name) { getTab_(name); });
+  Object.keys(TABS).forEach(function (name) { if (name === 'RSVP') rsvpSheet_(); else getTab_(name); });
 
   var extra = ss.getSheetByName('Sheet1');
   if (extra && extra.getLastRow() === 0 && ss.getSheets().length > 1) {
@@ -98,56 +96,86 @@ function handleRsvp_(b) {
     list = list.filter(function (x) { return WEDDING_DAY_EVENTS.indexOf(x) >= 0; });
     if (!list.length) list = WEDDING_DAY_EVENTS.slice();
   }
-  var events = list.join(' | ');
   var attending = String(b.attending) === 'no' ? 'No' : 'Yes';
-  var now = new Date();
-
-  var note = null;
+  var men = num_(b.men), women = num_(b.women), kids = num_(b.children);
+  var now = new Date(), note = null;
   var lock = LockService.getScriptLock();
   lock.waitLock(25000);
   try {
-    var sheet = getTab_('RSVP');
-    ensureHeader_(sheet, 'RSVP');
+    var sheet = rsvpSheet_();
     var n = TABS.RSVP.length;
     var row = findRow_(sheet, 4, phoneKey, function (v) { return phoneKey_(v); });
-
-    var first = now, times = 1;
+    var first = now, times = 1, typeLabel = tier === 'full' ? '3-day' : 'Wedding day';
     if (row) {
       var old = sheet.getRange(row, 1, 1, n).getValues()[0];
       first = old[1] || now;
-      times = (Number(old[19]) || 1) + 1;
+      times = (Number(old[14]) || 1) + 1;
+      if (String(old[12]) === '3-day') typeLabel = '3-day';   // invited for 3 days stays 3-day
     }
+    var yes = attending === 'Yes';
     var values = [
       now, first, name, '', attending,
-      num_(b.adults), num_(b.children), clean_(b.guestNames, 600), events,
-      clean_(b.arrivalDate, 20), clean_(b.arrivalTime, 20),
-      clean_(b.departureDate, 20), clean_(b.departureTime, 20),
-      yesNo_(b.accommodation), num_(b.nights), yesNo_(b.cab), clean_(b.pickupLocation, 200),
-      clean_(b.foodPreference, 80), clean_(b.notes, 1000), times,
-      tier === 'full' ? '3-day' : 'Wedding day'
+      yes ? men : '', yes ? women : '', yes ? kids : '', yes ? men + women + kids : 0,
+      yes ? clean_(b.arrivalDate, 20) : '', yes ? yesNo_(b.accommodation) : '',
+      clean_(b.notes, 1000), typeLabel, yes ? list.join(' | ') : '', times
     ];
-    if (attending === 'No') {   // a "cannot come" answer clears the travel details
-      for (var i = 5; i < 19; i++) values[i] = '';
-    }
-    if (row) {   // someone already invited for 3 days keeps that, even if they later use the other link
-      var oldType = String(sheet.getRange(row, 21).getValue() || '');
-      if (oldType === '3-day') values[20] = '3-day';
-    }
-    if (!row) {
-      sheet.appendRow(values);
-      row = sheet.getLastRow();
-    } else {
-      sheet.getRange(row, 1, 1, n).setValues([values]);
-    }
+    if (!row) { sheet.appendRow(values); row = sheet.getLastRow(); }
+    else sheet.getRange(row, 1, 1, n).setValues([values]);
     sheet.getRange(row, 4).setNumberFormat('@').setValue(phoneKey);
-    note = [(times > 1 ? 'RSVP updated: ' : 'New RSVP: ') + name + (attending === 'No' ? ' (cannot come)' : ''),
-      name + ' | ' + phoneKey + ' | ' + (attending === 'No' ? 'Cannot attend' : 'Attending') +
-      '\nInvite: ' + (tier === 'full' ? '3-day' : 'Wedding day') + (attending === 'Yes' ? '\nAdults: ' + num_(b.adults) + '  Children: ' + num_(b.children) + '\nFunctions: ' + events : '')];
+    sheet.getRange(row, 10).setNumberFormat('@').setValue(values[9]);
+    note = [(times > 1 ? 'RSVP updated: ' : 'New RSVP: ') + name + (yes ? '' : ' (cannot come)'),
+      name + ' | ' + phoneKey + ' | ' + typeLabel + ' | ' + (yes ? 'Coming: ' + (men + women + kids) + ' (M ' + men + ', W ' + women + ', C ' + kids + ')\nArrival: ' + values[9] + '  Room: ' + values[10] : 'Cannot attend')];
     return { success: true, updated: times > 1, message: times > 1 ? 'RSVP updated.' : 'RSVP saved.' };
   } finally {
     lock.releaseLock();
     if (note) notify_(note[0], note[1]);
   }
+}
+
+// The RSVP tab in the new layout. An older tab with different columns is kept as "RSVP (old)".
+function rsvpSheet_() {
+  var ss = SpreadsheetApp.getActive(), sheet = ss.getSheetByName('RSVP');
+  if (sheet && String(sheet.getRange(1, 6).getValue()) !== 'Men') {
+    var nm = 'RSVP (old)', k = 2;
+    while (ss.getSheetByName(nm)) nm = 'RSVP (old ' + (k++) + ')';
+    sheet.setName(nm); sheet = null;
+  }
+  if (!sheet) { sheet = getTab_('RSVP'); sheet.getRange('J:J').setNumberFormat('@'); }
+  summarySheet_();
+  return sheet;
+}
+
+// "RSVP Summary" tab: live totals (formulas), split by invite type and by arrival date.
+function summarySheet_() {
+  var ss = SpreadsheetApp.getActive();
+  if (ss.getSheetByName('RSVP Summary')) return;
+  var sh = ss.insertSheet('RSVP Summary');
+  var C = "RSVP!E2:E,\"Yes\"";
+  var by = function (col, type) { return type ? '=SUMIFS(RSVP!' + col + '2:' + col + ',' + C + ',RSVP!M2:M,"' + type + '")' : '=SUMIFS(RSVP!' + col + '2:' + col + ',' + C + ')'; };
+  var cnt = function (type) { return type ? '=COUNTIFS(' + C + ',RSVP!M2:M,"' + type + '")' : '=COUNTIF(' + C + ')'; };
+  var room = function (type) { return type ? '=COUNTIFS(' + C + ',RSVP!K2:K,"Yes",RSVP!M2:M,"' + type + '")' : '=COUNTIFS(' + C + ',RSVP!K2:K,"Yes")'; };
+  var rows = [
+    ['WEDDING RSVP SUMMARY (updates by itself)', '3-day guests', 'Wedding-day guests', 'ALL'],
+    ['Families coming', cnt('3-day'), cnt('Wedding day'), cnt('')],
+    ['Total guests', by('I', '3-day'), by('I', 'Wedding day'), by('I', '')],
+    ['Men', by('F', '3-day'), by('F', 'Wedding day'), by('F', '')],
+    ['Women', by('G', '3-day'), by('G', 'Wedding day'), by('G', '')],
+    ['Children', by('H', '3-day'), by('H', 'Wedding day'), by('H', '')],
+    ['Families needing a room', room('3-day'), room('Wedding day'), room('')],
+    ['Replied "cannot come"', '=COUNTIFS(RSVP!E2:E,"No",RSVP!M2:M,"3-day")', '=COUNTIFS(RSVP!E2:E,"No",RSVP!M2:M,"Wedding day")', '=COUNTIF(RSVP!E2:E,"No")'],
+    ['', '', '', ''],
+    ['ARRIVALS (guests arriving on each date)', '3-day guests', 'Wedding-day guests', 'ALL']
+  ];
+  ['2026-11-28', '2026-11-29', '2026-11-30', '2026-12-01', '2026-12-02'].forEach(function (d) {
+    var f = function (type) { return '=SUMIFS(RSVP!I2:I,' + C + ',RSVP!J2:J,"' + d + '"' + (type ? ',RSVP!M2:M,"' + type + '"' : '') + ')'; };
+    rows.push([d, f('3-day'), f('Wedding day'), f('')]);
+  });
+  sh.getRange(1, 1, rows.length, 4).setValues(rows);
+  sh.getRange('A1:D1').setFontWeight('bold').setBackground('#f3e2c8');
+  sh.getRange('A10:D10').setFontWeight('bold').setBackground('#f3e2c8');
+  sh.getRange('A11:A15').setNumberFormat('@');
+  sh.getRange('A3:D3').setFontWeight('bold');
+  sh.setColumnWidth(1, 300); sh.setColumnWidths(2, 3, 160); sh.setFrozenRows(1);
 }
 
 /* ------------------------------------------------------------------ */

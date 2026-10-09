@@ -10,7 +10,7 @@ import { sortedEvents } from '../utils';
    ========================================================================== */
 
 export const SEEN_KEY = 'ss_invite_seen';
-const MUSIC_SRC = '/audio/invite.mp3'; // optional: drop a royalty-free file here to enable music
+const MUSIC_SRC = '/audio/invite.mp3?v=3'; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
   Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
@@ -249,8 +249,6 @@ function MsgBG() {
     <svg className="iv-sky" viewBox="0 0 390 800" preserveAspectRatio="xMidYMid slice" aria-hidden>
       <defs><radialGradient id="msgG" cx=".5" cy=".5" r=".6"><stop offset="0" stopColor="#fffaf0" /><stop offset="1" stopColor="#f1e4cc" stopOpacity="0" /></radialGradient></defs>
       <ellipse cx="195" cy="400" rx="250" ry="400" fill="url(#msgG)" />
-      <path d="M34 800 L34 190 Q34 44 195 44 Q356 44 356 190 L356 800" fill="none" stroke="#c9a24a" strokeWidth="1.8" opacity=".5" />
-      <path d="M46 800 L46 194 Q46 58 195 58 Q344 58 344 194 L344 800" fill="none" stroke="#c9a24a" strokeWidth=".9" strokeDasharray="1 5" opacity=".6" />
       <g className="iv-blur" style={{ opacity: 0.75 }}>
         {[[28, 740, 30], [70, 770, 24], [362, 745, 32], [320, 775, 26], [20, 660, 22], [372, 655, 24]].map(([x, y, r], i) => i % 2 ? <Rose key={i} x={x} y={y} r={r} /> : <Marigold key={i} x={x} y={y} r={r} />)}
         {[[40, 700, 330], [350, 705, 30], [66, 735, 20], [326, 740, -20]].map(([x, y, r], i) => <Leaf key={i} x={x} y={y} r={r} c="#8fb08a" />)}
@@ -298,8 +296,6 @@ function CoverBG() {
       <rect width="390" height="800" fill="#f8efdf" />
       <ellipse cx="195" cy="430" rx="260" ry="420" fill="url(#royalG)" />
       {/* large mughal arch frame */}
-      <path d="M34 800 L34 190 Q34 44 195 44 Q356 44 356 190 L356 800" fill="none" stroke="#c9a24a" strokeWidth="2" opacity=".55" />
-      <path d="M46 800 L46 194 Q46 58 195 58 Q344 58 344 194 L344 800" fill="none" stroke="#c9a24a" strokeWidth=".9" strokeDasharray="1 5" opacity=".7" />
       {/* paisley border rows */}
       {Array.from({ length: 7 }).map((_, i) => <Paisley key={'b' + i} x={34 + i * 52} y={742} s={0.8} r={-20} o={0.5} />)}
       {[[28, 130, 20], [362, 130, -20], [24, 260, 200], [366, 260, 160]].map(([x, y, r], i) => <Paisley key={'c' + i} x={x} y={y} s={0.9} r={r} o={0.55} />)}
@@ -332,6 +328,17 @@ function Ornament({ color = '#b8893b', width = 230 }) {
         <path d="M110 34 Q84 36 80 26 Q98 26 110 34Z" /><path d="M110 34 Q136 36 140 26 Q122 26 110 34Z" />
       </g>
     </svg>
+  );
+}
+
+/* ---------- painted backgrounds (public/images/invite/<name>.jpg); falls back to the drawn art ---------- */
+function PaintedBG({ name, dark, children }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) return children || null;
+  return (
+    <div className={'iv-paint' + (dark ? ' dark' : '')} aria-hidden>
+      <img src={`/images/invite/${name}.jpg`} alt="" onError={() => setOk(false)} />
+    </div>
   );
 }
 
@@ -454,7 +461,7 @@ export default function InviteFilm() {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    const a = new Audio(MUSIC_SRC); a.loop = true; a.volume = 0.6; audio.current = a;
+    const a = new Audio(MUSIC_SRC); a.loop = true; a.volume = 0.45; audio.current = a;
     a.preload = 'auto'; a.addEventListener('error', () => setHasMusic(false));
     return () => { document.body.style.overflow = ''; a.pause(); };
   }, []);
@@ -559,7 +566,7 @@ export default function InviteFilm() {
 
         {/* 3. message: one heading-cum-message */}
         <section className="iv-sec iv-cream" data-i={idx++}>
-          <MsgBG />
+          <PaintedBG name="message"><MsgBG /></PaintedBG>
           <div className="iv-in">
             <p className="iv-small rv">By the grace of God</p>
             <div className="rv" style={{ '--d': '.1s' }}><Ornament /></div>
@@ -575,11 +582,11 @@ export default function InviteFilm() {
           const l = LINES[ev.name] || { hing: ev.description, icon: 'mandap' };
           return (
             <section key={ev.id} className={'iv-sec ' + ['iv-teal', 'iv-green', 'iv-dusk', 'iv-sun', 'iv-royal'][k % 5]} data-i={idx++}>
-              {/faldaan/i.test(ev.name) && <FaldaanBG />}
-              {/mehndi/i.test(ev.name) && <MehndiBG />}
-              {/haldi/i.test(ev.name) && <HaldiBG />}
-              {/sangeet/i.test(ev.name) && <SangeetBG />}
-              {/shaadi|varmala/i.test(ev.name) && <MandapBG />}
+              {/faldaan/i.test(ev.name) && <PaintedBG name="faldaan"><FaldaanBG /></PaintedBG>}
+              {/mehndi/i.test(ev.name) && <PaintedBG name="mehndi"><MehndiBG /></PaintedBG>}
+              {/haldi/i.test(ev.name) && <PaintedBG name="haldi"><HaldiBG /></PaintedBG>}
+              {/sangeet/i.test(ev.name) && <PaintedBG name="sangeet" dark><SangeetBG /></PaintedBG>}
+              {/shaadi|varmala/i.test(ev.name) && <PaintedBG name="shaadi"><MandapBG /></PaintedBG>}
               <div className="iv-in">
                 <p className="iv-small rv">{events.length > 1 ? `Function ${k + 1} of ${events.length}` : 'The Wedding'}</p>
                 <div className="iv-card rv" style={{ '--d': '.15s' }}>
@@ -608,7 +615,7 @@ export default function InviteFilm() {
 
         {/* finale */}
         <section className="iv-sec iv-night fin" data-i={idx++}>
-          <FinaleBG />
+          <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
           <div className="iv-in">
             <h2 className="iv-names rv" style={{ '--d': '.1s', fontSize: 'clamp(2.6rem,12vw,3.6rem)' }}>Aap aayenge na?</h2>
             <p className="iv-p rv" style={{ '--d': '.3s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
