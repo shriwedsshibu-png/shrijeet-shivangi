@@ -65,6 +65,13 @@ const siteConfig = {
     },
   },
 
+  // Blessing shown at the bottom of the last invite page (Gauri / Shiv-Parvati wedding shloka).
+  // Leave the list empty ([]) to hide it.
+  inviteEndMantra: [
+    "सर्वमङ्गलमाङ्गल्ये शिवे सर्वार्थसाधिके।",
+    "शरण्ये त्र्यम्बके गौरि नारायणि नमोऽस्तु ते॥",
+  ],
+
   guestTiers: {
     defaultTier: "wedding",
     full: {

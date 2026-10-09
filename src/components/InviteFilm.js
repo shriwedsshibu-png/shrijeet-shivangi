@@ -459,11 +459,13 @@ export default function InviteFilm() {
   const root = useRef(null);
   const audio = useRef(null);
   const [opened, setOpened] = useState(false);
+  const [musicOn, setMusicOn] = useState(false);
+  const [hasMusic, setHasMusic] = useState(true);
   const [revealed, setRevealed] = useState(false);
   const [active, setActive] = useState(0);
   const cd = useCountdown(siteConfig.wedding.countdownTo);
   const events = sortedEvents();                 // only the functions this guest is invited to
-  const [paused, setPaused] = useState(false);
+  const paused = false;   // no pause button any more
   const [prog, setProg] = useState(0);
   const [autoScratch, setAutoScratch] = useState(false);
   const elapsed = useRef(0);
@@ -475,7 +477,7 @@ export default function InviteFilm() {
   const doorZoom = useRef('none');
   const rsvpOn = !!siteConfig.features?.rsvp?.enabled;
   const fam = (groomFirst() ? siteConfig.inviteFamily?.groom : siteConfig.inviteFamily?.bride) || null;
-  const total = 5 + events.length + (fam ? 1 : 0);
+  const total = 5 + events.length;
   const DATE_I = 1, LAST = total - 1;
 
   const mark = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* ignore */ } };
@@ -514,7 +516,7 @@ export default function InviteFilm() {
 
   const open = () => {
     if (opened) return;
-    if (audio.current) audio.current.play().catch(() => {});
+    if (audio.current) audio.current.play().then(() => setMusicOn(true)).catch(() => setMusicOn(false));
     const r = root.current;
     const cov = r && r.querySelector('.iv-cov2');
     const img = cov && cov.querySelector('.iv-paint img');
@@ -539,6 +541,10 @@ export default function InviteFilm() {
       if (sec) sec.classList.add('in');
     }, 1550);
     setTimeout(() => setDoors(0), 2800);
+  };
+  const toggleMusic = () => {
+    const a = audio.current; if (!a) return;
+    if (musicOn) { a.pause(); setMusicOn(false); } else a.resume().then(() => setMusicOn(true)).catch(() => setHasMusic(!a.unavailable));
   };
   const replay = () => { setAutoScratch(false); root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }); };
   // go to the start of the very next page (never jumps two pages)
@@ -570,7 +576,7 @@ export default function InviteFilm() {
     // touch: the page follows the finger, then settles on the next / previous page (never two)
     let y0 = 0, s0 = 0, t0 = 0, x0 = 0, track = false, moved = false;
     const ts = (e) => {
-      track = !busy && !e.target.closest('canvas') && e.touches.length === 1;
+      track = !busy && !e.target.closest('canvas:not(.gone)') && e.touches.length === 1;
       moved = false;
       if (!track) return;
       y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; t0 = Date.now(); s0 = r.scrollTop;
@@ -681,10 +687,8 @@ export default function InviteFilm() {
           ))}
         </div>
       )}
-      <button className="iv-skip" onClick={() => leave('/')}>Skip <span>· go to website</span></button>
-      <div className="iv-ctrl">
-        {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
-      </div>
+      {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>Skip <span>· go to website</span></button>}
+      {opened && hasMusic && <button className="iv-mute" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊' : '🔇'}</button>}
       {opened && active > 0 && (
         <div className="iv-prog" aria-hidden>
           {Array.from({ length: LAST }).map((_, k) => { const i = k + 1; const f = i < active ? 1 : i === active ? (i === LAST ? 1 : prog) : 0; return <i key={i}><b style={{ width: (f * 100) + '%' }} /></i>; })}
@@ -723,7 +727,6 @@ export default function InviteFilm() {
             <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.8s' }}>
               {[['days', cd[0]], ['hrs', cd[1]], ['min', cd[2]], ['sec', cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
-            <button className="iv-inline-skip rv" style={{ '--d': '2.4s' }} onClick={() => leave('/')}>Skip · go to website</button>
           </div>
         </section>
 
@@ -787,25 +790,6 @@ export default function InviteFilm() {
           </div>
         </section>
 
-        {/* well-wishers: the family names, in the traditional card form */}
-        {fam && (
-          <section className="iv-sec iv-fam" data-i={idx++}>
-            <PaintedBG name="finale"><FinaleBG /></PaintedBG>
-            <div className="iv-in">
-              <p className="iv-small rv" style={{ '--d': '.2s' }}>With love and blessings</p>
-              <h2 className="iv-fam-h rv" style={{ '--d': '.6s' }}>{fam.heading}</h2>
-              <div className="iv-fam-list rv" style={{ '--d': '1.3s' }}>
-                {fam.groups.map((g, gi) => (
-                  <div key={gi} className="iv-fam-group">
-                    {g.map((line, li) => <p key={li}>{line}</p>)}
-                  </div>
-                ))}
-              </div>
-              <p className="iv-fam-close rv" style={{ '--d': '2.3s' }}>{fam.closing}</p>
-            </div>
-          </section>
-        )}
-
         {/* finale */}
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
@@ -816,6 +800,16 @@ export default function InviteFilm() {
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
               {rsvpOn && <button className="iv-cta gold sm" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
               <button className="iv-soft" onClick={() => leave('/')}>Explore the wedding website →</button>
+            </div>
+            <div className="iv-end rv" style={{ '--d': '3.2s' }}>
+              {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra">{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
+              {fam && (
+                <>
+                  <p className="iv-end-h">{fam.heading}</p>
+                  {fam.groups.map((g, gi) => <div key={gi} className="iv-end-names">{g.map((line, li) => <span key={li}>{line}</span>)}</div>)}
+                  <p className="iv-end-close">{fam.closing}</p>
+                </>
+              )}
             </div>
           </div>
         </section>
