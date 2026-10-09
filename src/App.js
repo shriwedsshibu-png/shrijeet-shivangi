@@ -8,7 +8,7 @@ import HomePage from './components/HomePage';
 import MobileBottomNav from './components/MobileBottomNav';
 import { warmUp } from './api';
 import InviteFilm, { SEEN_KEY } from './components/InviteFilm';
-import { tierFromCode, getTier, setTier } from './tier';
+import { tierFromCode, codeFromPath, getTier, setTier, sideFromPath, getSide, setSide } from './tier';
 
 const OurStory = lazy(() => import('./components/OurStory'));
 const EventPage = lazy(() => import('./components/EventPage'));
@@ -47,12 +47,16 @@ function FirstVisit() {
   return <HomePage />;
 }
 
-// /invite/<code>: remember which kind of guest this is, then play the invitation.
+// /invite/<code> or /invite/<side>/<code>: remember which kind of guest this is and whose
+// side invited them, then play the invitation.
 function TierInvite() {
   const { pathname } = useLocation();
-  const code = decodeURIComponent((pathname.split('/')[2] || ''));
-  const t = tierFromCode(code);
-  if (t && t !== getTier()) { setTier(t); window.location.reload(); return null; }
+  const t = tierFromCode(codeFromPath(pathname));
+  const sd = sideFromPath(pathname);
+  const changed = (t && t !== getTier()) || (sd && sd !== getSide());
+  if (sd) setSide(sd);
+  if (t && t !== getTier()) setTier(t);
+  if (changed) { window.location.reload(); return null; }
   return <InviteFilm />;
 }
 
@@ -86,6 +90,7 @@ export default function App() {
             <Route path="/" element={<FirstVisit />} />
             {routes}
             {siteConfig.features?.invite?.enabled && <Route path="/invite/:code" element={<TierInvite />} />}
+            {siteConfig.features?.invite?.enabled && <Route path="/invite/:side/:code" element={<TierInvite />} />}
             {legacy.map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

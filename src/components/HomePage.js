@@ -7,12 +7,6 @@ import { Card, ButtonLink, Divider } from './ui';
 import { isFeatureOn, sortedEvents, dayAndMonth } from '../utils';
 import { dateLine, isFullTier } from '../tier';
 
-// twinkling stars in the night sky behind the arch: [left %, top %, size px, delay s]
-const STARS = Array.from({ length: 34 }, (_, i) => {
-  const r = (n) => { const v = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453; return v - Math.floor(v); };
-  return [Math.round(8 + r(1) * 84), Math.round(14 + r(2) * 66), r(3) > 0.8 ? 3 : 2, +(r(4) * 4).toFixed(2)];
-});
-
 function ActionCard({ to, icon, title, text }) {
   return (
     <Link to={to} className="card flex items-center gap-4 no-underline" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -37,8 +31,6 @@ export default function HomePage() {
     <main>
       {/* ---------- Invitation ---------- */}
       <section className={`hero ${photoHero ? 'hero-photo' : 'hero-night'}`} style={photoHero ? { backgroundImage: `linear-gradient(180deg, rgba(22,38,61,.15) 0%, rgba(22,38,61,.25) 30%, rgba(22,38,61,.9) 62%, rgba(22,38,61,.95) 100%), url(${hp.heroImage})` } : { backgroundImage: `url(${hp.heroBackground || '/images/invite/finale.jpg'})` }}>
-        {!photoHero && <div className="hero-stars" aria-hidden>{STARS.map(([x, y, sz, d], i) => <i key={i} style={{ left: x + '%', top: y + '%', width: sz, height: sz, animationDelay: d + 's' }} />)}</div>}
-        {!photoHero && <img className="hero-frame" src="/images/arch-frame.webp" alt="" aria-hidden />}
         <div className="relative wrap-narrow fade-in hero-in">
           {hp.invocation && <p className="deva hero-inv">{hp.invocation}</p>}
 

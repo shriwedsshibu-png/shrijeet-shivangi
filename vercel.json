@@ -9,6 +9,22 @@
       "destination": "/invite/shubh-vivah/index.html"
     },
     {
+      "source": "/invite/shrijeet/parivaar",
+      "destination": "/invite/shrijeet/parivaar/index.html"
+    },
+    {
+      "source": "/invite/shrijeet/shubh-vivah",
+      "destination": "/invite/shrijeet/shubh-vivah/index.html"
+    },
+    {
+      "source": "/invite/shivangi/parivaar",
+      "destination": "/invite/shivangi/parivaar/index.html"
+    },
+    {
+      "source": "/invite/shivangi/shubh-vivah",
+      "destination": "/invite/shivangi/shubh-vivah/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

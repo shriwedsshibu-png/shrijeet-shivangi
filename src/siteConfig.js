@@ -33,6 +33,16 @@ const siteConfig = {
   //     plain website without a link sees the wedding-day version ("defaultTier").
   //     You can change the words after /invite/ below (letters, numbers, dashes).
   // --------------------------------------------------------------------------
+  // Whose side sent the invite. The invite puts that side's name and family first:
+  //   Shrijeet's side ->  /invite/shrijeet/parivaar   (3 days)   /invite/shrijeet/shubh-vivah   (wedding day)
+  //   Shivangi's side ->  /invite/shivangi/parivaar   (3 days)   /invite/shivangi/shubh-vivah   (wedding day)
+  // The website itself always reads "Shivangi & Shrijeet".
+  inviteSides: {
+    default: "bride",
+    groom: { slug: "shrijeet" },
+    bride: { slug: "shivangi" },
+  },
+
   guestTiers: {
     defaultTier: "wedding",
     full: {

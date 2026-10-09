@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import siteConfig from '../siteConfig';
 import { sortedEvents } from '../utils';
+import makeLoopPlayer from '../loopAudio';
+import { groomFirst } from '../tier';
 
 /* ============================================================================
    The invitation film: a full-screen, scroll-through story (made for phones).
@@ -10,7 +12,7 @@ import { sortedEvents } from '../utils';
    ========================================================================== */
 
 export const SEEN_KEY = 'ss_invite_seen';
-const MUSIC_SRC = '/audio/invite.mp3?v=5'; // optional: drop a royalty-free file here to enable music
+const MUSIC_SRC = '/audio/invite.mp3?v=6'; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
   Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
@@ -482,9 +484,8 @@ export default function InviteFilm() {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    const a = new Audio(MUSIC_SRC); a.loop = true; a.volume = 0.45; audio.current = a;
-    a.preload = 'auto'; a.addEventListener('error', () => setHasMusic(false));
-    return () => { document.body.style.overflow = ''; a.pause(); };
+    const a = makeLoopPlayer(MUSIC_SRC, 0.45); audio.current = a;   // gapless loop, no dip at the loop point
+    return () => { document.body.style.overflow = ''; a.destroy(); };
   }, []);
 
   // the cover plays its own entrance a moment after it appears (an element that starts "in" would not animate)
@@ -542,7 +543,7 @@ export default function InviteFilm() {
   };
   const toggleMusic = () => {
     const a = audio.current; if (!a) return;
-    if (musicOn) { a.pause(); setMusicOn(false); } else a.play().then(() => setMusicOn(true)).catch(() => {});
+    if (musicOn) { a.pause(); setMusicOn(false); } else a.resume().then(() => setMusicOn(true)).catch(() => setHasMusic(!a.unavailable));
   };
   const replay = () => { setAutoScratch(false); root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }); };
   // go to the start of the very next page (never jumps two pages)
@@ -667,6 +668,10 @@ export default function InviteFilm() {
 
   const names = siteConfig.couple;
   const inv = siteConfig.homepage.inviteCard;
+  // the side that sent this invite comes first (Shrijeet's side: Shrijeet & his family first)
+  const bride = { name: names.fullName1 || names.name1, line: inv.brideLine, parents: inv.brideParents };
+  const groom = { name: names.fullName2 || names.name2, line: inv.groomLine, parents: inv.groomParents };
+  const [p1, p2] = groomFirst() ? [groom, bride] : [bride, groom];
   const pair = (t) => { const [a, b] = String(t).split(' & '); return b ? <>{a} &amp;<br />{b}</> : t; };
   let idx = 0;
 
@@ -699,7 +704,7 @@ export default function InviteFilm() {
         <div className="iv-in">
           <p className="iv-ganesh rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
           <p className="iv-small rv" style={{ '--d': '.65s' }}>The wedding of</p>
-          <h1 className="iv-names iv-shine rv wr" style={{ '--d': '1s' }}>{names.fullName1 || names.name1}<span>&amp;</span>{names.fullName2 || names.name2}</h1>
+          <h1 className="iv-names iv-shine rv wr" style={{ '--d': '1s' }}>{p1.name}<span>&amp;</span>{p2.name}</h1>
           <div className="iv-jharokha rv" style={{ '--d': '2.1s' }}><CoupleArt /></div>
           {!opened
             ? <button className="iv-cta iv-open rv" style={{ '--d': '2.7s' }} onClick={open}>Open Your Invitation</button>
@@ -734,13 +739,13 @@ export default function InviteFilm() {
             <p className="iv-small rv" style={{ '--d': '.2s' }}>{inv.blessingsLabel}</p>
             {inv.blessings && inv.blessings.length > 0 && <p className="iv-host iv-ash rv" style={{ '--d': '.4s' }}>{inv.blessings.map((x, i) => <span key={i}>{x}</span>)}</p>}
             <p className="iv-req rv" style={{ '--d': '.6s' }}>{inv.request}</p>
-            <p className="iv-nm rv wr" style={{ '--d': '1.1s' }}>{names.fullName1 || names.name1}</p>
-            <p className="iv-req iv-of rv" style={{ '--d': '2.2s' }}>{inv.brideLine}</p>
-            <p className="iv-host rv" style={{ '--d': '2.5s' }}>{pair(inv.brideParents)}</p>
+            <p className="iv-nm rv wr" style={{ '--d': '1.1s' }}>{p1.name}</p>
+            <p className="iv-req iv-of rv" style={{ '--d': '2.2s' }}>{p1.line}</p>
+            <p className="iv-host rv" style={{ '--d': '2.5s' }}>{pair(p1.parents)}</p>
             <p className="iv-with rv" style={{ '--d': '3s' }}>with</p>
-            <p className="iv-nm rv wr" style={{ '--d': '3.3s' }}>{names.fullName2 || names.name2}</p>
-            <p className="iv-req iv-of rv" style={{ '--d': '4.4s' }}>{inv.groomLine}</p>
-            <p className="iv-host rv" style={{ '--d': '4.7s' }}>{pair(inv.groomParents)}</p>
+            <p className="iv-nm rv wr" style={{ '--d': '3.3s' }}>{p2.name}</p>
+            <p className="iv-req iv-of rv" style={{ '--d': '4.4s' }}>{p2.line}</p>
+            <p className="iv-host rv" style={{ '--d': '4.7s' }}>{pair(p2.parents)}</p>
             <div className="rv grow" style={{ '--d': '5.2s' }}><Ornament width={180} /></div>
             <p className="iv-p iv-close rv" style={{ '--d': '5.7s' }}>{siteConfig.homepage.invitationBottom}</p>
             <p className="iv-deva rv" style={{ '--d': '6.2s' }}>{siteConfig.homepage.welcomeHindi}</p>
