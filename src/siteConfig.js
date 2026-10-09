@@ -298,7 +298,7 @@ And here's to all the journeys still waiting for us.`,
         relation: "Dadi"
       },
       {
-        name: "Sushil Kumar Mishra MAA(Retd)",
+        name: "Sushil Kumar Mishra",
         relation: "Papa"
       },
       {
@@ -318,7 +318,7 @@ And here's to all the journeys still waiting for us.`,
         relation: "Nani"
       },
       {
-        name: "Sudhir Kumar Mishra Hon(Lt) (Retd)",
+        name: "Sudhir Kumar Mishra",
         relation: "Bade Papa"
       },
       {
@@ -326,7 +326,7 @@ And here's to all the journeys still waiting for us.`,
         relation: "Badi Mummy"
       },
       {
-        name: "Shashi Bhushan Mishra CPO(Retd)",
+        name: "Shashi Bhushan Mishra",
         relation: "Bade Papa"
       },
       {
@@ -338,11 +338,11 @@ And here's to all the journeys still waiting for us.`,
         relation: "Bhaiya"
       },
       {
-        name: "Lt Cdr Seema Rani Sharma (Retd)",
+        name: "Seema Rani Sharma",
         relation: "Bhabhi"
       },
       {
-        name: "Cdr Avlok Kumar Mishra",
+        name: "Avlok Kumar Mishra",
         relation: "Bhaiya"
       },
       {
@@ -370,9 +370,16 @@ And here's to all the journeys still waiting for us.`,
     //   { name: "Full Name", relation: "Papa" },
     // While this list is empty, only Shrijeet's family is shown.
     shivangi: [
-      { name: "Shailendra Kumar", relation: "Father" },
-      { name: "Anju Kumari", relation: "Mother" },
-      { name: "Sourabh", relation: "Brother" },
+      { name: "Shailendra Kumar", relation: "Papa" },
+      { name: "Anju Kumari", relation: "Mummy" },
+      { name: "Gyanendra Saurav", relation: "Bhai" },
+      { name: "Satyandra Kumar", relation: "Chacha Ji" }
+      { name: "Bharti Devi", relation: "Chachi Ji" }
+      { name: "Sangita Kumari", relation: "Didi" }
+      { name: "Sudhanshu Shekhar", relation: "Jiju" }
+      { name: "Neha Kumari", relation: "Cousin" }
+      { name: "Kishan Kumar", relation: "Cousin" }
+      { name: "Sarika Priya", relation: "Cousin" }
     ],
   },
 
