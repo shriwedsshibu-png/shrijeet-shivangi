@@ -36,13 +36,13 @@ export default function HomePage() {
         <div className="relative wrap-narrow fade-in">
           {hp.invocation && <p className="deva" style={{ color: '#e7cf98', fontSize: '1.15rem', marginBottom: '1.2rem' }}>{hp.invocation}</p>}
 
-          {!photoHero && <div className="arch"><img src="/images/our2.jpg" alt={`${couple.name1} and ${couple.name2}`} /></div>}
+          {!photoHero && <div className="arch"><img src={hp.heroImage} alt={`${couple.name1} and ${couple.name2}, watercolour illustration`} /></div>}
 
           <p className="hero-text">{hp.invitationTop}</p>
-          <h1 className="hero-names mt-2">
-            {couple.name1}
+          <h1 className="hero-names">
+            {couple.fullName1 || couple.name1}
             <span className="hero-amp">&amp;</span>
-            {couple.name2}
+            {couple.fullName2 || couple.name2}
           </h1>
           <p className="hero-text mt-3">{hp.invitationBottom}</p>
 

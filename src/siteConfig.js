@@ -77,6 +77,8 @@ const siteConfig = {
     // Her name comes first wherever the two names are shown together.
     name1: "Shivangi",
     name2: "Shrijeet",
+    fullName1: "Shivangi Priya",   // shown where the names are big (home page, invitation)
+    fullName2: "Shrijeet Mishra",
     displayName: "Shivangi & Shrijeet", // small name used in the top bar and footer
   },
 
@@ -94,8 +96,8 @@ const siteConfig = {
   // --------------------------------------------------------------------------
   homepage: {
     // "photo" = big full-screen photo behind the invitation.  "arch" = small framed photo.
-    heroStyle: "photo",
-    heroImage: "/images/our2.jpg",
+    heroStyle: "arch",
+    heroImage: "/images/couple-art.jpg",
     invocation: "॥ श्री गणेशाय नमः ॥",
     invitationTop:
       "With the blessings of our families, we joyfully invite you to celebrate the wedding of",

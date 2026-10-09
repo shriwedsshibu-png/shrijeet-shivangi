@@ -624,10 +624,10 @@ export default function InviteFilm() {
         <div className="iv-in">
           <p className="iv-ganesh rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
           <p className="iv-small rv" style={{ '--d': '.5s' }}>The wedding of</p>
-          <h1 className="iv-names iv-shine rv" style={{ '--d': '.9s' }}>{names.name1}<span>&amp;</span>{names.name2}</h1>
+          <h1 className="iv-names iv-shine rv" style={{ '--d': '.9s' }}>{names.fullName1 || names.name1}<span>&amp;</span>{names.fullName2 || names.name2}</h1>
           <div className="iv-jharokha rv" style={{ '--d': '1.3s' }}><CoupleArt /></div>
           {!opened
-            ? <button className="iv-cta rv" style={{ '--d': '1.7s' }} onClick={open}>Open Your Invitation</button>
+            ? <button className="iv-cta iv-open rv" style={{ '--d': '1.7s' }} onClick={open}>Open Your Invitation</button>
             : <p className="iv-small">scroll ↓</p>}
         </div>
       </section>
@@ -658,11 +658,11 @@ export default function InviteFilm() {
             <p className="iv-small rv">{inv.blessingsLabel}</p>
             {inv.blessings && inv.blessings.length > 0 && <p className="iv-host iv-ash rv" style={{ '--d': '.1s' }}>{inv.blessings.map((x, i) => <span key={i}>{x}</span>)}</p>}
             <p className="iv-req rv" style={{ '--d': '.25s' }}>{inv.request}</p>
-            <p className="iv-nm rv" style={{ '--d': '.4s' }}>{names.name1}</p>
+            <p className="iv-nm rv" style={{ '--d': '.4s' }}>{names.fullName1 || names.name1}</p>
             <p className="iv-req iv-of rv" style={{ '--d': '.5s' }}>{inv.brideLine}</p>
             <p className="iv-host rv" style={{ '--d': '.55s' }}>{pair(inv.brideParents)}</p>
             <p className="iv-with rv" style={{ '--d': '.65s' }}>with</p>
-            <p className="iv-nm rv" style={{ '--d': '.75s' }}>{names.name2}</p>
+            <p className="iv-nm rv" style={{ '--d': '.75s' }}>{names.fullName2 || names.name2}</p>
             <p className="iv-req iv-of rv" style={{ '--d': '.85s' }}>{inv.groomLine}</p>
             <p className="iv-host rv" style={{ '--d': '.9s' }}>{pair(inv.groomParents)}</p>
             <div className="rv" style={{ '--d': '1s' }}><Ornament width={180} /></div>
