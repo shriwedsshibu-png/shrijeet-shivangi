@@ -465,7 +465,9 @@ export default function InviteFilm() {
   const [active, setActive] = useState(0);
   const cd = useCountdown(siteConfig.wedding.countdownTo);
   const events = sortedEvents();                 // only the functions this guest is invited to
-  const paused = false;   // no pause button any more
+  const [paused, setPaused] = useState(false);
+  const [dateRound, setDateRound] = useState(0);   // the scratch card is covered again each time the date page comes back
+  const dateSeen = useRef(false);
   const [prog, setProg] = useState(0);
   const [autoScratch, setAutoScratch] = useState(false);
   const elapsed = useRef(0);
@@ -506,10 +508,13 @@ export default function InviteFilm() {
       if (e.isIntersecting && e.intersectionRatio > 0.55) {
         if (!hold.current) e.target.classList.add('in');
         setActive(+e.target.dataset.i);
-      } else if (!e.isIntersecting) {
-        e.target.classList.remove('in', 'out', 'leaving'); // fully off screen: reset, so it plays again on return
+      } else if (!e.isIntersecting || e.intersectionRatio < 0.02) {
+        // fully off screen (a page that only touches the screen edge still counts as "intersecting",
+        // so check the ratio too): reset it, so it plays again on return
+        e.target.classList.remove('in', 'out', 'leaving');
+        if (e.target.dataset.i === '1') { setDateRound((n) => n + 1); setRevealed(false); setAutoScratch(false); }
       }
-    }), { root: root.current, threshold: [0, 0.55] });
+    }), { root: root.current, threshold: [0, 0.02, 0.55] });
     secs.forEach((s) => io.observe(s));
     return () => io.disconnect();
   }, [opened]);
@@ -652,8 +657,9 @@ export default function InviteFilm() {
       if (paused || document.hidden || active === 0 || active >= LAST) return;
       if (active === DATE_I && !revealed) {
         if (touching.current) return;
-        elapsed.current = Math.min(elapsed.current + 100, 8500);
-        if (elapsed.current >= 8500) setAutoScratch(true);
+        const wait = dateSeen.current ? 2500 : 8500;   // second time round the coin sweeps by itself sooner
+        elapsed.current = Math.min(elapsed.current + 100, wait);
+        if (elapsed.current >= wait) setAutoScratch(true);
         setProg(elapsed.current / dur.current); return;
       }
       elapsed.current += 100; setProg(Math.min(1, elapsed.current / dur.current));
@@ -687,7 +693,10 @@ export default function InviteFilm() {
           ))}
         </div>
       )}
-      {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>Skip <span>· go to website</span></button>}
+      <div className="iv-ctrl">
+        {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((v) => !v)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
+        {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>Visit wedding website</button>}
+      </div>
       {opened && hasMusic && <button className="iv-mute" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊' : '🔇'}</button>}
       {opened && active > 0 && (
         <div className="iv-prog" aria-hidden>
@@ -719,7 +728,7 @@ export default function InviteFilm() {
             <p className="iv-small dark rv" style={{ '--d': '.2s' }}>Save the date</p>
             <h2 className="iv-h iv-h-sm iv-h-date rv" style={{ '--d': '.35s' }}>Unveil our auspicious day</h2>
             <div className="rv" style={{ '--d': '1.5s' }}>
-              <Scratch onReveal={() => setRevealed(true)} auto={autoScratch} onTouch={(v) => { touching.current = v; }}>
+              <Scratch key={dateRound} onReveal={() => { dateSeen.current = true; setRevealed(true); }} auto={autoScratch} onTouch={(v) => { touching.current = v; }}>
                 <div className="iv-date"><span className="wd">Wednesday</span><b>2 December</b><span>2026</span></div>
               </Scratch>
             </div>
