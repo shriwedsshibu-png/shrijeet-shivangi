@@ -785,9 +785,9 @@ export default function InviteFilm() {
             <p className="iv-small rv" style={{ '--d': '.2s' }}>The Venue</p>
             <h2 className="iv-h light rv wr" style={{ '--d': '.6s' }}>{siteConfig.wedding.venueName}</h2>
             <p className="iv-p light rv" style={{ '--d': '1.7s' }}><Typed text={siteConfig.wedding.city} d="2s" /></p>
-            <p className="iv-all rv" style={{ '--d': '3s' }}>{isFullTier() ? 'All the celebrations will be held here' : 'The wedding will be held here'}, at <b>{siteConfig.wedding.venueName}</b></p>
-            <p className="iv-tap rv" style={{ '--d': '3.6s' }}>Tap below to see the location</p>
-            <a className="iv-map rv" style={{ '--d': '3.9s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
+            <p className="iv-all rv" style={{ '--d': '3s' }}>{isFullTier() ? 'All the celebrations will be held here' : 'The wedding will be held here'}</p>
+            <p className="iv-tap rv" style={{ '--d': '3.4s' }}>Tap below</p>
+            <a className="iv-map rv" style={{ '--d': '3.7s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
           </div>
         </section>
 

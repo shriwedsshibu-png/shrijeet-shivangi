@@ -516,10 +516,9 @@
 @media(max-width:360px){.iv .iv-skip,.iv .iv-snd{font-size:.72rem;padding:.3rem .7rem}}
 
 /* ===== Venue: everything happens here, and a clear blue map button ===== */
-.iv-all{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;line-height:1.3;color:#1f3350;background:rgba(255,250,240,.86);border:1px solid rgba(184,137,59,.5);border-radius:1rem;padding:.55rem 1rem;margin-top:1.1rem;max-width:20rem}
-.iv-all b{font-weight:700}
-.iv-tap{font-size:.95rem;color:#1f3350;background:rgba(255,250,240,.72);border-radius:99px;padding:.15rem .8rem;margin-top:.9rem}
-.iv a.iv-map{background:linear-gradient(180deg,#2c4a6e,#1f3350);color:#fbf3e6;border:1.5px solid #e2c27a;font-family:'Cinzel',serif;font-weight:700;font-size:.95rem;padding:.7rem 1.4rem;min-height:3rem;box-shadow:0 8px 20px rgba(31,51,80,.35);margin-top:.5rem}
+.iv-all{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1.15rem;line-height:1.3;color:#1f3350;background:rgba(255,250,240,.6);border-radius:1rem;padding:.3rem .9rem;margin-top:.9rem}
+.iv-tap{font-family:'Cormorant Garamond',Georgia,serif;font-size:.95rem;color:#1f3350;opacity:.8;margin-top:.5rem}
+.iv a.iv-map{background:linear-gradient(180deg,#2c4a6e,#1f3350);color:#fbf3e6;border:1.5px solid #e2c27a;font-family:'Cinzel',serif;font-weight:700;font-size:.95rem;padding:.7rem 1.4rem;min-height:3rem;box-shadow:0 8px 20px rgba(31,51,80,.35);margin-top:.6rem}
 .iv .iv-skip{position:fixed;top:1.35rem;bottom:auto;right:.7rem;left:auto}
 .iv .iv-next{left:.75rem;bottom:.7rem;transform:none;animation:ivb3 1.8s ease-in-out infinite;width:2.6rem;height:2.6rem}
 @keyframes ivb3{50%{transform:translateY(5px)}}
