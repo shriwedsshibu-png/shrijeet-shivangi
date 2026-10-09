@@ -114,7 +114,7 @@ const siteConfig = {
       groomLine: "son of",
       groomParents: "Smt. Sujata Mishra & Shri Sushil Kumar Mishra",
     },
-    countdownTitle: "Counting down to forever",
+    countdownTitle: "",
     countdownPoem: "Two hearts, two families, one beautiful beginning.",
   },
 

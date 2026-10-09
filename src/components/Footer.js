@@ -25,7 +25,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <p className="font-display italic mt-4" style={{ fontSize: '1.2rem' }}>“{f.tagline}”</p>
+      <p className="font-display italic mt-4" style={{ fontSize: 'min(1.2rem, 4vw)', whiteSpace: 'nowrap' }}>“{f.tagline}”</p>
       <p className="text-sm mt-3" style={{ opacity: .75 }}>{dateLine()} · {siteConfig.wedding.city}</p>
     </footer>
   );

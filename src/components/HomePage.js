@@ -30,11 +30,9 @@ export default function HomePage() {
   return (
     <main>
       {/* ---------- Invitation ---------- */}
-      <section className={`hero ${photoHero ? 'hero-photo' : ''}`} style={photoHero ? { backgroundImage: `linear-gradient(180deg, rgba(50,10,22,.15) 0%, rgba(50,10,22,.25) 30%, rgba(40,8,18,.9) 62%, rgba(40,8,18,.95) 100%), url(${hp.heroImage})` } : undefined}>
-        {!photoHero && <div className="hero-pattern" />}
-        <div className="hero-toran" />
-        <div className="relative wrap-narrow fade-in">
-          {hp.invocation && <p className="deva" style={{ color: '#e7cf98', fontSize: '1.15rem', marginBottom: '1.2rem' }}>{hp.invocation}</p>}
+      <section className={`hero ${photoHero ? 'hero-photo' : 'hero-night'}`} style={photoHero ? { backgroundImage: `linear-gradient(180deg, rgba(22,38,61,.15) 0%, rgba(22,38,61,.25) 30%, rgba(22,38,61,.9) 62%, rgba(22,38,61,.95) 100%), url(${hp.heroImage})` } : { backgroundImage: `url(${hp.heroBackground || '/images/invite/finale.jpg'})` }}>
+        <div className="relative wrap-narrow fade-in hero-in">
+          {hp.invocation && <p className="deva hero-inv">{hp.invocation}</p>}
 
           {!photoHero && <div className="arch"><img src={hp.heroImage} alt={`${couple.name1} and ${couple.name2}, watercolour illustration`} /></div>}
 
@@ -44,16 +42,16 @@ export default function HomePage() {
             <span className="hero-amp">&amp;</span>
             {couple.fullName2 || couple.name2}
           </h1>
-          <p className="hero-text mt-3">{hp.invitationBottom}</p>
+          <p className="hero-text hero-text2">{hp.invitationBottom}</p>
 
           <div className="hero-date">
-            <span className="font-display font-bold" style={{ fontSize: '1.6rem', color: '#f1d68e', lineHeight: 1.1 }}>{dateLine()}</span>
-            <span style={{ color: '#d9e3f0', fontSize: '1.05rem', letterSpacing: '.12em', textTransform: 'uppercase' }}>{wedding.city}</span>
+            <span className="hero-date1">{dateLine()}</span>
+            <span className="hero-date2">{wedding.city}</span>
           </div>
 
-          {hp.welcomeHindi && <p className="deva mt-5" style={{ color: '#e7cf98', fontSize: '1.1rem' }}>{hp.welcomeHindi}</p>}
+          {hp.welcomeHindi && <p className="deva hero-wel">{hp.welcomeHindi}</p>}
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+          <div className="hero-btns">
             {isFeatureOn('rsvp') && <ButtonLink to="/rsvp" variant="gold">Confirm Your Presence</ButtonLink>}
             {isFeatureOn('photos') && <ButtonLink to="/photos" variant="light">Share Your Photos</ButtonLink>}
             {siteConfig.inviteFilm?.enabled && siteConfig.inviteFilm?.homeButton && <ButtonLink to="/invite" variant="light">▶ Watch the Invitation</ButtonLink>}
@@ -63,7 +61,7 @@ export default function HomePage() {
 
       {/* ---------- Countdown ---------- */}
       <section className="wrap text-center" style={{ padding: '3rem 1.1rem 1.5rem' }}>
-        <p className="eyebrow">{hp.countdownTitle}</p>
+        {hp.countdownTitle && <p className="eyebrow">{hp.countdownTitle}</p>}
         <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>Our forever begins in</h2>
         <div className="mt-6"><Countdown target={wedding.countdownTo} /></div>
         <p className="font-display italic mt-6" style={{ fontSize: '1.4rem', color: 'var(--maroon)' }}>{hp.countdownPoem}</p>

@@ -420,3 +420,29 @@
 .iv-cov2 .iv-jharokha .iv-art{width:var(--artw)}
 .iv-cta.iv-open{width:calc(var(--artw) + 12px);min-width:10.6rem;padding:.55rem .4rem;font-size:.8rem;letter-spacing:.03em;white-space:nowrap}
 @media(max-height:720px){.iv-cov2{--artw:min(62vw,calc(28dvh * .75))}}
+
+/* ===== Home hero: painted night sky (lanterns + diyas), everything on one phone screen ===== */
+.hero.hero-night{background-color:#1f3350;background-size:cover;background-position:50% 100%;background-repeat:no-repeat;
+  --svh100:100svh;--svh2:1.8svh;min-height:calc(var(--svh100) - var(--nav-h) - env(safe-area-inset-bottom));padding:calc(4.1rem + var(--svh2)) 1rem 6svh;display:flex;flex-direction:column;justify-content:center}
+.hero.hero-night::after{display:none}
+.hero.hero-night::before{inset:.55rem;border-color:rgba(231,207,152,.45)}
+.hero-in{width:100%}
+.hero-night .hero-inv{font-size:clamp(.74rem,1.85svh,1.05rem);margin:0 0 1svh;color:#e7cf98}
+.hero-night .arch{--ah:clamp(6rem,17.5svh,14rem);height:var(--ah);width:calc(var(--ah) * .77);margin:0 auto 1.4svh;border-width:2px;box-shadow:0 0 0 5px rgba(231,207,152,.16),0 14px 34px rgba(0,0,0,.45)}
+.hero-night .hero-text{font-size:clamp(.82rem,2.05svh,1.2rem);line-height:1.32;max-width:24rem;color:#eef1f6}
+.hero-night .hero-names{font-size:min(10.6vw,4.8svh,4.2rem);margin-top:.5svh;line-height:1.1;padding:.06em .2em 0}
+.hero-night .hero-amp{font-size:.5em}
+.hero-night .hero-text2{margin-top:.5svh}
+.hero-date1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.6rem;color:#f1d68e;line-height:1.1}
+.hero-date2{color:#d9e3f0;font-size:1.05rem;letter-spacing:.12em;text-transform:uppercase}
+.hero-night .hero-date{margin-top:1.3svh;padding:.7svh 1.3rem;border-radius:.8rem;background:rgba(10,20,36,.38)}
+.hero-night .hero-date1{font-size:clamp(1rem,2.5svh,1.5rem)}
+.hero-night .hero-date2{font-size:clamp(.66rem,1.5svh,1rem)}
+.hero-wel{color:#e7cf98;font-size:1.1rem;margin-top:1.25rem}
+.hero-night .hero-wel{font-size:clamp(.78rem,1.85svh,1.05rem);margin-top:1svh}
+.hero-btns{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:1.5rem}
+.hero-night .hero-btns{gap:1svh;margin-top:1.5svh}
+.hero-night .hero-btns .btn{min-height:clamp(2.2rem,5.2svh,3rem);padding:.2rem 1.4rem;font-size:clamp(.76rem,1.8svh,.98rem);width:min(100%,16.5rem)}
+@media(min-width:640px){.hero-btns{flex-direction:row;justify-content:center}}
+@media(min-width:1024px){.hero.hero-night{min-height:100svh}}
+@media(max-height:700px) and (max-width:1023px){.hero-night .arch{--ah:15.5svh}.hero.hero-night{padding-bottom:4.5svh}.hero-night .hero-btns .btn{min-height:2.1rem}}

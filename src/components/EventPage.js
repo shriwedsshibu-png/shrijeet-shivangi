@@ -37,7 +37,7 @@ export default function EventPage() {
                 <Card className="flex-1 min-w-0" style={{ padding: 0, overflow: 'hidden' }}>
                   {img && (
                     <div style={{ margin: '-1px -1px 0', borderRadius: '1.1rem 1.1rem 0 0', overflow: 'hidden' }}>
-                      <img src={img} alt="" style={{ width: '100%', height: '8.5rem', objectFit: 'cover', display: 'block' }} />
+                      <img src={img} alt="" style={{ width: '100%', aspectRatio: '1.45', objectFit: 'cover', display: 'block' }} />
                     </div>
                   )}
                   <div style={{ padding: '1.2rem 1.2rem 1.3rem' }}>
