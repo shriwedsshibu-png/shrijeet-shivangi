@@ -1,6 +1,6 @@
 /**
  * ============================================================
- *  Shrijeet & Shivangi Wedding — Google backend (Apps Script)
+ *  Shivangi & Shrijeet Wedding — Google backend (Apps Script)
  * ============================================================
  *  This one small script is the "back office" of the website.
  *  It runs inside YOUR Google account, so:

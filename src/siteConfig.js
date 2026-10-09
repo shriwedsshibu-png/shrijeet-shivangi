@@ -1,5 +1,5 @@
 // ============================================================================
-//  Shrijeet & Shivangi — Wedding Website
+//  Shivangi & Shrijeet — Wedding Website
 //  THIS IS THE ONLY FILE YOU NEED TO EDIT FOR TEXT, DATES, LINKS AND NAMES.
 //  Change the words between the "quotation marks", save (commit) on GitHub,
 //  and the live website updates by itself in about a minute.
@@ -74,8 +74,9 @@ const siteConfig = {
   // 3. NAMES, DATE, PLACE
   // --------------------------------------------------------------------------
   couple: {
-    name1: "Shrijeet",
-    name2: "Shivangi",
+    // Her name comes first wherever the two names are shown together.
+    name1: "Shivangi",
+    name2: "Shrijeet",
     displayName: "Shivangi & Shrijeet", // small name used in the top bar and footer
   },
 
@@ -103,10 +104,14 @@ const siteConfig = {
     welcomeHindi: "आपका हार्दिक स्वागत है",
     // The invitation page of the invite film (traditional card wording)
     inviteCard: {
-      groomParents: "Smt. Sujata Mishra & Shri Sushil Kumar Mishra",
-      request: "request the pleasure of your company at the wedding of their son",
+      // Aashirwad — the elders whose blessings open the card
+      blessingsLabel: "With the blessings of",
+      blessings: ["Smt. Jagtaran Devi", "Shri Shiv Chandra Singh & Smt. Prabha Devi"],
+      request: "our families request the pleasure of your company at the wedding of",
       brideLine: "daughter of",
       brideParents: "Smt. Anju Kumari & Shri Shailendra Kumar",
+      groomLine: "son of",
+      groomParents: "Smt. Sujata Mishra & Shri Sushil Kumar Mishra",
     },
     countdownTitle: "Counting down to forever",
     countdownPoem: "Two hearts, two families, one beautiful beginning.",
@@ -181,7 +186,7 @@ const siteConfig = {
     // Photographer's professional face-search gallery (add link after the wedding)
     photographerGalleryUrl: "",
     // Your own photos shown at the top of the gallery (files are in public/images)
-    ourPhotosLabel: "Shrijeet & Shivangi",
+    ourPhotosLabel: "Shivangi & Shrijeet",
     ourPhotos: [
       "/images/our-image.jpg",
       "/images/our2.jpg",
@@ -206,7 +211,7 @@ const siteConfig = {
     heading: "Digital Shagun",
     optionalNote: "Completely optional — your presence and blessings mean the most to us.",
     upiId: "7356045315@yescred",
-    payeeName: "Shrijeet & Shivangi",
+    payeeName: "Shivangi & Shrijeet",
     note: "Shagun",
     // Optional: to show your own QR picture instead of the automatic one,
     // put the picture in public/images and write its name here, e.g. "/images/my-upi-qr.png"
@@ -430,8 +435,8 @@ And here's to all the journeys still waiting for us.`,
   },
 
   app: {
-    name: "Shrijeet & Shivangi — Wedding",
-    description: "The wedding invitation of Shrijeet & Shivangi — Visakhapatnam, 2 December 2026.",
+    name: "Shivangi & Shrijeet — Wedding",
+    description: "The wedding invitation of Shivangi & Shrijeet — Visakhapatnam, 2 December 2026.",
   },
 };
 

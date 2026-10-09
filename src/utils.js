@@ -69,6 +69,23 @@ export function currentEventName(now = new Date()) {
   return pick;
 }
 
+// Photo uploads: the same list for every guest, whichever invite link they came from.
+// Only functions that have already begun (from 30 min before), so on 30 Nov it is just Faldaan,
+// and by the wedding evening all of them. Before the first function, every function is listed.
+export function uploadableEvents(now = new Date()) {
+  const all = sortedEvents(true);
+  const started = all.filter((e) => now.getTime() >= eventStart(e).getTime() - 30 * 60 * 1000);
+  return started.length ? started : all;
+}
+
+// The function to preselect: the one going on now, else the most recent one that has begun.
+export function defaultUploadEvent(now = new Date()) {
+  const cur = currentEventName(now);
+  if (cur) return cur;
+  const started = sortedEvents(true).filter((e) => now.getTime() >= eventStart(e).getTime() - 30 * 60 * 1000);
+  return started.length ? started[started.length - 1].name : '';
+}
+
 export function getDeviceId() {
   try {
     let id = localStorage.getItem('wedding_device_id');

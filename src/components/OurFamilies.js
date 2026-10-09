@@ -28,8 +28,8 @@ export default function OurFamilies() {
       <div className={both ? 'wrap' : 'wrap-narrow'}>
         <PageHeader eyebrow="With love & blessings" title={f.title} subtitle={f.subtitle} />
         <div className={both ? 'grid grid-cols-2 gap-3 sm:gap-8 max-w-5xl mx-auto' : ''}>
-          {groom.length > 0 && <Column title={`${siteConfig.couple.name1}'s Family`} members={groom} />}
-          {bride.length > 0 && <Column title={`${siteConfig.couple.name2}'s Family`} members={bride} />}
+          {groom.length > 0 && <Column title="Shrijeet's Family" members={groom} />}
+          {bride.length > 0 && <Column title="Shivangi's Family" members={bride} />}
         </div>
       </div>
     </main>

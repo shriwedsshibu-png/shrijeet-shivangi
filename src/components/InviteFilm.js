@@ -17,7 +17,7 @@ const LINES = {
   Mehndi: { hing: 'Henna, laughter and lots of colour', icon: 'hand' },
   'Engagement & Sangeet': { hing: 'Music, dance and the whole family', icon: 'dhol' },
   Haldi: { hing: 'Yellow hands, golden blessings', icon: 'marigold' },
-  'Varmala & Shaadi': { hing: 'Two hearts, seven vows, one forever', icon: 'mandap', note: 'Saat phere, saat vachan, ek zindagi.' },
+  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan, ek zindagi', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
 };
 
 const fmtDate = (iso) =>
@@ -112,7 +112,7 @@ function Couple({ scale = 1 }) {
 function CoupleArt() {
   const [bad, setBad] = useState(false);
   if (bad) return <Couple scale={0.86} />;
-  return (<div className="iv-art"><img src="/images/couple-art.jpg" alt="Shrijeet and Shivangi, watercolour illustration" onError={() => setBad(true)} /></div>);
+  return (<div className="iv-art"><img src="/images/couple-art.jpg" alt="Shivangi and Shrijeet, watercolour illustration" onError={() => setBad(true)} /></div>);
 }
 
 /* ---------- soft background art for two functions + the finale ---------- */
@@ -329,6 +329,13 @@ function Ornament({ color = '#b8893b', width = 230 }) {
       </g>
     </svg>
   );
+}
+
+/* marigold toran hanging across the top of a page (painted, transparent background) */
+function Toran2() {
+  const [ok, setOk] = useState(true);
+  if (!ok) return null;
+  return <img className="iv-toran" src="/images/invite/toran.webp" alt="" aria-hidden onError={() => setOk(false)} />;
 }
 
 /* ---------- painted backgrounds (public/images/invite/<name>.jpg); falls back to the drawn art ---------- */
@@ -628,6 +635,7 @@ export default function InviteFilm() {
       {opened && (<>
         {/* 2. date reveal */}
         <section className="iv-sec iv-rose" data-i={idx++}>
+          <PaintedBG name="date" />
           <div className="iv-in">
             <p className="iv-small dark rv">Save the date</p>
             <h2 className="iv-h rv iv-h-sm" style={{ '--d': '.2s' }}>Unveil our auspicious day</h2>
@@ -647,14 +655,16 @@ export default function InviteFilm() {
         <section className="iv-sec iv-cream iv-msg2" data-i={idx++}>
           <PaintedBG name="message"><MsgBG /></PaintedBG>
           <div className="iv-in">
-            <p className="iv-small rv">By the grace of God</p>
-            <p className="iv-host rv" style={{ '--d': '.15s' }}>{pair(inv.groomParents)}</p>
-            <p className="iv-req rv" style={{ '--d': '.3s' }}>{inv.request}</p>
-            <p className="iv-nm rv" style={{ '--d': '.5s' }}>{names.name1}</p>
-            <p className="iv-with rv" style={{ '--d': '.6s' }}>with</p>
-            <p className="iv-nm rv" style={{ '--d': '.7s' }}>{names.name2}</p>
-            <p className="iv-req rv" style={{ '--d': '.85s' }}>{inv.brideLine}</p>
-            <p className="iv-host rv" style={{ '--d': '.9s' }}>{pair(inv.brideParents)}</p>
+            <p className="iv-small rv">{inv.blessingsLabel}</p>
+            <p className="iv-host iv-ash rv" style={{ '--d': '.1s' }}>{inv.blessings.map((x, i) => <span key={i}>{x}</span>)}</p>
+            <p className="iv-req rv" style={{ '--d': '.25s' }}>{inv.request}</p>
+            <p className="iv-nm rv" style={{ '--d': '.4s' }}>{names.name1}</p>
+            <p className="iv-req iv-of rv" style={{ '--d': '.5s' }}>{inv.brideLine}</p>
+            <p className="iv-host rv" style={{ '--d': '.55s' }}>{pair(inv.brideParents)}</p>
+            <p className="iv-with rv" style={{ '--d': '.65s' }}>with</p>
+            <p className="iv-nm rv" style={{ '--d': '.75s' }}>{names.name2}</p>
+            <p className="iv-req iv-of rv" style={{ '--d': '.85s' }}>{inv.groomLine}</p>
+            <p className="iv-host rv" style={{ '--d': '.9s' }}>{pair(inv.groomParents)}</p>
             <div className="rv" style={{ '--d': '1s' }}><Ornament width={180} /></div>
             <p className="iv-p iv-close rv" style={{ '--d': '1.1s' }}>{siteConfig.homepage.invitationBottom}</p>
             <p className="iv-deva rv" style={{ '--d': '1.25s' }}>{siteConfig.homepage.welcomeHindi}</p>
@@ -665,12 +675,13 @@ export default function InviteFilm() {
         {events.map((ev, k) => {
           const l = LINES[ev.name] || { hing: ev.description, icon: 'mandap' };
           return (
-            <section key={ev.id} className={'iv-sec ' + ['iv-teal', 'iv-green', 'iv-dusk', 'iv-sun', 'iv-royal'][k % 5]} data-i={idx++}>
+            <section key={ev.id} className={'iv-sec ' + ['iv-teal', 'iv-green', 'iv-dusk', 'iv-sun', 'iv-royal'][k % 5] + (/shaadi|varmala/i.test(ev.name) ? ' iv-shaadi' : '')} data-i={idx++}>
               {/faldaan/i.test(ev.name) && <PaintedBG name="faldaan"><FaldaanBG /></PaintedBG>}
               {/mehndi/i.test(ev.name) && <PaintedBG name="mehndi"><MehndiBG /></PaintedBG>}
               {/haldi/i.test(ev.name) && <PaintedBG name="haldi"><HaldiBG /></PaintedBG>}
               {/sangeet/i.test(ev.name) && <PaintedBG name="sangeet" dark><SangeetBG /></PaintedBG>}
               {/shaadi|varmala/i.test(ev.name) && <PaintedBG name="shaadi"><MandapBG /></PaintedBG>}
+              {/faldaan|mehndi|shaadi|varmala/i.test(ev.name) && <Toran2 />}
               <div className="iv-in">
                 <p className="iv-small rv">{events.length > 1 ? `Function ${k + 1} of ${events.length}` : 'The Wedding'}</p>
                 <div className="iv-card rv" style={{ '--d': '.15s' }}>
@@ -680,15 +691,15 @@ export default function InviteFilm() {
                   <div className="iv-when"><b>{fmtDate(ev.date)}</b><span>{ev.time}</span></div>
                   <div className="iv-dress">Dress code · {ev.dressCode}</div>
                 </div>
-                <p className="iv-p light rv" style={{ '--d': '.4s' }}>{l.note || ev.description}</p>
+                {!l.noNote && <p className="iv-p light rv" style={{ '--d': '.4s' }}>{l.note || ev.description}</p>}
               </div>
             </section>
           );
         })}
 
         {/* venue */}
-        <section className="iv-sec iv-sea" data-i={idx++}>
-          <svg className="iv-waves" viewBox="0 0 390 120" preserveAspectRatio="none" aria-hidden><path className="w1" d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V120 H0Z" fill="#ffffff22" /><path className="w2" d="M0 80 Q50 50 100 80 T200 80 T300 80 T400 80 V120 H0Z" fill="#ffffff2e" /></svg>
+        <section className="iv-sec iv-sea iv-venue" data-i={idx++}>
+          <PaintedBG name="venue"><svg className="iv-waves" viewBox="0 0 390 120" preserveAspectRatio="none" aria-hidden><path className="w1" d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V120 H0Z" fill="#ffffff22" /><path className="w2" d="M0 80 Q50 50 100 80 T200 80 T300 80 T400 80 V120 H0Z" fill="#ffffff2e" /></svg></PaintedBG>
           <div className="iv-in">
             <p className="iv-small rv">The Venue</p>
             <h2 className="iv-h light rv" style={{ '--d': '.15s' }}>{siteConfig.wedding.venueName}</h2>

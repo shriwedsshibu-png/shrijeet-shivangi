@@ -5,7 +5,7 @@ import Icon from '../icons';
 import { backendReady, NOT_READY_MESSAGE, uploadPhoto, fetchPhotos, fetchFaces, thumbUrl, fullUrl, downloadUrl } from '../api';
 import { prepareForUpload, selfieCanvas } from '../photoTools';
 import { loadFaceApi, describeFaces, matchPhotos } from '../faces';
-import { sortedEvents, currentEventName } from '../utils';
+import { sortedEvents, uploadableEvents, defaultUploadEvent } from '../utils';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const withTimeout = (promise, ms) => Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -14,8 +14,8 @@ const withTimeout = (promise, ms) => Promise.race([promise, new Promise((_, rej)
    SHARE  — choose celebration, pick photos, upload
    ============================================================ */
 function SharePanel({ onUploaded, openGallery }) {
-  const events = useMemo(() => sortedEvents(), []);
-  const [event, setEvent] = useState(currentEventName());
+  const events = useMemo(() => uploadableEvents(), []);
+  const [event, setEvent] = useState(defaultUploadEvent());
   const [items, setItems] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -214,7 +214,7 @@ function GalleryPanel({ active, openShare }) {
   useEffect(() => { if (active) load(); }, [active, load]);
 
   const ours = useMemo(() => (cfg.ourPhotos || []).map((url, i) => ({ id: `our-${i}`, static: true, event: cfg.ourPhotosLabel || 'Our Photos', thumb: url, full: url, download: url })), [cfg]);
-  const eventOrder = useMemo(() => sortedEvents().map((e) => e.name), []);
+  const eventOrder = useMemo(() => sortedEvents(true).map((e) => e.name), []);
 
   const all = useMemo(() => {
     const pool = matches ? guest.filter((p) => matches.has(p.id)) : [...ours, ...guest];
