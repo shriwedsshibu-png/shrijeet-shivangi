@@ -59,7 +59,7 @@ const siteConfig = {
     bride: {
       heading: "आकांक्षी",
       groups: [
-        ["Shailendra Kumar", "Gyanendra Saurav", "Satyendra Kumar", "Rishabh & Riyansh"],
+        ["Satyendra Kumar", "Gyanendra Saurav", "Rishabh & Riyansh"],
       ],
       closing: "समस्त परिवार",
     },

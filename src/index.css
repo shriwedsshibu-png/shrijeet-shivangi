@@ -602,3 +602,24 @@
 .iv .iv-sec.fin{padding-bottom:max(4rem,19vh)}
 .fin .iv-end-names span,.fin .iv-end-h,.fin .iv-end-close{text-shadow:0 1px 6px rgba(10,16,35,.85)}
 @media(max-height:700px){.iv .iv-sec.fin{padding-bottom:max(3.6rem,17vh)}}
+
+/* ===== v13: Shri Ganesh on every page, and a few touches of kumkum red ===== */
+.iv-gan-cov{display:block;height:clamp(52px,9.5svh,84px);width:auto;margin:0 auto -.1rem;filter:drop-shadow(0 2px 6px rgba(120,60,20,.25))}
+.iv-gan-top{position:fixed;top:1.05rem;left:50%;transform:translateX(-50%);height:2.35rem;width:auto;z-index:19;pointer-events:none;filter:drop-shadow(0 1px 4px rgba(0,0,0,.25))}
+.iv-end-top{display:flex;flex-direction:column;align-items:center;margin-bottom:auto}
+.iv-gan-end{height:clamp(44px,7.5svh,62px);width:auto;margin-bottom:.35rem;filter:drop-shadow(0 2px 8px rgba(255,200,120,.25))}
+.fin .iv-end-mantra{margin:0;padding-bottom:.4rem}
+.iv .iv-sec.fin{padding-top:2.1rem}
+/* red/maroon, only in a few places: the Ganesh lines on the cover (as on printed cards),
+   the function names, and the revealed wedding date */
+.iv-cov2 .iv-ganesh{color:#a31f1f}
+.iv-card h2{color:#7b1e2b}
+.iv-orn{color:#a31f1f}
+.iv-date b{color:#7b1e2b}
+@media(max-height:700px){.iv .iv-sec.fin{padding-top:1.8rem}.iv-gan-top{height:2rem;top:.95rem}}
+@media(max-height:700px){.iv .iv-sec.iv-shaadi{padding-top:3.6rem}.iv-gan-cov{height:42px}.iv-cov2 .iv-art{width:min(56vw,calc(24dvh * .75))}}
+/* cover: keep "Open Your Invitation" clear of the website link on short phones */
+.iv .iv-cov2{padding-bottom:3.6rem}
+@media(max-height:700px){.iv-cov2 .iv-art{width:min(52vw,calc(21dvh * .75))}.iv-cov2 .iv-in{gap:.25rem}}
+/* on the cover the website link sits in the top-right corner, clear of "Open Your Invitation" */
+.iv .iv-ctrl.top{top:.7rem;bottom:auto}

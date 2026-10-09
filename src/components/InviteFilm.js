@@ -693,7 +693,8 @@ export default function InviteFilm() {
           ))}
         </div>
       )}
-      <div className="iv-ctrl">
+      {opened && active > 0 && active < LAST && <img className="iv-gan-top" src="/images/invite/ganesh.webp" alt="" aria-hidden />}
+      <div className={'iv-ctrl' + (active === 0 ? ' top' : '')}>
         {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((v) => !v)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
         {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>Visit wedding website</button>}
       </div>
@@ -709,6 +710,7 @@ export default function InviteFilm() {
         <PaintedBG name="cover" zoom><CoverBG /></PaintedBG>
         <div className="iv-drift" aria-hidden>{Array.from({ length: 10 }).map((_, i) => <i key={i} style={{ left: (6 + i * 9.4) + '%', animationDelay: (i * 1.3) % 9 + 's', animationDuration: 9 + (i % 4) * 2 + 's', background: ['#f4c2bd', '#f2d18a', '#fff1d8', '#eeb0aa'][i % 4] }} />)}</div>
         <div className="iv-in">
+          <img className="iv-gan-cov rv" style={{ '--d': '.05s' }} src="/images/invite/ganesh.webp" alt="Shri Ganesh" />
           <p className="iv-ganesh rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
           <p className="iv-ganesh iv-mantra rv" style={{ '--d': '.5s' }}>वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।<br />निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
           <p className="iv-small rv" style={{ '--d': '.95s' }}>The wedding of</p>
@@ -803,7 +805,10 @@ export default function InviteFilm() {
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
           <div className="iv-in">
-            {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra rv" style={{ '--d': '.1s' }}>{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
+            <div className="iv-end-top rv" style={{ '--d': '.05s' }}>
+              <img className="iv-gan-end" src="/images/invite/ganesh.webp" alt="Shri Ganesh" />
+            {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra">{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
+            </div>
             <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>Aap aayenge na!</h2>
             <p className="iv-p rv" style={{ '--d': '1.6s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
