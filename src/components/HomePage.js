@@ -10,7 +10,7 @@ import { dateLine, isFullTier } from '../tier';
 function ActionCard({ to, icon, title, text }) {
   return (
     <Link to={to} className="card flex items-center gap-4 no-underline" style={{ textDecoration: 'none', color: 'inherit' }}>
-      <span className="grid place-items-center flex-none rounded-full" style={{ width: '3.6rem', height: '3.6rem', background: 'linear-gradient(180deg,#7d2231,#4a1120)', color: '#ffe2a3', border: '1.5px solid var(--gold)' }}>
+      <span className="grid place-items-center flex-none rounded-full" style={{ width: '3.6rem', height: '3.6rem', background: 'linear-gradient(180deg,#2c4a6e,#1f3350)', color: '#f1d68e', border: '1.5px solid var(--gold)' }}>
         <Icon name={icon} size={28} />
       </span>
       <span className="flex-1 min-w-0">
@@ -47,8 +47,8 @@ export default function HomePage() {
           <p className="hero-text mt-3">{hp.invitationBottom}</p>
 
           <div className="hero-date">
-            <span className="font-display font-bold" style={{ fontSize: '1.6rem', color: '#ffe2a3', lineHeight: 1.1 }}>{dateLine()}</span>
-            <span style={{ color: '#f1e2c4', fontSize: '1.05rem', letterSpacing: '.12em', textTransform: 'uppercase' }}>{wedding.city}</span>
+            <span className="font-display font-bold" style={{ fontSize: '1.6rem', color: '#f1d68e', lineHeight: 1.1 }}>{dateLine()}</span>
+            <span style={{ color: '#d9e3f0', fontSize: '1.05rem', letterSpacing: '.12em', textTransform: 'uppercase' }}>{wedding.city}</span>
           </div>
 
           {hp.welcomeHindi && <p className="deva mt-5" style={{ color: '#e7cf98', fontSize: '1.1rem' }}>{hp.welcomeHindi}</p>}

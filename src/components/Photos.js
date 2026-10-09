@@ -139,7 +139,7 @@ function SharePanel({ onUploaded, openGallery }) {
                   {it.status === 'done' ? '✓' : it.status === 'error' ? '!' : it.status === 'working' ? '…' : ''}
                 </span>
                 {!busy && it.status !== 'done' && (
-                  <button type="button" aria-label="Remove photo" onClick={() => remove(it.id)} className="absolute top-1 right-1 grid place-items-center rounded-full" style={{ width: '1.7rem', height: '1.7rem', background: 'rgba(74,17,32,.85)', color: '#fff', border: 0 }}>
+                  <button type="button" aria-label="Remove photo" onClick={() => remove(it.id)} className="absolute top-1 right-1 grid place-items-center rounded-full" style={{ width: '1.7rem', height: '1.7rem', background: 'rgba(31,51,80,.85)', color: '#fff', border: 0 }}>
                     <Icon name="close" size={14} strokeWidth={2.5} />
                   </button>
                 )}
@@ -289,7 +289,7 @@ function GalleryPanel({ active, openShare }) {
       {guestCount > 0 && (
         <Card>
           <div className="flex items-center gap-3">
-            <span className="grid place-items-center flex-none rounded-full" style={{ width: '3.2rem', height: '3.2rem', background: 'var(--maroon)', color: '#ffe2a3' }}><Icon name="face" size={26} /></span>
+            <span className="grid place-items-center flex-none rounded-full" style={{ width: '3.2rem', height: '3.2rem', background: 'var(--maroon)', color: '#f1d68e' }}><Icon name="face" size={26} /></span>
             <div>
               <h2 className="font-display font-bold" style={{ fontSize: '1.7rem', color: 'var(--maroon)', lineHeight: 1.1 }}>Find my photos</h2>
               <p className="text-muted" style={{ fontSize: '.95rem' }}>Take a quick selfie and we will show the photos you are in.</p>
@@ -375,7 +375,7 @@ function GalleryPanel({ active, openShare }) {
             <a className="btn btn-gold" href={current.download} target="_blank" rel="noopener noreferrer" download><Icon name="download" size={20} /> Download</a>
             <button className="btn btn-light" style={{ minHeight: '3rem', padding: '.3rem 1rem' }} onClick={() => setOpenIndex((i) => Math.min(i + 1, flat.length - 1))} disabled={openIndex === flat.length - 1} aria-label="Next"><Icon name="chevronRight" size={22} /></button>
           </div>
-          <p className="mt-3" style={{ color: '#e9d9bd', fontSize: '.9rem' }}>{current.event} · {openIndex + 1} of {flat.length}</p>
+          <p className="mt-3" style={{ color: '#d9e3f0', fontSize: '.9rem' }}>{current.event} · {openIndex + 1} of {flat.length}</p>
         </div>
       )}
     </div>

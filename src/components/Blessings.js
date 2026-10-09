@@ -79,7 +79,7 @@ function ShagunCard() {
   useEffect(() => {
     if (s.qrImage) return undefined;
     let alive = true;
-    QRCode.toDataURL(upiLink, { width: 480, margin: 2, color: { dark: '#4a1120', light: '#ffffff' } })
+    QRCode.toDataURL(upiLink, { width: 480, margin: 2, color: { dark: '#1f3350', light: '#ffffff' } })
       .then((url) => { if (alive) setQr(url); })
       .catch(() => {});
     return () => { alive = false; };
