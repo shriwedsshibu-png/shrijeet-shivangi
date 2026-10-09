@@ -459,8 +459,6 @@ export default function InviteFilm() {
   const root = useRef(null);
   const audio = useRef(null);
   const [opened, setOpened] = useState(false);
-  const [musicOn, setMusicOn] = useState(false);
-  const [hasMusic, setHasMusic] = useState(true);
   const [revealed, setRevealed] = useState(false);
   const [active, setActive] = useState(0);
   const cd = useCountdown(siteConfig.wedding.countdownTo);
@@ -476,7 +474,8 @@ export default function InviteFilm() {
   const [doors, setDoors] = useState(0); // 0 none, 1 closed, 2 seam glows, 3 swinging open
   const doorZoom = useRef('none');
   const rsvpOn = !!siteConfig.features?.rsvp?.enabled;
-  const total = 5 + events.length;
+  const fam = (groomFirst() ? siteConfig.inviteFamily?.groom : siteConfig.inviteFamily?.bride) || null;
+  const total = 5 + events.length + (fam ? 1 : 0);
   const DATE_I = 1, LAST = total - 1;
 
   const mark = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* ignore */ } };
@@ -515,7 +514,7 @@ export default function InviteFilm() {
 
   const open = () => {
     if (opened) return;
-    if (audio.current) audio.current.play().then(() => setMusicOn(true)).catch(() => setMusicOn(false));
+    if (audio.current) audio.current.play().catch(() => {});
     const r = root.current;
     const cov = r && r.querySelector('.iv-cov2');
     const img = cov && cov.querySelector('.iv-paint img');
@@ -540,10 +539,6 @@ export default function InviteFilm() {
       if (sec) sec.classList.add('in');
     }, 1550);
     setTimeout(() => setDoors(0), 2800);
-  };
-  const toggleMusic = () => {
-    const a = audio.current; if (!a) return;
-    if (musicOn) { a.pause(); setMusicOn(false); } else a.resume().then(() => setMusicOn(true)).catch(() => setHasMusic(!a.unavailable));
   };
   const replay = () => { setAutoScratch(false); root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }); };
   // go to the start of the very next page (never jumps two pages)
@@ -689,7 +684,6 @@ export default function InviteFilm() {
       <button className="iv-skip" onClick={() => leave('/')}>Skip <span>· go to website</span></button>
       <div className="iv-ctrl">
         {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
-        {hasMusic && <button className="iv-snd" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊 Music on' : '🔇 Music off'}</button>}
       </div>
       {opened && active > 0 && (
         <div className="iv-prog" aria-hidden>
@@ -703,11 +697,12 @@ export default function InviteFilm() {
         <div className="iv-drift" aria-hidden>{Array.from({ length: 10 }).map((_, i) => <i key={i} style={{ left: (6 + i * 9.4) + '%', animationDelay: (i * 1.3) % 9 + 's', animationDuration: 9 + (i % 4) * 2 + 's', background: ['#f4c2bd', '#f2d18a', '#fff1d8', '#eeb0aa'][i % 4] }} />)}</div>
         <div className="iv-in">
           <p className="iv-ganesh rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
-          <p className="iv-small rv" style={{ '--d': '.65s' }}>The wedding of</p>
-          <h1 className="iv-names iv-shine rv wr" style={{ '--d': '1s' }}>{p1.name}<span>&amp;</span>{p2.name}</h1>
-          <div className="iv-jharokha rv" style={{ '--d': '2.1s' }}><CoupleArt /></div>
+          <p className="iv-ganesh iv-mantra rv" style={{ '--d': '.5s' }}>वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।<br />निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
+          <p className="iv-small rv" style={{ '--d': '.95s' }}>The wedding of</p>
+          <h1 className="iv-names iv-shine rv wr" style={{ '--d': '1.3s' }}>{p1.name}<span>&amp;</span>{p2.name}</h1>
+          <div className="iv-jharokha rv" style={{ '--d': '2.4s' }}><CoupleArt /></div>
           {!opened
-            ? <button className="iv-cta iv-open rv" style={{ '--d': '2.7s' }} onClick={open}>Open Your Invitation</button>
+            ? <button className="iv-cta iv-open rv" style={{ '--d': '3s' }} onClick={open}>Open Your Invitation</button>
             : <p className="iv-small">scroll ↓</p>}
         </div>
       </section>
@@ -718,7 +713,7 @@ export default function InviteFilm() {
           <PaintedBG name="date" />
           <div className="iv-in">
             <p className="iv-small dark rv" style={{ '--d': '.2s' }}>Save the date</p>
-            <h2 className="iv-h rv wr iv-h-sm" style={{ '--d': '.6s' }}>Unveil our auspicious day</h2>
+            <h2 className="iv-h iv-h-sm iv-h-date rv" style={{ '--d': '.35s' }}>Unveil our auspicious day</h2>
             <div className="rv" style={{ '--d': '1.5s' }}>
               <Scratch onReveal={() => setRevealed(true)} auto={autoScratch} onTouch={(v) => { touching.current = v; }}>
                 <div className="iv-date"><span className="wd">Wednesday</span><b>2 December</b><span>2026</span></div>
@@ -728,6 +723,7 @@ export default function InviteFilm() {
             <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.8s' }}>
               {[['days', cd[0]], ['hrs', cd[1]], ['min', cd[2]], ['sec', cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
+            <button className="iv-inline-skip rv" style={{ '--d': '2.4s' }} onClick={() => leave('/')}>Skip · go to website</button>
           </div>
         </section>
 
@@ -791,6 +787,25 @@ export default function InviteFilm() {
           </div>
         </section>
 
+        {/* well-wishers: the family names, in the traditional card form */}
+        {fam && (
+          <section className="iv-sec iv-fam" data-i={idx++}>
+            <PaintedBG name="finale"><FinaleBG /></PaintedBG>
+            <div className="iv-in">
+              <p className="iv-small rv" style={{ '--d': '.2s' }}>With love and blessings</p>
+              <h2 className="iv-fam-h rv" style={{ '--d': '.6s' }}>{fam.heading}</h2>
+              <div className="iv-fam-list rv" style={{ '--d': '1.3s' }}>
+                {fam.groups.map((g, gi) => (
+                  <div key={gi} className="iv-fam-group">
+                    {g.map((line, li) => <p key={li}>{line}</p>)}
+                  </div>
+                ))}
+              </div>
+              <p className="iv-fam-close rv" style={{ '--d': '2.3s' }}>{fam.closing}</p>
+            </div>
+          </section>
+        )}
+
         {/* finale */}
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
@@ -798,9 +813,9 @@ export default function InviteFilm() {
             <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>Aap aayenge na!</h2>
             <p className="iv-p rv" style={{ '--d': '1.6s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
-              {rsvpOn && <button className="iv-cta gold" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
-              <button className="iv-soft" onClick={() => leave('/')}>Explore the wedding website →</button>
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
+              {rsvpOn && <button className="iv-cta gold sm" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
+              <button className="iv-soft" onClick={() => leave('/')}>Explore the wedding website →</button>
             </div>
           </div>
         </section>

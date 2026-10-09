@@ -43,6 +43,28 @@ const siteConfig = {
     bride: { slug: "shivangi" },
   },
 
+  // --------------------------------------------------------------------------
+  // 1d. INVITE — WELL-WISHERS PAGE  ("आकांक्षी" / "समस्त परिवार")
+  //     Shown near the end of the invite film, in the same order and groups
+  //     written below. The 3-day invite shows the sending side's family only.
+  // --------------------------------------------------------------------------
+  inviteFamily: {
+    groom: {
+      heading: "आकांक्षी",
+      groups: [
+        ["Sudhir Kumar Mishra", "Shashi Bhushan Mishra", "Alok Mishra", "Avlok Mishra"],
+      ],
+      closing: "समस्त परिवार",
+    },
+    bride: {
+      heading: "आकांक्षी",
+      groups: [
+        ["Shailendra Kumar", "Gyanendra Saurav", "Satyendra Kumar", "Rishabh & Riyansh"],
+      ],
+      closing: "समस्त परिवार",
+    },
+  },
+
   guestTiers: {
     defaultTier: "wedding",
     full: {
@@ -148,7 +170,7 @@ const siteConfig = {
         name: "Mehndi",
         date: "2026-12-01",
         time: "08:30 AM",
-        dressCode: "Traditional",
+        dressCode: "Shades of Green",
         description: "A morning of henna, colour, laughter and songs.",
       },
       {
@@ -156,7 +178,7 @@ const siteConfig = {
         name: "Engagement & Sangeet",
         date: "2026-12-01",
         time: "06:30 PM",
-        dressCode: "Party wear",
+        dressCode: "Indo-Western",
         description: "An evening of music, dance and family performances.",
       },
       {
@@ -164,7 +186,7 @@ const siteConfig = {
         name: "Haldi",
         date: "2026-12-02",
         time: "08:30 AM",
-        dressCode: "Traditional",
+        dressCode: "Shades of Blue and Yellow",
         description: "A joyful morning of haldi, blessings and fun.",
       },
       {

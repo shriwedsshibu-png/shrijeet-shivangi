@@ -332,6 +332,7 @@
 .iv-paint.p-message::after{background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(253,249,240,.7),rgba(253,249,240,0) 80%)}
 .iv-cov2 .iv-in{gap:.55rem}
 .iv-ganesh{font-family:'Noto Serif Devanagari',serif;color:#9a6e22;font-size:1rem;letter-spacing:.06em;margin:0}
+.iv-mantra{font-weight:600;line-height:1.55;max-width:19rem;text-align:center}
 .iv-shine{background:linear-gradient(100deg,#1f3350 0%,#1f3350 40%,#b8893b 50%,#1f3350 60%,#1f3350 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ivshine2 6s ease-in-out 2.4s infinite}
 .iv-shine span{-webkit-text-fill-color:#b8893b}
 @keyframes ivshine2{0%{background-position:100% 0}45%,100%{background-position:0 0}}
@@ -523,3 +524,24 @@
 .iv .iv-next{left:.75rem;bottom:.7rem;transform:none;animation:ivb3 1.8s ease-in-out infinite;width:2.6rem;height:2.6rem}
 @keyframes ivb3{50%{transform:translateY(5px)}}
 @media(prefers-reduced-motion:reduce){.iv .iv-next{animation:none}}
+
+/* ===== v9: a readable date-page heading (plain fade, no mask, a clear background behind it
+   on every device), a quiet inline Skip link, a smaller bold Confirm button, and the
+   well-wishers page ===== */
+.iv-h-date{background:rgba(255,250,248,.82);border-radius:1rem;padding:.3rem .8rem;box-shadow:0 2px 10px rgba(120,60,40,.08)}
+.iv-inline-skip{display:inline-block;background:none;border:0;color:#6a5a45;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;text-decoration:underline;text-underline-offset:.2em;padding:.5rem .4rem;margin-top:.3rem;cursor:pointer}
+.iv-cta.sm{min-height:3.1rem;padding:.6rem 1.3rem;font-size:1.02rem;font-weight:700}
+
+/* the Skip link moves to the bottom-right, small and quiet, not competing with Pause */
+.iv .iv-skip{position:fixed;top:auto;bottom:4.35rem;right:.7rem;left:auto;z-index:20;background:rgba(255,250,240,.55);border:0;box-shadow:none;color:#5a6a82;font-weight:400;font-size:.74rem;letter-spacing:.01em;padding:.3rem .65rem;min-height:auto;border-radius:999px;backdrop-filter:blur(3px);animation:none;text-decoration:none}
+.iv .iv-skip span{opacity:.75;font-family:'Lora',serif;color:inherit}
+.fin .iv-skip,.iv-fam .iv-skip{background:rgba(20,24,48,.4);color:#e7cf98}
+
+/* well-wishers page: same warm night sky as the finale, the heading in the finale's gold */
+.iv-fam{background:linear-gradient(#1f3350,#2c4a6e);color:#fbf3e6}
+.iv-fam .iv-small{color:#e7cf98}
+.iv-fam-h{font-family:'Noto Serif Devanagari',serif;font-weight:700;font-size:clamp(2.1rem,8.5vw,2.6rem);line-height:1.3;margin:.1rem 0 .2rem;background:linear-gradient(180deg,#fff3cf 0%,#f0d58c 55%,#d9b25c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.iv-fam-list{display:flex;flex-direction:column;gap:1rem;margin-top:.3rem}
+.iv-fam-group{display:flex;flex-direction:column;gap:.2rem}
+.iv-fam-group p{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:600;font-size:1.2rem;line-height:1.35;color:#fbe9bd}
+.iv-fam-close{font-family:'Noto Serif Devanagari',serif;font-weight:700;font-size:1.35rem;color:#f1d68e;margin-top:.6rem}
