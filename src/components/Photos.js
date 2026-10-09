@@ -173,6 +173,8 @@ function SharePanel({ onUploaded, openGallery }) {
 /* ============================================================
    GALLERY — grouped by celebration, with "find my photos"
    ============================================================ */
+const PREVIEW = 6; // photos shown per celebration before "See all"
+
 function Tile({ photo, onOpen }) {
   const [src, setSrc] = useState(photo.thumb);
   return (
@@ -273,6 +275,13 @@ function GalleryPanel({ active, openShare }) {
     }
   };
 
+  const topRef = useRef(null);
+  const pick = (name) => {
+    setFilter(name);
+    requestAnimationFrame(() => topRef.current && topRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
+  const swipe = useRef(null);
+
   const clearFace = () => { setMatches(null); setSelfie(''); setFace({ status: 'idle', text: '' }); };
 
   const chips = useMemo(() => {
@@ -284,7 +293,7 @@ function GalleryPanel({ active, openShare }) {
   const guestCount = guest.length;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-6" style={{ gridTemplateColumns: 'minmax(0, 1fr)' }}>
       {/* find my photos */}
       {guestCount > 0 && (
         <Card>
@@ -297,7 +306,7 @@ function GalleryPanel({ active, openShare }) {
           </div>
 
           {!matches && face.status !== 'working' && (
-            <div className="grid sm:grid-cols-2 gap-3 mt-4">
+            <div className="grid sm:grid-cols-2 gap-3 mt-4 fm-btns">
               <input ref={cameraRef} type="file" accept="image/*" capture="user" className="hidden" onChange={(e) => { findMe(e.target.files[0]); e.target.value = ''; }} />
               <input ref={pickRef} type="file" accept="image/*" className="hidden" onChange={(e) => { findMe(e.target.files[0]); e.target.value = ''; }} />
               <Button variant="primary" onClick={() => cameraRef.current?.click()}><Icon name="camera" size={22} /> Take a selfie</Button>
@@ -321,16 +330,16 @@ function GalleryPanel({ active, openShare }) {
       )}
 
       {/* filters */}
-      <div>
+      <div ref={topRef} style={{ scrollMarginTop: '5.5rem' }}>
         <div className="flex items-center justify-between mb-3 gap-3">
           <p className="font-semibold">{loading ? 'Loading photos…' : `${all.length} photo${all.length === 1 ? '' : 's'}`}</p>
           <button className="chip" onClick={load} disabled={loading}><Icon name="refresh" size={16} /> Refresh</button>
         </div>
         {chips.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'thin' }}>
-            <button className={`chip ${filter === 'all' ? 'chip-on' : ''}`} onClick={() => setFilter('all')}>All</button>
+          <div className="g-filters">
+            <button className={`chip ${filter === 'all' ? 'chip-on' : ''}`} onClick={() => pick('all')}>All</button>
             {chips.map((c) => (
-              <button key={c.name} className={`chip ${filter === c.name ? 'chip-on' : ''}`} onClick={() => setFilter(c.name)}>{c.name} · {c.count}</button>
+              <button key={c.name} className={`chip ${filter === c.name ? 'chip-on' : ''}`} onClick={() => pick(c.name)}>{c.name} · {c.count}</button>
             ))}
           </div>
         )}
@@ -339,16 +348,27 @@ function GalleryPanel({ active, openShare }) {
       {!backendReady() && <Notice kind="info">Guest photos will appear here once sharing opens.</Notice>}
       {error && <Notice kind="error">{error}</Notice>}
 
-      {shownGroups.map((g) => (
-        <section key={g.name}>
-          <h3 className="font-display font-bold mb-2" style={{ fontSize: '1.7rem', color: 'var(--maroon)' }}>{g.name} <span className="text-muted" style={{ fontSize: '1rem', fontWeight: 500 }}>· {g.photos.length}</span></h3>
-          <div className="g-grid">
-            {g.photos.map((p) => (
-              <Tile key={p.id} photo={p} onOpen={() => setOpenIndex(flat.indexOf(p))} />
-            ))}
-          </div>
-        </section>
-      ))}
+      {filter !== 'all' && (
+        <button className="btn btn-ghost g-back" onClick={() => pick('all')}><Icon name="chevronLeft" size={20} /> All celebrations</button>
+      )}
+
+      {shownGroups.map((g) => {
+        const preview = filter === 'all' && !matches && shownGroups.length > 1;
+        const list = preview ? g.photos.slice(0, PREVIEW) : g.photos;
+        return (
+          <section key={g.name}>
+            <h3 className="font-display font-bold mb-2" style={{ fontSize: '1.7rem', color: 'var(--maroon)', lineHeight: 1.15 }}>{g.name} <span className="text-muted" style={{ fontSize: '1rem', fontWeight: 500 }}>· {g.photos.length} photo{g.photos.length === 1 ? '' : 's'}</span></h3>
+            <div className="g-grid">
+              {list.map((p) => (
+                <Tile key={p.id} photo={p} onOpen={() => setOpenIndex(flat.indexOf(p))} />
+              ))}
+            </div>
+            {list.length < g.photos.length && (
+              <button className="btn btn-ghost btn-block g-more" onClick={() => pick(g.name)}>See all {g.photos.length} photos from {g.name} <Icon name="chevronRight" size={20} /></button>
+            )}
+          </section>
+        );
+      })}
 
       {!loading && guestCount === 0 && backendReady() && !error && (
         <Card className="text-center">
@@ -367,7 +387,13 @@ function GalleryPanel({ active, openShare }) {
       )}
 
       {current && (
-        <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setOpenIndex(-1)}>
+        <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setOpenIndex(-1)}
+          onTouchStart={(e) => { const t = e.touches[0]; swipe.current = { x: t.clientX, y: t.clientY }; }}
+          onTouchEnd={(e) => {
+            const s0 = swipe.current; swipe.current = null; if (!s0) return;
+            const t = e.changedTouches[0]; const dx = t.clientX - s0.x; const dy = t.clientY - s0.y;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) setOpenIndex((i) => (dx < 0 ? Math.min(i + 1, flat.length - 1) : Math.max(i - 1, 0)));
+          }}>
           <button className="btn btn-light" style={{ position: 'absolute', top: '.8rem', right: '.8rem', minHeight: '2.8rem', padding: '.3rem 1rem' }} onClick={() => setOpenIndex(-1)}><Icon name="close" size={20} /> Close</button>
           <img src={current.full} alt="Wedding moment" onClick={(e) => e.stopPropagation()} onError={(e) => { if (!current.static && !e.target.dataset.fb) { e.target.dataset.fb = '1'; e.target.src = `https://lh3.googleusercontent.com/d/${current.id}=w1600`; } }} />
           <div className="flex items-center gap-3 mt-4" onClick={(e) => e.stopPropagation()}>
@@ -375,7 +401,7 @@ function GalleryPanel({ active, openShare }) {
             <a className="btn btn-gold" href={current.download} target="_blank" rel="noopener noreferrer" download><Icon name="download" size={20} /> Download</a>
             <button className="btn btn-light" style={{ minHeight: '3rem', padding: '.3rem 1rem' }} onClick={() => setOpenIndex((i) => Math.min(i + 1, flat.length - 1))} disabled={openIndex === flat.length - 1} aria-label="Next"><Icon name="chevronRight" size={22} /></button>
           </div>
-          <p className="mt-3" style={{ color: '#d9e3f0', fontSize: '.9rem' }}>{current.event} · {openIndex + 1} of {flat.length}</p>
+          <p className="mt-3 text-center" style={{ color: '#e9edf4', fontSize: '1rem' }}>{current.event} · {openIndex + 1} of {flat.length}<br /><span style={{ fontSize: '.85rem', opacity: .75 }}>Swipe or use the arrows</span></p>
         </div>
       )}
     </div>

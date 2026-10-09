@@ -482,3 +482,20 @@
    reach above it, so give written lines room on every side without moving the layout */
 .iv .rv.wr{padding:.34em .42em .24em;margin-top:-.34em;margin-bottom:-.24em}
 .iv .iv-cov2 .iv-names.wr{margin-top:calc(.15rem - .34em)}
+
+/* ===== Gallery for every age: two big photos per row on phones (about six per screen),
+   filters as big buttons that wrap, nothing wider than the phone ===== */
+.g-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+@media(min-width:640px){.g-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}}
+@media(min-width:1024px){.g-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.g-tile{border-radius:1rem;box-shadow:0 4px 14px rgba(31,51,80,.12);outline:1px solid rgba(184,137,59,.25);outline-offset:-1px}
+.g-tile:active{transform:scale(.98)}
+.g-filters{display:flex;flex-wrap:wrap;gap:.5rem}
+.g-filters .chip{min-height:2.75rem;font-size:.98rem;padding:.35rem 1rem}
+.g-more{margin-top:.8rem;min-height:3rem;font-size:1rem;white-space:normal}
+.g-back{justify-self:start;min-height:2.8rem;padding:.35rem 1.1rem}
+.fm-btns .btn{width:100%;min-height:3.2rem;font-size:1.05rem;padding:.5rem 1rem;white-space:normal}
+.lightbox .btn{min-height:3.2rem}
+.seg button{white-space:nowrap}
+@media(max-width:400px){.seg button{font-size:.92rem;gap:.35rem;padding:0 .4rem}.seg button svg{width:19px;height:19px}}
+.g-filters .chip{min-height:2.55rem;font-size:.93rem;padding:.3rem .85rem}

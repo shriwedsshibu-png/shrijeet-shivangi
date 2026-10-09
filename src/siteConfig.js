@@ -199,8 +199,6 @@ const siteConfig = {
     // Your own photos shown at the top of the gallery (files are in public/images)
     ourPhotosLabel: "Shivangi & Shrijeet",
     ourPhotos: [
-      "/images/our-image.jpg",
-      "/images/our2.jpg",
       "/images/shrijeet.jpg",
       "/images/shivangi.jpg",
     ],
