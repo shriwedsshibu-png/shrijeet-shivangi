@@ -10,7 +10,7 @@ import { sortedEvents } from '../utils';
    ========================================================================== */
 
 export const SEEN_KEY = 'ss_invite_seen';
-const MUSIC_SRC = '/audio/invite.mp3?v=4'; // optional: drop a royalty-free file here to enable music
+const MUSIC_SRC = '/audio/invite.mp3?v=5'; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
   Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
