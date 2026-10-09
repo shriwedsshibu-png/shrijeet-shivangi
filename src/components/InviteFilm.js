@@ -794,15 +794,14 @@ export default function InviteFilm() {
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
           <div className="iv-in">
+            {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra rv" style={{ '--d': '.1s' }}>{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
             <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>Aap aayenge na!</h2>
             <p className="iv-p rv" style={{ '--d': '1.6s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
               {rsvpOn && <button className="iv-cta gold sm" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
-              <button className="iv-soft" onClick={() => leave('/')}>Explore the wedding website →</button>
             </div>
             <div className="iv-end rv" style={{ '--d': '3.2s' }}>
-              {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra">{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
               {fam && (
                 <>
                   <p className="iv-end-h">{fam.heading}</p>

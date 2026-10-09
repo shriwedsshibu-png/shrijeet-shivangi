@@ -574,3 +574,9 @@
 /* small mute button, next to the scroll-down arrow */
 .iv-mute{position:fixed;left:3.75rem;bottom:.7rem;z-index:20;width:2.3rem;height:2.3rem;border-radius:50%;border:1px solid rgba(184,137,59,.55);background:rgba(251,247,238,.78);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);padding:0}
 @media(max-height:660px){.fin .iv-in{gap:.35rem}.fin .iv-aap{font-size:2.1rem}.fin .iv-p{font-size:.95rem;line-height:1.45}.iv-end{margin-top:.4rem;padding-top:.4rem}.iv-end-names span{font-size:1rem}.iv .iv-sec.fin{padding-top:3rem;padding-bottom:3.6rem}}
+
+/* last page, final order: blessing, Aap aayenge na, line, (gap) Replay, Confirm, names */
+.iv .iv-skip.hot{animation:none}
+.fin .iv-end-mantra{margin:0 0 .2rem}
+.fin .iv-btns{margin-top:1.1rem}
+.fin .iv-end{border-top:0;margin-top:.9rem}
