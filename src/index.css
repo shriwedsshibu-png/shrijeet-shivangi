@@ -389,3 +389,18 @@
 .iv-map{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem 1rem;border-radius:999px;border:1px solid rgba(31,51,80,.35);background:rgba(255,250,240,.72);color:#1f3350;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;text-decoration:none;backdrop-filter:blur(2px);margin-top:.2rem}
 .iv-paint.p-venue ~ .iv-in > .iv-p{font-size:1.05rem;padding:.25rem .9rem}
 .iv-msg2 .iv-in > .iv-small:first-child{letter-spacing:.09em;font-size:.8rem;white-space:nowrap}
+
+/* ===== v7 ===== */
+/* cover: no boxes behind the small lines, just a soft glow, and room above the names */
+.iv-paint.p-cover ~ .iv-in > .iv-ganesh,.iv-paint.p-cover ~ .iv-in > .iv-small{background:none;padding:0;text-shadow:0 0 6px #fdf8ee,0 0 12px #fdf8ee,0 0 18px #fdf8ee}
+.iv-cov2 .iv-in > .iv-small{margin-bottom:.35rem}
+/* Shaadi without the toran: same top line as the other pages */
+.iv-shaadi{padding-top:7.4rem}
+@media(max-height:700px){.iv-shaadi{padding-top:5.4rem}}
+/* finale */
+.iv-aap{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:600;font-size:clamp(2.7rem,12.5vw,3.5rem);line-height:1.05;margin:.2rem 0;letter-spacing:.01em;background:linear-gradient(180deg,#fff3cf 0%,#f0d58c 55%,#d9b25c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.iv-soft{background:none;border:0;border-bottom:1px solid rgba(231,207,152,.45);color:#e7dcc2;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.08rem;padding:.35rem .2rem;margin:.2rem auto 0;cursor:pointer;align-self:center}
+.fin .iv-btns{gap:.7rem}
+/* cover: a soft cream veil behind the opening lines so the bells fade back, no box */
+.iv-paint.p-cover::after{background:radial-gradient(ellipse 58% 30% at 50% 22%,rgba(253,249,240,.92),rgba(253,249,240,.6) 45%,rgba(253,249,240,0) 80%),radial-gradient(ellipse 62% 48% at 50% 50%,rgba(253,249,240,.4),rgba(253,249,240,0) 75%)}
+.iv-aap{font-size:clamp(2.2rem,10.2vw,3rem);white-space:nowrap}

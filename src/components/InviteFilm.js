@@ -681,7 +681,7 @@ export default function InviteFilm() {
               {/haldi/i.test(ev.name) && <PaintedBG name="haldi"><HaldiBG /></PaintedBG>}
               {/sangeet/i.test(ev.name) && <PaintedBG name="sangeet" dark><SangeetBG /></PaintedBG>}
               {/shaadi|varmala/i.test(ev.name) && <PaintedBG name="shaadi"><MandapBG /></PaintedBG>}
-              {/faldaan|mehndi|shaadi|varmala/i.test(ev.name) && <Toran2 />}
+              {/faldaan/i.test(ev.name) && <Toran2 />}
               <div className="iv-in">
                 <p className="iv-small rv">{events.length > 1 ? `Function ${k + 1} of ${events.length}` : 'The Wedding'}</p>
                 <div className="iv-card rv" style={{ '--d': '.15s' }}>
@@ -712,11 +712,11 @@ export default function InviteFilm() {
         <section className="iv-sec iv-night fin" data-i={idx++}>
           <PaintedBG name="finale" dark><FinaleBG /></PaintedBG>
           <div className="iv-in">
-            <h2 className="iv-names rv" style={{ '--d': '.1s', fontSize: 'clamp(2.6rem,12vw,3.6rem)' }}>Aap aayenge na?</h2>
+            <h2 className="iv-aap rv" style={{ '--d': '.1s' }}>Aap aayenge na?</h2>
             <p className="iv-p rv" style={{ '--d': '.3s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
             <div className="iv-btns rv" style={{ '--d': '.5s' }}>
               {rsvpOn && <button className="iv-cta gold" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
-              <button className="iv-cta ghost" onClick={() => leave('/')}>Explore the Wedding Website</button>
+              <button className="iv-soft" onClick={() => leave('/')}>Explore the wedding website →</button>
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
             </div>
           </div>
