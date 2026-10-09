@@ -101,6 +101,13 @@ const siteConfig = {
     invitationBottom:
       "Your presence will be our greatest joy and your blessings our greatest gift.",
     welcomeHindi: "आपका हार्दिक स्वागत है",
+    // The invitation page of the invite film (traditional card wording)
+    inviteCard: {
+      groomParents: "Smt. Sujata Mishra & Shri Sushil Kumar Mishra",
+      request: "request the pleasure of your company at the wedding of their son",
+      brideLine: "daughter of",
+      brideParents: "Smt. Anju Kumari & Shri Shailendra Kumar",
+    },
     countdownTitle: "Counting down to forever",
     countdownPoem: "Two hearts, two families, one beautiful beginning.",
   },

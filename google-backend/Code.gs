@@ -51,6 +51,29 @@ function setup() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Runs by itself every time the Google Sheet is opened:               */
+/*  makes sure the RSVP + RSVP Summary tabs exist and adds a            */
+/*  "Wedding" menu at the top of the sheet.                             */
+/* ------------------------------------------------------------------ */
+function onOpen() {
+  try { rsvpSheet_(); } catch (e) {}
+  try {
+    SpreadsheetApp.getUi().createMenu('Wedding')
+      .addItem('Rebuild RSVP Summary', 'rebuildSummary')
+      .addToUi();
+  } catch (e) {}
+}
+
+// Deletes and re-creates the RSVP Summary tab (safe: it only holds formulas).
+function rebuildSummary() {
+  var ss = SpreadsheetApp.getActive();
+  var old = ss.getSheetByName('RSVP Summary');
+  if (old) ss.deleteSheet(old);
+  rsvpSheet_();
+  ss.setActiveSheet(ss.getSheetByName('RSVP Summary'));
+}
+
+/* ------------------------------------------------------------------ */
 /*  Web endpoints                                                       */
 /* ------------------------------------------------------------------ */
 function doPost(e) {

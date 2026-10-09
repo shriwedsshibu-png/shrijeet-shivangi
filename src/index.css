@@ -167,7 +167,7 @@
 
 /* ===== Invitation film (soft ivory / blush / sage / navy) ===== */
 .iv{--navy:#1f3350;--navy2:#2c4a6e;--gold:#b8893b;--golddeep:#8f6a26;position:fixed;inset:0;z-index:9999;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;background:#fbf7ee;color:var(--navy);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.iv-sec{position:relative;min-height:100vh;min-height:100dvh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:4.8rem 1.4rem 4.5rem;overflow:hidden;text-align:center}
+.iv-sec{position:relative;min-height:100vh;min-height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:4.8rem 1.4rem 4.5rem;overflow:hidden;text-align:center}
 .iv-in{position:relative;z-index:2;width:100%;max-width:26rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
 .iv-night{background:#f8efdf}
 .iv-rose{background:linear-gradient(160deg,#f9e9e3,#f1d6d0)}
@@ -321,3 +321,38 @@
 .iv-paint.dark ~ .iv-in > .iv-p{background:rgba(20,24,48,.55)}
 .iv-paint ~ .iv-in > .iv-small{background:rgba(251,247,238,.7);border-radius:99px;padding:.2rem .8rem}
 .iv-paint.dark ~ .iv-in > .iv-small{background:rgba(20,24,48,.5)}
+
+/* ===== v5: royal cover + traditional invitation page ===== */
+.iv-paint.zoom img{animation:ivkb 22s ease-in-out infinite alternate;transform-origin:50% 30%}
+@keyframes ivkb{from{transform:scale(1)}to{transform:scale(1.07)}}
+.iv-paint.p-cover img,.iv-paint.p-message img{object-position:center center}
+.iv-paint.p-cover::after{background:radial-gradient(ellipse 62% 48% at 50% 50%,rgba(253,249,240,.55),rgba(253,249,240,0) 75%)}
+.iv-paint.p-message::after{background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(253,249,240,.7),rgba(253,249,240,0) 80%)}
+.iv-cov2 .iv-in{gap:.55rem}
+.iv-ganesh{font-family:'Noto Serif Devanagari',serif;color:#9a6e22;font-size:1rem;letter-spacing:.06em;margin:0}
+.iv-shine{background:linear-gradient(100deg,#1f3350 0%,#1f3350 40%,#b8893b 50%,#1f3350 60%,#1f3350 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ivshine2 6s ease-in-out 2.4s infinite}
+.iv-shine span{-webkit-text-fill-color:#b8893b}
+@keyframes ivshine2{0%{background-position:100% 0}45%,100%{background-position:0 0}}
+.iv-jharokha{position:relative;padding:6px;border-radius:999px 999px 1.1rem 1.1rem;background:linear-gradient(160deg,#e9cf8e,#b8893b 45%,#f1dca6 70%,#a87a2e);box-shadow:0 16px 36px rgba(110,80,30,.25)}
+.iv-jharokha::before{content:'';position:absolute;left:50%;top:-14px;width:12px;height:12px;transform:translateX(-50%) rotate(45deg);background:#b8893b;border-radius:2px;box-shadow:0 0 0 3px #fbf7ee}
+.iv-jharokha .iv-art{border-radius:999px 999px .8rem .8rem;border:3px solid #fbf7ee;outline:none;box-shadow:none;width:min(58vw,13.5rem,calc(30dvh * .75))}
+.iv-drift{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.iv-drift i{position:absolute;top:-12px;width:9px;height:6px;border-radius:60% 0 60% 0;opacity:0;animation:ivdrift 11s linear infinite}
+@keyframes ivdrift{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:.85}90%{opacity:.7}100%{opacity:0;transform:translate(28px,105vh) rotate(540deg)}}
+@media(prefers-reduced-motion:reduce){.iv-drift,.iv-paint.zoom img,.iv-shine{animation:none}.iv-drift{display:none}}
+.iv-msg2 .iv-in{gap:.35rem;max-width:21rem}
+.iv-host{font-family:'Cinzel',serif;color:#8f6a26;font-size:clamp(.95rem,4.3vw,1.08rem);letter-spacing:.03em;line-height:1.45;margin:.4rem 0 0}
+.iv-req{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;color:#3a4a63;font-size:clamp(1.02rem,4.6vw,1.15rem);line-height:1.45;margin:0}
+.iv-nm{font-family:'Great Vibes',cursive;color:#1f3350;font-size:clamp(2.7rem,12.5vw,3.4rem);line-height:1;margin:.15rem 0 0}
+.iv-with{font-family:'Cinzel',serif;color:#b8893b;font-size:.85rem;letter-spacing:.3em;text-transform:uppercase;margin:0}
+.iv-msg2 .iv-close{font-size:1.02rem;line-height:1.5;margin:0}
+.iv-msg2 .iv-deva{font-size:1.25rem;margin:.1rem 0 0}
+.iv-paint.p-message ~ .iv-in > .iv-p,.iv-paint.p-message ~ .iv-in > .iv-small,.iv-paint.p-cover ~ .iv-in > .iv-small{background:none;padding:0;backdrop-filter:none}
+@media(max-height:700px){.iv-msg2 .iv-in{gap:.15rem}.iv-nm{font-size:2.5rem}.iv-msg2 .iv-close{display:none}.iv-cov2 .iv-in{gap:.3rem}}
+.iv-cov2{padding-top:6.6rem}
+.iv-paint.p-cover ~ .iv-in > .iv-ganesh,.iv-paint.p-cover ~ .iv-in > .iv-small{background:rgba(253,249,240,.82);border-radius:99px;padding:.18rem .85rem}
+.iv-host{margin:.25rem 0 0}
+.iv-msg2 .iv-req + .iv-host{margin-top:0}
+@media(max-height:700px){.iv-cov2{padding-top:4.2rem}.iv-host{font-size:.9rem;line-height:1.35}.iv-req{font-size:.98rem;line-height:1.35}}
+@media(max-height:700px){.iv-sec:not(.iv-night){padding-bottom:3.9rem;padding-top:2.8rem}.iv-card h2{font-size:1.75rem}.iv-card{padding-top:.8rem;padding-bottom:.8rem}}
+@media(max-height:700px){.iv-next{display:none}}

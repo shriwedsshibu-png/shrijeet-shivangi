@@ -332,11 +332,11 @@ function Ornament({ color = '#b8893b', width = 230 }) {
 }
 
 /* ---------- painted backgrounds (public/images/invite/<name>.jpg); falls back to the drawn art ---------- */
-function PaintedBG({ name, dark, children }) {
+function PaintedBG({ name, dark, zoom, children }) {
   const [ok, setOk] = useState(true);
   if (!ok) return children || null;
   return (
-    <div className={'iv-paint' + (dark ? ' dark' : '')} aria-hidden>
+    <div className={'iv-paint' + (dark ? ' dark' : '') + (zoom ? ' zoom' : '') + ' p-' + name} aria-hidden>
       <img src={`/images/invite/${name}.jpg`} alt="" onError={() => setOk(false)} />
     </div>
   );
@@ -487,7 +487,84 @@ export default function InviteFilm() {
     if (musicOn) { a.pause(); setMusicOn(false); } else a.play().then(() => setMusicOn(true)).catch(() => {});
   };
   const replay = () => { setAutoScratch(false); root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }); };
-  const next = useCallback(() => { if (root.current) root.current.scrollBy({ top: root.current.clientHeight, behavior: 'smooth' }); }, []);
+  // go to the start of the very next page (never jumps two pages)
+  const next = useCallback(() => {
+    const r = root.current; if (!r) return;
+    const secs = Array.from(r.querySelectorAll('.iv-sec'));
+    const nx = secs.find((s) => s.offsetTop > r.scrollTop + 8);
+    if (nx) r.scrollTo({ top: nx.offsetTop, behavior: 'smooth' });
+  }, []);
+
+  // ---- one swipe = one page. The phone's own "momentum" scrolling could fly past
+  // several functions on a fast flick, so we turn the pages ourselves. ----
+  useEffect(() => {
+    const r = root.current;
+    if (!opened || !r) return undefined;
+    r.style.scrollSnapType = 'none';
+    const secs = () => Array.from(r.querySelectorAll('.iv-sec'));
+    const idxAt = (top) => { let best = 0; secs().forEach((s, i) => { if (s.offsetTop <= top + r.clientHeight * 0.5) best = i; }); return best; };
+    let busy = false, busyT = 0;
+    const goFrom = (base, dir) => {
+      const ss = secs(); const i = idxAt(base); const s = ss[i]; const vh = r.clientHeight;
+      let top;
+      if (dir > 0 && s.offsetTop + s.offsetHeight > base + vh * 1.25) top = Math.min(base + vh * 0.8, s.offsetTop + s.offsetHeight - vh); // a tall page: finish reading it first
+      else if (dir < 0 && base > s.offsetTop + vh * 0.25) top = Math.max(s.offsetTop, base - vh * 0.8);
+      else top = ss[Math.max(0, Math.min(ss.length - 1, i + dir))].offsetTop;
+      busy = true; clearTimeout(busyT); busyT = setTimeout(() => { busy = false; }, 700);
+      r.scrollTo({ top, behavior: 'smooth' });
+    };
+    // touch: the page follows the finger, then settles on the next / previous page (never two)
+    let y0 = 0, s0 = 0, t0 = 0, x0 = 0, track = false, moved = false;
+    const ts = (e) => {
+      track = !busy && !e.target.closest('canvas') && e.touches.length === 1;
+      moved = false;
+      if (!track) return;
+      y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; t0 = Date.now(); s0 = r.scrollTop;
+    };
+    const tm = (e) => {
+      if (busy) { e.preventDefault(); return; }
+      if (!track) return;
+      const dy = e.touches[0].clientY - y0;
+      if (!moved && Math.abs(dy) < 6 && Math.abs(e.touches[0].clientX - x0) < 6) return;
+      moved = true; e.preventDefault();
+      const lim = r.clientHeight * 0.6;
+      r.scrollTop = s0 - Math.max(-lim, Math.min(lim, dy));
+    };
+    const te = (e) => {
+      if (!track || !moved) { track = false; return; }
+      track = false;
+      const dy = (e.changedTouches[0] ? e.changedTouches[0].clientY : y0) - y0;
+      const fast = Math.abs(dy) / Math.max(1, Date.now() - t0) > 0.3;
+      if (Math.abs(dy) > 50 || (fast && Math.abs(dy) > 15)) goFrom(s0, dy < 0 ? 1 : -1);
+      else r.scrollTo({ top: s0, behavior: 'smooth' });
+    };
+    // mouse wheel / trackpad: one page per gesture
+    let wLock = false, wT = 0;
+    const wh = (e) => {
+      if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      e.preventDefault();
+      clearTimeout(wT); wT = setTimeout(() => { wLock = false; }, 260);
+      if (wLock || busy || Math.abs(e.deltaY) < 3) return;
+      wLock = true; goFrom(r.scrollTop, e.deltaY > 0 ? 1 : -1);
+    };
+    const kd = (e) => {
+      const k = e.key;
+      if (['ArrowDown', 'PageDown', ' '].includes(k) && e.target.tagName !== 'BUTTON') { e.preventDefault(); if (!busy) goFrom(r.scrollTop, 1); }
+      if (['ArrowUp', 'PageUp'].includes(k)) { e.preventDefault(); if (!busy) goFrom(r.scrollTop, -1); }
+    };
+    r.addEventListener('touchstart', ts, { passive: true });
+    r.addEventListener('touchmove', tm, { passive: false });
+    r.addEventListener('touchend', te, { passive: true });
+    r.addEventListener('touchcancel', te, { passive: true });
+    r.addEventListener('wheel', wh, { passive: false });
+    window.addEventListener('keydown', kd);
+    return () => {
+      r.removeEventListener('touchstart', ts); r.removeEventListener('touchmove', tm);
+      r.removeEventListener('touchend', te); r.removeEventListener('touchcancel', te);
+      r.removeEventListener('wheel', wh); window.removeEventListener('keydown', kd);
+      clearTimeout(busyT); clearTimeout(wT); r.style.scrollSnapType = '';
+    };
+  }, [opened]);
 
   // ---- plays by itself: each page stays for the time it takes to read it ----
   useEffect(() => {
@@ -516,6 +593,8 @@ export default function InviteFilm() {
   }, [opened, paused, active, revealed, LAST, DATE_I, next]);
 
   const names = siteConfig.couple;
+  const inv = siteConfig.homepage.inviteCard;
+  const pair = (t) => { const [a, b] = String(t).split(' & '); return b ? <>{a} &amp;<br />{b}</> : t; };
   let idx = 0;
 
   return (
@@ -532,14 +611,14 @@ export default function InviteFilm() {
       )}
 
       {/* 1. cover */}
-      <section className="iv-sec iv-night in" data-i={idx++}>
-        <CoverBG />
+      <section className="iv-sec iv-night iv-cov2 in" data-i={idx++}>
+        <PaintedBG name="cover" zoom><CoverBG /></PaintedBG>
+        <div className="iv-drift" aria-hidden>{Array.from({ length: 10 }).map((_, i) => <i key={i} style={{ left: (6 + i * 9.4) + '%', animationDelay: (i * 1.3) % 9 + 's', animationDuration: 9 + (i % 4) * 2 + 's', background: ['#f4c2bd', '#f2d18a', '#fff1d8', '#eeb0aa'][i % 4] }} />)}</div>
         <div className="iv-in">
-          <p className="iv-small rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
-          <p className="iv-small rv" style={{ '--d': '.5s', marginTop: '.8rem' }}>We are getting married</p>
-          <h1 className="iv-names rv" style={{ '--d': '.9s' }}>{names.name1}<span>&amp;</span>{names.name2}</h1>
-          <div className="rv" style={{ '--d': '1.3s' }}><CoupleArt /></div>
-          <div className="rv" style={{ '--d': '1.5s' }}><Ornament width={210} /></div>
+          <p className="iv-ganesh rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
+          <p className="iv-small rv" style={{ '--d': '.5s' }}>The wedding of</p>
+          <h1 className="iv-names iv-shine rv" style={{ '--d': '.9s' }}>{names.name1}<span>&amp;</span>{names.name2}</h1>
+          <div className="iv-jharokha rv" style={{ '--d': '1.3s' }}><CoupleArt /></div>
           {!opened
             ? <button className="iv-cta rv" style={{ '--d': '1.7s' }} onClick={open}>Open Your Invitation</button>
             : <p className="iv-small">scroll ↓</p>}
@@ -564,16 +643,21 @@ export default function InviteFilm() {
           </div>
         </section>
 
-        {/* 3. message: one heading-cum-message */}
-        <section className="iv-sec iv-cream" data-i={idx++}>
+        {/* 3. message: the invitation, in the traditional card form */}
+        <section className="iv-sec iv-cream iv-msg2" data-i={idx++}>
           <PaintedBG name="message"><MsgBG /></PaintedBG>
           <div className="iv-in">
             <p className="iv-small rv">By the grace of God</p>
-            <div className="rv" style={{ '--d': '.1s' }}><Ornament /></div>
-            <p className="iv-p rv" style={{ '--d': '.25s', fontSize: '1.2rem' }}>{siteConfig.homepage.invitationTop}</p>
-            <p className="iv-names2 rv" style={{ '--d': '.45s' }}>{names.name1} <em>&amp;</em> {names.name2}</p>
-            <p className="iv-p rv" style={{ '--d': '.6s' }}>{siteConfig.homepage.invitationBottom}</p>
-            <p className="iv-deva rv" style={{ '--d': '.8s' }}>{siteConfig.homepage.welcomeHindi}</p>
+            <p className="iv-host rv" style={{ '--d': '.15s' }}>{pair(inv.groomParents)}</p>
+            <p className="iv-req rv" style={{ '--d': '.3s' }}>{inv.request}</p>
+            <p className="iv-nm rv" style={{ '--d': '.5s' }}>{names.name1}</p>
+            <p className="iv-with rv" style={{ '--d': '.6s' }}>with</p>
+            <p className="iv-nm rv" style={{ '--d': '.7s' }}>{names.name2}</p>
+            <p className="iv-req rv" style={{ '--d': '.85s' }}>{inv.brideLine}</p>
+            <p className="iv-host rv" style={{ '--d': '.9s' }}>{pair(inv.brideParents)}</p>
+            <div className="rv" style={{ '--d': '1s' }}><Ornament width={180} /></div>
+            <p className="iv-p iv-close rv" style={{ '--d': '1.1s' }}>{siteConfig.homepage.invitationBottom}</p>
+            <p className="iv-deva rv" style={{ '--d': '1.25s' }}>{siteConfig.homepage.welcomeHindi}</p>
           </div>
         </section>
 
