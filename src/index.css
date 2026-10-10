@@ -660,3 +660,15 @@
 .iv-card .iv-hing{white-space:nowrap;font-size:clamp(1.45rem,6.6vw,2rem);line-height:1.2}
 /* short phones: keep both home-page buttons clear of the bottom menu */
 @media(max-height:700px) and (max-width:1023px){.hero-night .arch{--ah:13svh}.hero.hero-night{padding-bottom:7svh}}
+
+/* gallery: soft shimmer while a small picture loads, then it fades in */
+.g-tile{background:linear-gradient(100deg,#f3e9da 30%,#fbf6ee 50%,#f3e9da 70%);background-size:300% 100%;animation:gshim 1.4s ease-in-out infinite}
+.g-tile.ready{animation:none;background:var(--cream)}
+.g-tile img{opacity:0;transition:opacity .35s ease}
+.g-tile.ready img{opacity:1}
+@keyframes gshim{0%{background-position:100% 0}100%{background-position:0 0}}
+/* full view: small picture first, sharp one on top as soon as it arrives */
+.lb-pic{position:relative;display:grid;place-items:center;max-width:100%}
+.lb-pic>img{grid-area:1/1;max-width:100%;max-height:74vh;border-radius:.6rem;object-fit:contain}
+.lb-pic .lb-low{filter:blur(1px);width:min(92vw,40rem);height:auto}
+.lb-pic .lb-loading{opacity:0}

@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
 import MobileBottomNav from './components/MobileBottomNav';
-import { warmUp } from './api';
+import { warmUp, prefetchGallery } from './api';
 import InviteFilm, { SEEN_KEY } from './components/InviteFilm';
 import { tierFromCode, codeFromPath, getTier, setTier, sideFromPath, getSide, setSide } from './tier';
 
@@ -64,6 +64,8 @@ function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   useEffect(() => { warmUp(); }, []);
+  // a few seconds after the site opens, quietly fetch the photo list so the gallery opens instantly
+  useEffect(() => { const t = setTimeout(prefetchGallery, 4000); return () => clearTimeout(t); }, []);
   return null;
 }
 

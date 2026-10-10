@@ -54,9 +54,35 @@ export async function get(action) {
 export const submitRsvp = (form) => post({ action: 'rsvp', ...form });
 export const submitBlessing = (form) => post({ action: 'blessing', ...form });
 export const uploadPhoto = (payload) => post({ action: 'upload', ...payload }, 120000);
-export const fetchPhotos = async () => (await get('photos')).photos || [];
+export const fetchPhotos = async () => {
+  const list = (await get('photos')).photos || [];
+  try { localStorage.setItem(GALLERY_KEY, JSON.stringify({ t: Date.now(), list })); } catch (e) { /* storage full or private mode */ }
+  return list;
+};
+// The last photo list this phone saw, so the gallery can appear instantly while it refreshes.
+const GALLERY_KEY = 'ss_gallery_v1';
+export function cachedPhotos() {
+  try { const c = JSON.parse(localStorage.getItem(GALLERY_KEY) || 'null'); return c && Array.isArray(c.list) ? c.list : null; } catch (e) { return null; }
+}
+// Fetched quietly a few seconds after any page opens, so the gallery is ready before the guest gets there.
+let prefetched = false;
+export function prefetchGallery() {
+  if (prefetched || !backendReady()) return;
+  prefetched = true;
+  fetchPhotos().catch(() => { prefetched = false; });
+}
 export const fetchFaces = async () => (await get('faces')).faces || [];
 
+// Small pictures for the grid, straight from Google's image server (one hop instead of two),
+// sized for this phone's screen. Full view and download stay sharp / original.
+export const tileSize = () => {
+  const w = Math.min(typeof window !== 'undefined' ? window.innerWidth : 400, 1100);
+  const cols = w >= 1024 ? 4 : w >= 640 ? 3 : 2;
+  const dpr = Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1);
+  return Math.min(480, Math.ceil((w / cols) * dpr / 80) * 80);
+};
+export const tileUrl = (id) => `https://lh3.googleusercontent.com/d/${id}=w${tileSize()}`;
+export const viewUrl = (id) => `https://lh3.googleusercontent.com/d/${id}=w1600`;
 export const thumbUrl = (id, size = 600) => `https://drive.google.com/thumbnail?id=${id}&sz=w${size}`;
 export const fullUrl = (id) => `https://drive.google.com/thumbnail?id=${id}&sz=w2000`;
 export const downloadUrl = (id) => `https://drive.google.com/uc?export=download&id=${id}`;

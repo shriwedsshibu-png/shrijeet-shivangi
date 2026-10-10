@@ -3,7 +3,7 @@ import siteConfig from '../siteConfig';
 import { displayNames } from '../tier';
 import { Card, Button, Notice, PageHeader } from './ui';
 import Icon from '../icons';
-import { backendReady, NOT_READY_MESSAGE, uploadPhoto, fetchPhotos, fetchFaces, thumbUrl, fullUrl, downloadUrl } from '../api';
+import { backendReady, NOT_READY_MESSAGE, uploadPhoto, fetchPhotos, fetchFaces, cachedPhotos, thumbUrl, tileUrl, viewUrl, downloadUrl } from '../api';
 import { prepareForUpload, selfieCanvas } from '../photoTools';
 import { loadFaceApi, describeFaces, describeSelfie, matchPhotos, preloadFaceFinder } from '../faces';
 import { sortedEvents, defaultUploadEvent } from '../utils';
@@ -178,17 +178,36 @@ const PREVIEW = 6; // photos shown per celebration before "See all"
 
 function Tile({ photo, onOpen }) {
   const [src, setSrc] = useState(photo.thumb);
+  const [ready, setReady] = useState(false);
   return (
-    <button className="g-tile" onClick={onOpen} aria-label="Open photo">
-      <img src={src} alt="Wedding moment" loading="lazy" onError={() => { if (!photo.static && src === photo.thumb) setSrc(`https://lh3.googleusercontent.com/d/${photo.id}=w600`); }} />
+    <button className={'g-tile' + (ready ? ' ready' : '')} onClick={onOpen} aria-label="Open photo">
+      <img src={src} alt="Wedding moment" loading="lazy" decoding="async" onLoad={() => setReady(true)}
+        onError={() => { if (!photo.static && src === photo.thumb) setSrc(thumbUrl(photo.id, 480)); }} />
     </button>
   );
 }
 
+// Full-screen picture: shows the small (already loaded) picture at once, then swaps in the sharp one
+function FullImage({ photo }) {
+  const [sharp, setSharp] = useState(false);
+  const [src, setSrc] = useState(photo.full);
+  useEffect(() => { setSharp(false); setSrc(photo.full); }, [photo]);
+  return (
+    <span className="lb-pic" onClick={(e) => e.stopPropagation()}>
+      {!sharp && <img src={photo.thumb} alt="" aria-hidden className="lb-low" />}
+      <img src={src} alt="Wedding moment" className={sharp ? '' : 'lb-loading'} onLoad={() => setSharp(true)}
+        onError={() => { if (!photo.static && src === photo.full) setSrc(thumbUrl(photo.id, 2000)); }} />
+    </span>
+  );
+}
+
+const toPhoto = (p) => ({ id: p.id, event: p.event || 'Other', ts: p.ts, thumb: tileUrl(p.id), full: viewUrl(p.id), download: downloadUrl(p.id) });
+
 function GalleryPanel({ active, openShare }) {
   const cfg = siteConfig.photos;
-  const [guest, setGuest] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // last known list first (instant), the fresh list replaces it a moment later
+  const [guest, setGuest] = useState(() => (cachedPhotos() || []).map(toPhoto));
+  const [loading, setLoading] = useState(() => !cachedPhotos());
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
   const [face, setFace] = useState({ status: 'idle', text: '' });
@@ -201,11 +220,11 @@ function GalleryPanel({ active, openShare }) {
 
   const load = useCallback(async () => {
     if (!backendReady()) { setLoading(false); return; }
-    setLoading(true);
+    if (!cachedPhotos()) setLoading(true);
     setError('');
     try {
       const list = await fetchPhotos();
-      setGuest(list.map((p) => ({ id: p.id, event: p.event || 'Other', ts: p.ts, thumb: thumbUrl(p.id, 600), full: fullUrl(p.id), download: downloadUrl(p.id) })));
+      setGuest(list.map(toPhoto));
       // new photos may have arrived: fetch the face list again, in the background, ready for "Find my photos"
       facesCache.current = fetchFaces().catch(() => null);
     } catch (e) {
@@ -406,7 +425,9 @@ function GalleryPanel({ active, openShare }) {
             if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) setOpenIndex((i) => (dx < 0 ? Math.min(i + 1, flat.length - 1) : Math.max(i - 1, 0)));
           }}>
           <button className="btn btn-light" style={{ position: 'absolute', top: '.8rem', right: '.8rem', minHeight: '2.8rem', padding: '.3rem 1rem' }} onClick={() => setOpenIndex(-1)}><Icon name="close" size={20} /> Close</button>
-          <img src={current.full} alt="Wedding moment" onClick={(e) => e.stopPropagation()} onError={(e) => { if (!current.static && !e.target.dataset.fb) { e.target.dataset.fb = '1'; e.target.src = `https://lh3.googleusercontent.com/d/${current.id}=w1600`; } }} />
+          <FullImage photo={current} />
+          {/* get the next and previous pictures ready, so swiping is instant */}
+          {[flat[openIndex + 1], flat[openIndex - 1]].filter(Boolean).map((p) => <link key={p.id} rel="prefetch" as="image" href={p.full} />)}
           <div className="flex items-center gap-3 mt-4" onClick={(e) => e.stopPropagation()}>
             <button className="btn btn-light" style={{ minHeight: '3rem', padding: '.3rem 1rem' }} onClick={() => setOpenIndex((i) => Math.max(i - 1, 0))} disabled={openIndex === 0} aria-label="Previous"><Icon name="chevronLeft" size={22} /></button>
             <a className="btn btn-gold" href={current.download} target="_blank" rel="noopener noreferrer" download><Icon name="download" size={20} /> Download</a>

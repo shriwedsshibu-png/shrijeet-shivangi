@@ -97,7 +97,14 @@ function doPost(e) {
 function doGet(e) {
   try {
     var action = (e && e.parameter && e.parameter.action) || 'ping';
-    if (action === 'photos') return json_(listPhotos_());
+    if (action === 'photos') {
+      // the gallery list is remembered for a minute so many guests opening it at once get it quickly
+      var cache = CacheService.getScriptCache(), hit = cache.get('PHOTOS_JSON');
+      if (hit) return ContentService.createTextOutput(hit).setMimeType(ContentService.MimeType.JSON);
+      var txt = JSON.stringify(listPhotos_());
+      if (txt.length < 95000) cache.put('PHOTOS_JSON', txt, 60);
+      return ContentService.createTextOutput(txt).setMimeType(ContentService.MimeType.JSON);
+    }
     if (action === 'faces')  return json_(listFaces_());
     return json_({ success: true, message: 'Wedding backend is running.' });
   } catch (err) {
@@ -301,7 +308,7 @@ function handleUpload_(b) {
   } finally {
     lock.releaseLock();
   }
-  try { CacheService.getScriptCache().remove('LIVE_PHOTO_IDS'); } catch (e) {}
+  try { CacheService.getScriptCache().removeAll(['LIVE_PHOTO_IDS', 'PHOTOS_JSON']); } catch (e) {}
   notifyPhoto_(event);
   return { success: true, id: id };
 }
@@ -367,7 +374,7 @@ function liveIds_() {
 
 // Wedding menu > "Remove deleted photos from the sheet": tidies the Photos and Faces tabs.
 function removeDeletedPhotos() {
-  CacheService.getScriptCache().remove('LIVE_PHOTO_IDS');
+  CacheService.getScriptCache().removeAll(['LIVE_PHOTO_IDS', 'PHOTOS_JSON']);
   var live = liveIds_();
   if (!live) return;
   ['Photos', 'Faces'].forEach(function (tab) {
