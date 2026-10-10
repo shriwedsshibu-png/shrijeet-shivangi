@@ -62,6 +62,7 @@ function onOpen() {
   try {
     SpreadsheetApp.getUi().createMenu('Wedding')
       .addItem('Rebuild RSVP Summary', 'rebuildSummary')
+      .addItem('Remove deleted photos from the sheet', 'removeDeletedPhotos')
       .addToUi();
   } catch (e) {}
 }
@@ -300,6 +301,7 @@ function handleUpload_(b) {
   } finally {
     lock.releaseLock();
   }
+  try { CacheService.getScriptCache().remove('LIVE_PHOTO_IDS'); } catch (e) {}
   notifyPhoto_(event);
   return { success: true, id: id };
 }
@@ -310,8 +312,10 @@ function listPhotos_() {
   var photos = [];
   if (last > 1) {
     var rows = sheet.getRange(2, 1, last - 1, 5).getValues();
+    var live = liveIds_();   // only photos that are still in the Drive folder (deleted ones disappear)
     for (var i = rows.length - 1; i >= 0 && photos.length < 3000; i--) {
       if (!rows[i][1]) continue;
+      if (live && !live[String(rows[i][1])]) continue;
       photos.push({ id: String(rows[i][1]), event: String(rows[i][2]), ts: toIso_(rows[i][0]) });
     }
   }
@@ -324,11 +328,55 @@ function listFaces_() {
   var out = [];
   if (last > 1) {
     var rows = sheet.getRange(2, 1, last - 1, 2).getValues();
+    var live = liveIds_();
     for (var i = 0; i < rows.length; i++) {
+      if (live && !live[String(rows[i][0])]) continue;
       try { out.push({ id: String(rows[i][0]), d: JSON.parse(rows[i][1]) }); } catch (e) {}
     }
   }
   return { success: true, faces: out };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Which photos are still in Drive?                                    */
+/*  Delete (or move out) a photo in the Drive folder and it leaves the  */
+/*  website within about 2 minutes. Checked once and remembered briefly */
+/*  so the gallery stays fast.                                          */
+/* ------------------------------------------------------------------ */
+function liveIds_() {
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get('LIVE_PHOTO_IDS');
+  if (hit !== null) { var m0 = {}; hit.split(',').forEach(function (x) { if (x) m0[x] = 1; }); return m0; }
+  try {
+    var ids = [], seen = {};
+    var walk = function (folder) {
+      var files = folder.searchFiles('trashed = false');
+      while (files.hasNext()) { var id = files.next().getId(); if (!seen[id]) { seen[id] = 1; ids.push(id); } }
+      var subs = folder.getFolders();
+      while (subs.hasNext()) { var sub = subs.next(); if (!sub.isTrashed()) walk(sub); }
+    };
+    walk(getRootFolder_());
+    var joined = ids.join(',');
+    if (joined.length < 95000) cache.put('LIVE_PHOTO_IDS', joined, 120);
+    return seen;
+  } catch (e) {
+    Logger.log('liveIds_ failed: ' + e);
+    return null;   // if Drive cannot be checked, show everything rather than nothing
+  }
+}
+
+// Wedding menu > "Remove deleted photos from the sheet": tidies the Photos and Faces tabs.
+function removeDeletedPhotos() {
+  CacheService.getScriptCache().remove('LIVE_PHOTO_IDS');
+  var live = liveIds_();
+  if (!live) return;
+  ['Photos', 'Faces'].forEach(function (tab) {
+    var sh = getTab_(tab), col = tab === 'Photos' ? 2 : 1, last = sh.getLastRow();
+    for (var r = last; r >= 2; r--) {
+      var id = String(sh.getRange(r, col).getValue());
+      if (id && !live[id]) sh.deleteRow(r);
+    }
+  });
 }
 
 /* ------------------------------------------------------------------ */
