@@ -5,7 +5,7 @@ import Countdown from './Countdown';
 import Icon from '../icons';
 import { Card, ButtonLink, Divider } from './ui';
 import { isFeatureOn, sortedEvents, dayAndMonth } from '../utils';
-import { dateLine, isFullTier, coupleOrder } from '../tier';
+import { dateLine, isFullTier, coupleOrder, groomFirst } from '../tier';
 
 function ActionCard({ to, icon, title, text }) {
   return (
@@ -25,6 +25,9 @@ function ActionCard({ to, icon, title, text }) {
 export default function HomePage() {
   const { homepage: hp, wedding } = siteConfig;
   const [n1, n2] = coupleOrder();   // Shrijeet's guests see Shrijeet first
+  // the same opening words as the guest's invite (Shrijeet's side: Dadi's request)
+  const card = groomFirst() ? { ...(hp.inviteCard || {}), ...((hp.inviteCard || {}).groomSide || {}) } : (hp.inviteCard || {});
+  const invitationTop = card.blessingsLabel && card.request ? `${card.blessingsLabel}, ${card.request}` : hp.invitationTop;
   const events = sortedEvents();
   const photoHero = hp.heroStyle === 'photo';
 
@@ -37,7 +40,7 @@ export default function HomePage() {
 
           {!photoHero && <div className="arch"><img src={hp.heroImage} alt={`${n1.short} and ${n2.short}, watercolour illustration`} /></div>}
 
-          <p className="hero-text">{hp.invitationTop}</p>
+          <p className="hero-text">{invitationTop}</p>
           <h1 className="hero-names">
             {n1.full}
             <span className="hero-amp">&amp;</span>

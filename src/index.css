@@ -658,3 +658,5 @@
 
 /* function cards: the short line is always two balanced lines, never a word left alone */
 .iv-card .iv-hing{white-space:nowrap;font-size:clamp(1.45rem,6.6vw,2rem);line-height:1.2}
+/* short phones: keep both home-page buttons clear of the bottom menu */
+@media(max-height:700px) and (max-width:1023px){.hero-night .arch{--ah:13svh}.hero.hero-night{padding-bottom:7svh}}
