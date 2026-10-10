@@ -680,3 +680,7 @@ html.hi .iv-closing{margin-top:.35rem}
 .lang-switch{width:100%;text-align:left;background:none;border:0;border-top:1px solid rgba(184,137,59,.3);margin-top:.4rem;cursor:pointer}
 .foot-lang{margin-top:1rem;background:none;border:1px solid rgba(231,207,152,.6);color:#f1d68e;border-radius:999px;padding:.45rem 1.1rem;font-size:.95rem;cursor:pointer}
 html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no single Hindi word left alone on the last line */
+
+/* every invite page is exactly one screen tall (the height comes from the phone, see fitPages in InviteFilm.js) */
+.iv .iv-sec{height:var(--ivh,100dvh);min-height:0}
+.iv.iv-measure .rv,.iv.iv-measure .iv-in{transform:none!important;transition:none!important}

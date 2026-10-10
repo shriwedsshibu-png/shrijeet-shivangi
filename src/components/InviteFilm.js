@@ -468,6 +468,76 @@ function Typed({ text, className = '', d = '0s' }) {
   );
 }
 
+/* ---------- every page fits exactly one screen, on every phone ----------
+   Each page is made exactly as tall as the screen. If a page's words would run past the screen,
+   or under the buttons at the bottom (Pause / website / sound), that page alone is shrunk a little
+   until it fits. Pages that already fit are not touched. */
+function fitPages(r, opened) {
+  if (!r) return;
+  const H = r.clientHeight, W = r.clientWidth;
+  if (!H) return;
+  r.style.setProperty('--ivh', H + 'px');
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  const secs = Array.from(r.querySelectorAll('.iv-sec'));
+  const last = secs.length - 1;
+  const sndH = 2.45 * rem, skipH = 1.6 * rem, gap = 0.45 * rem, edge = 0.7 * rem, pad = 6;
+  r.classList.add('iv-measure');                       // measure the final layout (no slide-in offsets)
+  const plan = secs.map((sec, i) => {
+    const inn = sec.querySelector('.iv-in');
+    if (!inn) return null;
+    inn.style.zoom = '';
+    return { sec, inn, i };
+  }).filter(Boolean).map(({ sec, inn, i }) => {
+    const top = sec.getBoundingClientRect().top;
+    const box = inn.getBoundingClientRect();
+    const b = { top: box.top - top, bottom: box.bottom - top, h: box.height };
+    // the screen area kept free for the buttons on this page
+    let topRes, zones;
+    if (i === 0) {
+      const link = r.querySelector('.iv-ctrl.top');
+      topRes = !opened && link ? link.getBoundingClientRect().bottom + pad : pad;
+      zones = [];
+    } else {
+      topRes = 0.55 * rem + 4 + pad;                    // progress bar
+      const right = i === last ? [W - edge - 11 * rem, H - edge - sndH]
+        : i === 1 ? [W - edge - 7 * rem, H - edge - sndH]
+        : [W - edge - 11 * rem, H - edge - skipH - gap - sndH];
+      const left = [edge + 6.2 * rem, H - edge - 2.6 * rem];
+      zones = [{ x0: right[0], x1: W, y: right[1] - pad }, { x0: 0, x1: left[0], y: left[1] - pad }];
+    }
+    // does any word, picture or button of this page sit off the screen or under a button?
+    let bandBottom = H - pad, clash = b.top < topRes - 1 || b.bottom > H + 1, zW = 1;
+    sec.querySelectorAll('.iv-in *').forEach((el) => {
+      if (!el.offsetParent) return;
+      const own = ['IMG', 'BUTTON', 'A', 'CANVAS'].includes(el.tagName) || Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim());
+      if (!own) return;
+      const t = el.getBoundingClientRect();
+      const y0 = t.top - top, y1 = t.bottom - top;
+      zones.forEach((z) => {
+        if (y1 > z.y && t.right > z.x0 && t.left < z.x1) { clash = true; bandBottom = Math.min(bandBottom, z.y); }
+      });
+      if (y0 < topRes - 1 || y1 > H + 1) clash = true;
+      if (t.left < -1 || t.right > W + 1) { clash = true; zW = Math.min(zW, (W - 2 * pad) / t.width); }   // a line wider than the phone
+    });
+    // a page whose block fills the whole screen height (the last page): its words must fit inside that block
+    const stretch = getComputedStyle(sec).alignItems === 'stretch';
+    const S = inn.scrollHeight, B = inn.clientHeight;
+    if (stretch && S > B + 1) clash = true;
+    if (!clash) return { inn, z: 1 };
+    let z;
+    if (stretch) {
+      z = Math.min(1, B / S, (Math.min(bandBottom, b.bottom) - Math.max(topRes, b.top)) / S);
+    } else {
+      const c = (b.top + b.bottom) / 2;                 // the page stays centred while it shrinks
+      z = Math.min(1, (2 * (bandBottom - c)) / b.h, (2 * (c - topRes)) / b.h, (bandBottom - topRes) / b.h);
+    }
+    z = Math.max(0.6, Math.floor(Math.min(z, zW) * 100) / 100);
+    return { inn, z };
+  });
+  plan.forEach(({ inn, z }) => { inn.style.zoom = z < 1 ? String(z) : ''; });
+  r.classList.remove('iv-measure');
+}
+
 /* ---------- the film ---------- */
 export default function InviteFilm() {
   const nav = useNavigate();
@@ -506,6 +576,24 @@ export default function InviteFilm() {
     return () => { document.body.style.overflow = ''; a.destroy(); };
   }, []);
 
+  // every page exactly one screen tall (and shrunk only if it would not fit): on open, on rotation /
+  // browser bars showing or hiding, and once the fonts have arrived
+  useEffect(() => {
+    const r = root.current; if (!r) return undefined;
+    let raf = 0;
+    const run = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => fitPages(r, opened)); };
+    run();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(run) : null;
+    if (ro) ro.observe(r); else window.addEventListener('resize', run);
+    if (document.fonts) { document.fonts.ready.then(run).catch(() => {}); document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', run); }
+    const late = setTimeout(run, 1500);
+    return () => {
+      cancelAnimationFrame(raf); clearTimeout(late);
+      if (ro) ro.disconnect(); else window.removeEventListener('resize', run);
+      if (document.fonts && document.fonts.removeEventListener) document.fonts.removeEventListener('loadingdone', run);
+    };
+  }, [opened]);
+
   // the cover plays its own entrance a moment after it appears (an element that starts "in" would not animate)
   useEffect(() => {
     const t = setTimeout(() => {
@@ -543,7 +631,7 @@ export default function InviteFilm() {
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setOpened(true);
     if (!r || !cov || !img || reduce) {
-      setTimeout(() => r && r.scrollTo({ top: r.clientHeight, behavior: 'smooth' }), 150);
+      setTimeout(() => { const s1 = r && r.querySelector('.iv-sec[data-i="1"]'); if (r) r.scrollTo({ top: s1 ? s1.offsetTop : r.clientHeight, behavior: 'smooth' }); }, 150);
       return;
     }
     hold.current = true;
@@ -551,7 +639,8 @@ export default function InviteFilm() {
     setTimeout(() => {                                       // 2. two halves of the painting take its place
       doorZoom.current = getComputedStyle(img).transform || 'none';
       setDoors(1);
-      r.scrollTo({ top: r.clientHeight });                   //    and the next page waits behind them
+      const s1 = r.querySelector('.iv-sec[data-i="1"]');
+      r.scrollTo({ top: s1 ? s1.offsetTop : r.clientHeight }); //    and the next page waits behind them
     }, 520);
     setTimeout(() => setDoors(2), 700);                      // 3. a line of light at the seam
     setTimeout(() => setDoors(3), 950);                      // 4. the doors swing open
@@ -566,7 +655,7 @@ export default function InviteFilm() {
     const a = audio.current; if (!a) return;
     if (musicOn) { a.pause(); setMusicOn(false); } else a.resume().then(() => setMusicOn(true)).catch(() => setHasMusic(!a.unavailable));
   };
-  const replay = () => { setAutoScratch(false); root.current.scrollTo({ top: root.current.clientHeight, behavior: 'smooth' }); };
+  const replay = () => { setAutoScratch(false); const r = root.current; const s1 = r.querySelector('.iv-sec[data-i="1"]'); r.scrollTo({ top: s1 ? s1.offsetTop : r.clientHeight, behavior: 'smooth' }); };
   // go to the start of the very next page (never jumps two pages)
   const next = useCallback(() => {
     const r = root.current; if (!r) return;
