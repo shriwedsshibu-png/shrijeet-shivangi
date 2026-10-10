@@ -360,7 +360,7 @@ And here's to all the journeys still waiting for us.`,
         relation: "Bade Papa"
       },
       {
-        name: "Abha",
+        name: "Abha Mishra",
         relation: "Badi Mummy"
       },
       {
@@ -387,6 +387,7 @@ And here's to all the journeys still waiting for us.`,
         name: "Anuradha",
         relation: "Bhabhi"
       },
+      { name: "Advait Mishra", relation: "Bhai" },
       {
         name: "Rani",
         relation: "Didi"
@@ -403,10 +404,10 @@ And here's to all the journeys still waiting for us.`,
         name: "Abhishek Sharma",
         relation: "Jiju"
       },
-      { name: "Pihu", relation: "Nephew" },
-      { name: "Raavi", relation: "Nephew" },
+      { name: "Pihu", relation: "Niece" },
+      { name: "Raavi", relation: "Niece" },
       { name: "Adi", relation: "Nephew" },
-      { name: "Saavi", relation: "Nephew" }
+      { name: "Sanvi Mishra", relation: "Niece" }
     ],
     // Shivangi's side — fill this in when ready. Example of one person:
     //   { name: "Full Name", relation: "Papa" },
