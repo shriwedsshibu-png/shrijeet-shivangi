@@ -17,11 +17,12 @@ const MUSIC_SRC = '/audio/invite.mp3?v=7';
 const MUSIC_LOOP = { firstNote: 0.0838, loopStart: 2.24, loopEnd: 21.30 }; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
-  Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
-  Mehndi: { hing: 'Henna, laughter and lots of colour', icon: 'hand' },
-  'Engagement & Sangeet': { hing: 'Music, dance and the whole family', icon: 'dhol' },
-  Haldi: { hing: 'Yellow hands, golden blessings', icon: 'marigold' },
-  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan, ek zindagi', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
+  // each line is written as two balanced lines ("\n" = the line break), so every card looks alike
+  Faldaan: { hing: 'Rishta pakka,\nmithai pakki!', icon: 'kalash' },
+  Mehndi: { hing: 'Henna, laughter\nand lots of colour', icon: 'hand' },
+  'Engagement & Sangeet': { hing: 'Music & dance with\nthe whole family', icon: 'dhol' },
+  Haldi: { hing: 'Yellow hands,\ngolden blessings', icon: 'marigold' },
+  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan,\nek zindagi, ek saath', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
 };
 
 const fmtDate = (iso) =>
@@ -449,8 +450,8 @@ function useCountdown(target) {
 function Typed({ text, className = '', d = '0s' }) {
   const t = String(text || '');
   return (
-    <span className={'tw ' + className} style={{ '--d': d }} aria-label={t}>
-      {Array.from(t).map((c, i) => <span key={i} aria-hidden style={{ '--i': i }}>{c}</span>)}
+    <span className={'tw ' + className} style={{ '--d': d }} aria-label={t.replace(/\n/g, ' ')}>
+      {Array.from(t).map((c, i) => (c === '\n' ? <br key={i} /> : <span key={i} aria-hidden style={{ '--i': i }}>{c}</span>))}
     </span>
   );
 }

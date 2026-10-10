@@ -655,3 +655,6 @@
 /* invitation page: a little air between the first family's names and "WITH" */
 .iv-msg2 .iv-with{margin-top:.7rem;margin-bottom:.1rem}
 @media(max-height:700px){.iv-msg2 .iv-with{margin-top:.4rem}}
+
+/* function cards: the short line is always two balanced lines, never a word left alone */
+.iv-card .iv-hing{white-space:nowrap;font-size:clamp(1.45rem,6.6vw,2rem);line-height:1.2}
