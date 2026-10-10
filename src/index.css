@@ -651,3 +651,7 @@
 .choice-on .rsvp-tick{background:#f1d68e;border-color:#f1d68e;color:#1f3350}
 .rsvp-ev-name{font-size:1.05rem}
 .rsvp-ev-when{font-size:.88rem;font-weight:500;opacity:.8}
+
+/* invitation page: a little air between the first family's names and "WITH" */
+.iv-msg2 .iv-with{margin-top:.7rem;margin-bottom:.1rem}
+@media(max-height:700px){.iv-msg2 .iv-with{margin-top:.4rem}}

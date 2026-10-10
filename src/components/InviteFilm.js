@@ -647,10 +647,10 @@ export default function InviteFilm() {
   useEffect(() => {
     elapsed.current = 0; setProg(0); outDone.current = false;
     if (!opened || !root.current) return;
-    if (active === DATE_I) { dur.current = 17000; return; }       // 8.5 s to scratch + 1.6 s reveal + 7 s to see the date
+    if (active === DATE_I) { dur.current = 16000; return; }       // 8.5 s to scratch + 1.6 s reveal + 7 s to see the date
     const sec = root.current.querySelector(`.iv-sec[data-i="${active}"]`);
     const words = sec ? sec.innerText.split(/\s+/).filter(Boolean).length : 30;
-    dur.current = Math.min(24000, Math.max(13500, 6500 + words * 380)); // unhurried: ~160 words a minute + time for the lines to appear
+    dur.current = Math.min(22700, Math.max(12200, 5200 + words * 380)); // unhurried: ~160 words a minute + time for the lines to appear
   }, [active, opened, DATE_I]);
   useEffect(() => { if (revealed && active === DATE_I) elapsed.current = Math.max(elapsed.current, 10100); }, [revealed, active, DATE_I]);
   useEffect(() => {
@@ -681,6 +681,7 @@ export default function InviteFilm() {
   const bride = { name: names.fullName1 || names.name1, line: inv.brideLine, parents: inv.brideParents };
   const groom = { name: names.fullName2 || names.name2, line: inv.groomLine, parents: inv.groomParents };
   const [p1, p2] = groomFirst() ? [groom, bride] : [bride, groom];
+  const card = groomFirst() ? { ...inv, ...(inv.groomSide || {}) } : inv;   // Shrijeet's side has its own opening lines
   const pair = (t) => { const [a, b] = String(t).split(' & '); return b ? <>{a} &amp;<br />{b}</> : t; };
   let idx = 0;
 
@@ -747,9 +748,9 @@ export default function InviteFilm() {
           <PaintedBG name="message"><MsgBG /></PaintedBG>
           <div className="iv-drift" aria-hidden>{Array.from({ length: 9 }).map((_, i) => <i key={i} style={{ left: (4 + i * 11) + '%', animationDelay: (i * 1.7) % 10 + 's', animationDuration: 11 + (i % 3) * 2 + 's', background: ['#f4c2bd', '#eeb0aa', '#f2d18a'][i % 3] }} />)}</div>
           <div className="iv-in">
-            <p className="iv-small rv" style={{ '--d': '.2s' }}>{inv.blessingsLabel}</p>
+            <p className="iv-small rv" style={{ '--d': '.2s' }}>{card.blessingsLabel}</p>
             {inv.blessings && inv.blessings.length > 0 && <p className="iv-host iv-ash rv" style={{ '--d': '.4s' }}>{inv.blessings.map((x, i) => <span key={i}>{x}</span>)}</p>}
-            <p className="iv-req rv" style={{ '--d': '.6s' }}>{inv.request}</p>
+            <p className="iv-req rv" style={{ '--d': '.6s' }}>{card.request}</p>
             <p className="iv-nm rv wr" style={{ '--d': '1.1s' }}>{p1.name}</p>
             <p className="iv-req iv-of rv" style={{ '--d': '2.2s' }}>{p1.line}</p>
             <p className="iv-host rv" style={{ '--d': '2.5s' }}>{pair(p1.parents)}</p>
@@ -778,7 +779,7 @@ export default function InviteFilm() {
                 {events.length === 1 && <p className="iv-small rv" style={{ '--d': '.2s' }}>The Wedding</p>}
                 <div className="iv-card rv" style={{ '--d': '.5s' }}>
                   <img className="iv-gan-card rv" style={{ '--d': '.8s' }} src="/images/invite/ganesh.webp" alt="" aria-hidden />
-                  <h2 className="rv wr" style={{ '--d': '1s' }}>{ev.name}</h2>
+                  <h2 className={'rv' + (ev.name.length > 12 ? '' : ' wr')} style={{ '--d': '1s' }}>{ev.name}</h2>
                   <p className="iv-hing"><Typed text={l.hing} d="2.1s" /></p>
                   <div className="iv-when rv grow" style={{ '--d': '3.5s' }}><b><Typed text={fmtDate(ev.date)} d="3.9s" /></b><span className="rv" style={{ '--d': '4.6s' }}>{ev.time}</span></div>
                   <div className="iv-dress rv" style={{ '--d': '5s' }}>Dress code · {ev.dressCode}</div>
