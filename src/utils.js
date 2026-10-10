@@ -1,5 +1,5 @@
 import siteConfig from './siteConfig';
-import { eventAllowed, pageHidden } from './tier';
+import { eventAllowed, pageHidden, displayNames } from './tier';
 
 const IST = 'Asia/Kolkata';
 
@@ -49,7 +49,7 @@ export function calendarLink(event) {
   const end = new Date(start.getTime() + 3 * 3600 * 1000);
   const params = new URLSearchParams({
     action: 'TEMPLATE',
-    text: `${event.name} — ${siteConfig.couple.name1} & ${siteConfig.couple.name2}'s Wedding`,
+    text: `${event.name} — ${displayNames()}'s Wedding`,
     dates: `${toCalStamp(start)}/${toCalStamp(end)}`,
     ctz: IST,
     details: event.description || '',

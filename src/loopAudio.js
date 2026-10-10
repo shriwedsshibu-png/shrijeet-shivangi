@@ -5,9 +5,11 @@
 
 const SILENT = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAAGQAABdAAKCgoMTExMTo6OjpDQ0NDTExMTFVVVVVeXl5eZ2dnZ3BwcHB5eXl5goKCgouLi4uUlJSUnZ2dnaampqavr6+vuLi4uMHBwcHKysrK09PT09zc3Nzl5eXl7u7u7vf39/f/////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQCUgAAAAAAAAXQHwIDDAAAAAAAAAAAAAAAAAD/8yDEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVV//MixCcAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVX/8yDETwAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVV//MgxHYAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVf/zIMSdAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVX/8yLExAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVf/zIMTYAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVX/8yDE2AAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVV//MgxNgAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVf/zIsTXAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVV//MgxNgAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVf/zIMTYAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVX/8yDE2AAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVV//MixNcAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVX/8yDE2AAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVV//MgxNgAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVf/zIMTYAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVX/8yLE1wAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVf/zIMTYAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVX/8yDE2AAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MgxNgAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zIsTXAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MgxNgAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zIMTYAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8yDE2AAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
 
-export default function makeLoopPlayer(src, volume = 0.45) {
+// opts (seconds in the source file): { firstNote, loopStart, loopEnd } -> plays once from the very
+// start of the song, then repeats only loopStart..loopEnd (the file has the seam blended in).
+export default function makeLoopPlayer(src, volume = 0.45, opts = {}) {
   const AC = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
-  let ctx = null, gain = null, buf = null, node = null, loopStart = 0, loopEnd = 0;
+  let ctx = null, gain = null, buf = null, node = null, loopStart = 0, loopEnd = 0, firstAt = 0;
   let want = false, failed = !AC, started = false, el = null, keepAlive = null;
   const listeners = [];
   const emit = (ok) => listeners.splice(0).forEach((f) => f(ok));
@@ -33,7 +35,7 @@ export default function makeLoopPlayer(src, volume = 0.45) {
     gain.gain.cancelScheduledValues(t);
     gain.gain.setValueAtTime(started ? volume : 0, t);
     if (!started) gain.gain.linearRampToValueAtTime(volume, t + 1.6); // soft entrance, only the very first time
-    node.start(0, loopStart);
+    node.start(0, started ? loopStart : firstAt);
     started = true;
   };
 
@@ -48,7 +50,12 @@ export default function makeLoopPlayer(src, volume = 0.45) {
           const ch = b.getChannelData(0), n = ch.length, th = 1e-4;
           let i = 0; while (i < n && Math.abs(ch[i]) < th) i++;
           let j = n - 1; while (j > i && Math.abs(ch[j]) < th) j--;
-          loopStart = i / b.sampleRate; loopEnd = (j + 1) / b.sampleRate;
+          loopStart = i / b.sampleRate; loopEnd = (j + 1) / b.sampleRate; firstAt = loopStart;
+          if (opts.loopEnd > opts.loopStart) {
+            const off = firstAt - (opts.firstNote || 0);          // the decoder may add a few ms at the start
+            loopStart = Math.max(0, opts.loopStart + off);
+            loopEnd = Math.min(b.duration, opts.loopEnd + off);
+          }
           if (want) { start(); emit(true); }
         })
         .catch(() => { failed = true; if (want) fallback().play().then(() => emit(true)).catch(() => emit(false)); });

@@ -5,7 +5,7 @@ import Countdown from './Countdown';
 import Icon from '../icons';
 import { Card, ButtonLink, Divider } from './ui';
 import { isFeatureOn, sortedEvents, dayAndMonth } from '../utils';
-import { dateLine, isFullTier } from '../tier';
+import { dateLine, isFullTier, coupleOrder } from '../tier';
 
 function ActionCard({ to, icon, title, text }) {
   return (
@@ -23,7 +23,8 @@ function ActionCard({ to, icon, title, text }) {
 }
 
 export default function HomePage() {
-  const { homepage: hp, wedding, couple } = siteConfig;
+  const { homepage: hp, wedding } = siteConfig;
+  const [n1, n2] = coupleOrder();   // Shrijeet's guests see Shrijeet first
   const events = sortedEvents();
   const photoHero = hp.heroStyle === 'photo';
 
@@ -34,13 +35,13 @@ export default function HomePage() {
         <div className="relative wrap-narrow fade-in hero-in">
           {hp.invocation && <p className="deva hero-inv">{hp.invocation}</p>}
 
-          {!photoHero && <div className="arch"><img src={hp.heroImage} alt={`${couple.name1} and ${couple.name2}, watercolour illustration`} /></div>}
+          {!photoHero && <div className="arch"><img src={hp.heroImage} alt={`${n1.short} and ${n2.short}, watercolour illustration`} /></div>}
 
           <p className="hero-text">{hp.invitationTop}</p>
           <h1 className="hero-names">
-            {couple.fullName1 || couple.name1}
+            {n1.full}
             <span className="hero-amp">&amp;</span>
-            {couple.fullName2 || couple.name2}
+            {n2.full}
           </h1>
           <p className="hero-text hero-text2">{hp.invitationBottom}</p>
 

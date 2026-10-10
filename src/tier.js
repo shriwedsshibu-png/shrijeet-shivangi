@@ -55,6 +55,19 @@ export function getSide() {
 }
 export const groomFirst = () => getSide() === 'groom';
 
+// The names in the order this guest's side uses: Shrijeet's guests see Shrijeet first,
+// Shivangi's guests (and anyone who comes in without an invite link, e.g. the QR code) see Shivangi first.
+export function coupleOrder() {
+  const c = siteConfig.couple || {};
+  const bride = { short: c.name1, full: c.fullName1 || c.name1 };
+  const groom = { short: c.name2, full: c.fullName2 || c.name2 };
+  return groomFirst() ? [groom, bride] : [bride, groom];
+}
+export function displayNames() {
+  const [a, b] = coupleOrder();
+  return `${a.short} & ${b.short}`;
+}
+
 export function setTier(t) {
   try { localStorage.setItem(KEY, t); } catch (e) { /* private mode */ }
   memo = t;

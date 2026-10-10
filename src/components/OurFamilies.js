@@ -1,6 +1,7 @@
 import React from 'react';
 import siteConfig from '../siteConfig';
 import { Card, PageHeader } from './ui';
+import { groomFirst } from '../tier';
 
 function Column({ title, members }) {
   return (
@@ -28,8 +29,9 @@ export default function OurFamilies() {
       <div className={both ? 'wrap' : 'wrap-narrow'}>
         <PageHeader eyebrow="With love & blessings" title={f.title} subtitle={f.subtitle} />
         <div className={both ? 'grid grid-cols-2 gap-3 sm:gap-8 max-w-5xl mx-auto' : ''}>
-          {groom.length > 0 && <Column title="Shrijeet's Family" members={groom} />}
-          {bride.length > 0 && <Column title="Shivangi's Family" members={bride} />}
+          {(groomFirst() ? ['g', 'b'] : ['b', 'g']).map((k) => (k === 'g'
+            ? groom.length > 0 && <Column key="g" title="Shrijeet's Family" members={groom} />
+            : bride.length > 0 && <Column key="b" title="Shivangi's Family" members={bride} />))}
         </div>
       </div>
     </main>

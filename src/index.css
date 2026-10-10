@@ -623,3 +623,8 @@
 @media(max-height:700px){.iv-cov2 .iv-art{width:min(52vw,calc(21dvh * .75))}.iv-cov2 .iv-in{gap:.25rem}}
 /* on the cover the website link sits in the top-right corner, clear of "Open Your Invitation" */
 .iv .iv-ctrl.top{top:.7rem;bottom:auto}
+
+/* v14: Ganesh ji sits at the top of each function card (in place of the ❖), not over the pages */
+.iv-gan-top{display:none}
+.iv-gan-card{display:block;height:clamp(40px,7svh,56px);width:auto;margin:0 auto .1rem;filter:drop-shadow(0 2px 4px rgba(120,60,20,.2))}
+@media(max-height:700px){.iv-gan-card{height:36px}}

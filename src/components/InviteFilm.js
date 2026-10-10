@@ -12,7 +12,9 @@ import { groomFirst, isFullTier } from '../tier';
    ========================================================================== */
 
 export const SEEN_KEY = 'ss_invite_seen';
-const MUSIC_SRC = '/audio/invite.mp3?v=6'; // optional: drop a royalty-free file here to enable music
+const MUSIC_SRC = '/audio/invite.mp3?v=7';
+// the first ~21 s of the Mangalam track: plays from the start once, then repeats 2.24 s - 21.30 s seamlessly
+const MUSIC_LOOP = { firstNote: 0.0838, loopStart: 2.24, loopEnd: 21.30 }; // optional: drop a royalty-free file here to enable music
 
 const LINES = {
   Faldaan: { hing: 'Rishta pakka, mithai pakki!', icon: 'kalash' },
@@ -487,7 +489,7 @@ export default function InviteFilm() {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    const a = makeLoopPlayer(MUSIC_SRC, 0.45); audio.current = a;   // gapless loop, no dip at the loop point
+    const a = makeLoopPlayer(MUSIC_SRC, 0.45, MUSIC_LOOP); audio.current = a;   // gapless loop, no dip at the loop point
     return () => { document.body.style.overflow = ''; a.destroy(); };
   }, []);
 
@@ -693,7 +695,6 @@ export default function InviteFilm() {
           ))}
         </div>
       )}
-      {opened && active > 0 && active < LAST && <img className="iv-gan-top" src="/images/invite/ganesh.webp" alt="" aria-hidden />}
       <div className={'iv-ctrl' + (active === 0 ? ' top' : '')}>
         {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((v) => !v)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
         {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>Visit wedding website</button>}
@@ -776,7 +777,7 @@ export default function InviteFilm() {
               <div className="iv-in">
                 <p className="iv-small rv" style={{ '--d': '.2s' }}>{events.length > 1 ? `Function ${k + 1} of ${events.length}` : 'The Wedding'}</p>
                 <div className="iv-card rv" style={{ '--d': '.5s' }}>
-                  <div className="iv-orn rv" style={{ '--d': '.9s' }} aria-hidden>❖</div>
+                  <img className="iv-gan-card rv" style={{ '--d': '.8s' }} src="/images/invite/ganesh.webp" alt="" aria-hidden />
                   <h2 className="rv wr" style={{ '--d': '1s' }}>{ev.name}</h2>
                   <p className="iv-hing"><Typed text={l.hing} d="2.1s" /></p>
                   <div className="iv-when rv grow" style={{ '--d': '3.5s' }}><b><Typed text={fmtDate(ev.date)} d="3.9s" /></b><span className="rv" style={{ '--d': '4.6s' }}>{ev.time}</span></div>

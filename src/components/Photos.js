@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import siteConfig from '../siteConfig';
+import { displayNames } from '../tier';
 import { Card, Button, Notice, PageHeader } from './ui';
 import Icon from '../icons';
 import { backendReady, NOT_READY_MESSAGE, uploadPhoto, fetchPhotos, fetchFaces, thumbUrl, fullUrl, downloadUrl } from '../api';
@@ -215,7 +216,7 @@ function GalleryPanel({ active, openShare }) {
 
   useEffect(() => { if (active) load(); }, [active, load]);
 
-  const ours = useMemo(() => (cfg.ourPhotos || []).map((url, i) => ({ id: `our-${i}`, static: true, event: cfg.ourPhotosLabel || 'Our Photos', thumb: url, full: url, download: url })), [cfg]);
+  const ours = useMemo(() => (cfg.ourPhotos || []).map((url, i) => ({ id: `our-${i}`, static: true, event: (cfg.ourPhotosLabel === siteConfig.couple.displayName ? displayNames() : cfg.ourPhotosLabel || 'Our Photos'), thumb: url, full: url, download: url })), [cfg]);
   const eventOrder = useMemo(() => sortedEvents(true).map((e) => e.name), []);
 
   const all = useMemo(() => {
@@ -227,7 +228,7 @@ function GalleryPanel({ active, openShare }) {
   const groups = useMemo(() => {
     const map = new Map();
     all.forEach((p) => { if (!map.has(p.event)) map.set(p.event, []); map.get(p.event).push(p); });
-    const label = cfg.ourPhotosLabel || 'Our Photos';
+    const label = (cfg.ourPhotosLabel === siteConfig.couple.displayName ? displayNames() : cfg.ourPhotosLabel || 'Our Photos');
     const names = [...map.keys()].sort((a, b) => {
       const ra = a === label ? -1 : eventOrder.indexOf(a) === -1 ? 999 : eventOrder.indexOf(a);
       const rb = b === label ? -1 : eventOrder.indexOf(b) === -1 ? 999 : eventOrder.indexOf(b);

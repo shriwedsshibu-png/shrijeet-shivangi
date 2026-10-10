@@ -36,7 +36,8 @@ const siteConfig = {
   // Whose side sent the invite. The invite puts that side's name and family first:
   //   Shrijeet's side ->  /invite/shrijeet/parivaar   (3 days)   /invite/shrijeet/shubh-vivah   (wedding day)
   //   Shivangi's side ->  /invite/shivangi/parivaar   (3 days)   /invite/shivangi/shubh-vivah   (wedding day)
-  // The website itself always reads "Shivangi & Shrijeet".
+  // The website remembers the side too: Shrijeet's guests see "Shrijeet & Shivangi" on the home page,
+  // top bar and footer; Shivangi's guests and anyone without a link (e.g. the QR code) see "Shivangi & Shrijeet".
   inviteSides: {
     default: "bride",
     groom: { slug: "shrijeet" },
@@ -52,7 +53,7 @@ const siteConfig = {
     groom: {
       heading: "आकांक्षी",
       groups: [
-        ["Sudhir Kumar Mishra", "Shashi Bhushan Mishra", "Alok Mishra", "Avlok Mishra"],
+        ["Sudhir Kumar Mishra", "Shashi Bhushan Mishra", "Alok Mishra", "Avlok Kumar Mishra"],
       ],
       closing: "समस्त परिवार",
     },
