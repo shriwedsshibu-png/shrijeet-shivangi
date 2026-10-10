@@ -628,3 +628,19 @@
 .iv-gan-top{display:none}
 .iv-gan-card{display:block;height:clamp(40px,7svh,56px);width:auto;margin:0 auto .1rem;filter:drop-shadow(0 2px 4px rgba(120,60,20,.2))}
 @media(max-height:700px){.iv-gan-card{height:36px}}
+
+/* last page: tell first-time guests that the gold button is the RSVP, and let it gently call for a tap */
+.iv-rsvp-hint{margin:.5rem 0 -.1rem;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:600;color:#f1d68e;text-align:center}
+.iv-hand{display:inline-block;animation:ivhand 1.3s ease-in-out infinite}
+@keyframes ivhand{50%{transform:translateY(4px)}}
+.iv-cta.iv-rsvp{position:relative;animation:ivrsvp 2.4s ease-in-out 1.5s infinite}
+@keyframes ivrsvp{0%,100%{box-shadow:0 8px 20px rgba(0,0,0,.25),0 0 0 0 rgba(241,214,142,.0)}50%{box-shadow:0 8px 20px rgba(0,0,0,.25),0 0 0 8px rgba(241,214,142,.35)}}
+@media(prefers-reduced-motion:reduce){.iv-hand,.iv-cta.iv-rsvp{animation:none}}
+@media(max-height:700px){.iv-rsvp-hint{font-size:.95rem;margin-top:.25rem}}
+.iv-rsvp-hint{margin:.15rem 0 -.15rem;font-size:1.1rem}
+@keyframes ivrsvp{0%,100%{box-shadow:0 8px 20px rgba(0,0,0,.25),0 0 0 0 rgba(241,214,142,0)}50%{box-shadow:0 8px 20px rgba(0,0,0,.25),0 0 14px 3px rgba(241,214,142,.45)}}
+.fin .iv-btns{margin-top:.55rem;gap:.3rem}
+.fin .iv-link{padding:.15rem .3rem}
+.iv .iv-sec.fin{padding-bottom:max(3.8rem,15vh)}
+@media(max-height:700px){.iv .iv-sec.fin{padding-bottom:3.4rem}.fin .iv-p{font-size:.92rem;line-height:1.4}.fin .iv-aap{font-size:2rem}.iv-gan-end{height:38px}.fin .iv-end-mantra{font-size:.88rem}}
+@media(max-height:700px){.iv .iv-sec.fin{padding-bottom:5.2rem}}

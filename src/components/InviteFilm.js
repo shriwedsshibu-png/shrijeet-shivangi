@@ -814,7 +814,8 @@ export default function InviteFilm() {
             <p className="iv-p rv" style={{ '--d': '1.6s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
               <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
-              {rsvpOn && <button className="iv-cta gold sm" onClick={() => leave('/rsvp')}>Confirm Your Presence</button>}
+              {rsvpOn && <p className="iv-rsvp-hint"><span className="iv-hand" aria-hidden>👇</span> Tap below to RSVP</p>}
+              {rsvpOn && <button className="iv-cta gold sm iv-rsvp" onClick={() => leave('/rsvp')}>✓ Confirm Your Presence</button>}
             </div>
             <div className="iv-end rv" style={{ '--d': '3.2s' }}>
               {fam && (
