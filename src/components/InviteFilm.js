@@ -468,10 +468,29 @@ function Typed({ text, className = '', d = '0s' }) {
   );
 }
 
+/* A page that has left the screen goes back to its "not yet shown" state at once (without the slow
+   fade-out each line would otherwise do after its own delay), so when the guest scrolls back to it,
+   every line plays again from the start, top to bottom. */
+function resetPage(sec) {
+  if (!sec.classList.contains('in') && !sec.classList.contains('out') && !sec.classList.contains('leaving')) return;
+  sec.classList.add('iv-reset');
+  sec.classList.remove('in', 'out', 'leaving');
+  void sec.offsetWidth;            // apply the hidden state now
+  sec.classList.remove('iv-reset');
+}
+
 /* ---------- every page fits exactly one screen, on every phone ----------
    Each page is made exactly as tall as the screen. If a page's words would run past the screen,
    or under the buttons at the bottom (Pause / website / sound), that page alone is shrunk a little
    until it fits. Pages that already fit are not touched. */
+// where an element sits inside its page, from the layout itself (slide-in / fade animations do not
+// change these numbers, so measuring never disturbs an animation that is playing)
+function boxIn(el, sec) {
+  let x = 0, y = 0, e = el;
+  while (e && e !== sec) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+  if (e !== sec) return null;
+  return { left: x, top: y, right: x + el.offsetWidth, bottom: y + el.offsetHeight, width: el.offsetWidth, height: el.offsetHeight };
+}
 function fitPages(r, opened) {
   if (!r) return;
   const H = r.clientHeight, W = r.clientWidth;
@@ -481,16 +500,15 @@ function fitPages(r, opened) {
   const secs = Array.from(r.querySelectorAll('.iv-sec'));
   const last = secs.length - 1;
   const sndH = 2.45 * rem, skipH = 1.6 * rem, gap = 0.45 * rem, edge = 0.7 * rem, pad = 6;
-  r.classList.add('iv-measure');                       // measure the final layout (no slide-in offsets)
   const plan = secs.map((sec, i) => {
     const inn = sec.querySelector('.iv-in');
     if (!inn) return null;
     inn.style.zoom = '';
     return { sec, inn, i };
   }).filter(Boolean).map(({ sec, inn, i }) => {
-    const top = sec.getBoundingClientRect().top;
-    const box = inn.getBoundingClientRect();
-    const b = { top: box.top - top, bottom: box.bottom - top, h: box.height };
+    const box = boxIn(inn, sec);
+    if (!box) return { inn, z: 1 };
+    const b = { top: box.top, bottom: box.bottom, h: box.height };
     // the screen area kept free for the buttons on this page
     let topRes, zones;
     if (i === 0) {
@@ -511,8 +529,9 @@ function fitPages(r, opened) {
       if (!el.offsetParent) return;
       const own = ['IMG', 'BUTTON', 'A', 'CANVAS'].includes(el.tagName) || Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim());
       if (!own) return;
-      const t = el.getBoundingClientRect();
-      const y0 = t.top - top, y1 = t.bottom - top;
+      const t = boxIn(el, sec);
+      if (!t) return;
+      const y0 = t.top, y1 = t.bottom;
       zones.forEach((z) => {
         if (y1 > z.y && t.right > z.x0 && t.left < z.x1) { clash = true; bandBottom = Math.min(bandBottom, z.y); }
       });
@@ -535,7 +554,6 @@ function fitPages(r, opened) {
     return { inn, z };
   });
   plan.forEach(({ inn, z }) => { inn.style.zoom = z < 1 ? String(z) : ''; });
-  r.classList.remove('iv-measure');
 }
 
 /* ---------- the film ---------- */
@@ -614,7 +632,7 @@ export default function InviteFilm() {
       } else if (!e.isIntersecting || e.intersectionRatio < 0.02) {
         // fully off screen (a page that only touches the screen edge still counts as "intersecting",
         // so check the ratio too): reset it, so it plays again on return
-        e.target.classList.remove('in', 'out', 'leaving');
+        resetPage(e.target);
         if (e.target.dataset.i === '1') { setDateRound((n) => n + 1); setRevealed(false); setAutoScratch(false); }
       }
     }), { root: root.current, threshold: [0, 0.02, 0.55] });

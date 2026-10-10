@@ -683,4 +683,5 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 
 /* every invite page is exactly one screen tall (the height comes from the phone, see fitPages in InviteFilm.js) */
 .iv .iv-sec{height:var(--ivh,100dvh);min-height:0}
-.iv.iv-measure .rv,.iv.iv-measure .iv-in{transform:none!important;transition:none!important}
+/* a page that left the screen snaps back to hidden at once, so it replays from the start (see resetPage) */
+.iv .iv-reset .rv,.iv .iv-reset .tw>span,.iv .iv-reset .iv-in,.iv .iv-reset .iv-cd{transition:none!important}
