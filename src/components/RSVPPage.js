@@ -17,6 +17,7 @@ const blank = () => ({
   arrivalDate: '',
   accommodation: '',
   notes: '',
+  events: [],   // the functions this family will come for (3-day guests choose)
 });
 
 function Choice({ on, onClick, children }) {
@@ -25,13 +26,19 @@ function Choice({ on, onClick, children }) {
 
 export default function RSVPPage() {
   const saved = loadSaved(SAVE_KEY);
-  const [form, setForm] = useState(() => ({ ...blank(), ...(saved || {}) }));
+  const [form, setForm] = useState(() => { const f = { ...blank(), ...(saved || {}) }; if (!Array.isArray(f.events)) f.events = []; return f; });
   const [hadSaved] = useState(!!saved);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(null); // null | 'new' | 'updated'
   const [error, setError] = useState('');
   const events = sortedEvents();
   const full = isFullTier();
+  const choose = full && events.length > 1;            // 3-day guests pick their functions
+  const picked = (name) => form.events.includes(name);
+  const allPicked = choose && events.every((ev) => picked(ev.name));
+  const toggle = (name) => setForm((f) => ({ ...f, events: f.events.includes(name) ? f.events.filter((x) => x !== name) : [...f.events, name] }));
+  const toggleAll = () => setForm((f) => ({ ...f, events: allPicked ? [] : events.map((ev) => ev.name) }));
+  const evDay = (d) => new Date(d + 'T12:00:00+05:30').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' });
   const days = full ? ['2026-11-29', '2026-11-30', '2026-12-01', '2026-12-02'] : ['2026-12-01', '2026-12-02'];
   const dayLabel = (d) => new Date(d + 'T12:00:00+05:30').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' });
 
@@ -44,13 +51,14 @@ export default function RSVPPage() {
     if (!form.contactName.trim()) { setError('Please enter your name.'); return; }
     if (form.phone.replace(/\D/g, '').length < 10) { setError('Please enter a valid 10-digit mobile number.'); return; }
     if (form.attending === 'yes') {
+      if (choose && !events.some((ev) => picked(ev.name))) { setError('Please tick the functions you will attend.'); return; }
       if (n(form.men) + n(form.women) + n(form.children) === 0) { setError('Please tell us how many people are coming.'); return; }
       if (!form.arrivalDate) { setError('Please choose your date of arrival.'); return; }
       if (!form.accommodation) { setError('Please tell us if you need a room.'); return; }
     }
     setLoading(true);
     try {
-      const result = await submitRsvp({ ...form, eventsAttending: events.map((ev) => ev.name), inviteType: getTier() });
+      const result = await submitRsvp({ ...form, eventsAttending: (choose ? events.filter((ev) => picked(ev.name)) : events).map((ev) => ev.name), inviteType: getTier() });
       save(SAVE_KEY, form);
       setDone(result.updated ? 'updated' : 'new');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -105,6 +113,25 @@ export default function RSVPPage() {
 
               {attending && (
                 <>
+                  {choose && (
+                    <section className="grid gap-3">
+                      <h2 className="form-title">Which functions will you attend?</h2>
+                      <p className="hint" style={{ margin: 0 }}>Tap each one you will come for, so we can plan food and seating for every function.</p>
+                      <Choice on={allPicked} onClick={toggleAll}>{allPicked ? '✓ ' : ''}All the functions</Choice>
+                      <div className="grid gap-2">
+                        {events.map((ev) => (
+                          <Choice key={ev.name} on={picked(ev.name)} onClick={() => toggle(ev.name)}>
+                            <span className="rsvp-ev">
+                              <span className="rsvp-tick" aria-hidden>{picked(ev.name) ? '✓' : ''}</span>
+                              <span className="rsvp-ev-name">{ev.nameHi && <span className="deva" style={{ display: 'block' }}>{ev.nameHi}</span>}{ev.name}</span>
+                              <span className="rsvp-ev-when">{evDay(ev.date)}, {ev.time}</span>
+                            </span>
+                          </Choice>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
                   <section className="grid gap-4">
                     <h2 className="form-title">How many of you are coming?</h2>
                     <div className="grid grid-cols-3 gap-3">

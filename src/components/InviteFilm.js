@@ -775,7 +775,7 @@ export default function InviteFilm() {
               {/shaadi|varmala/i.test(ev.name) && <PaintedBG name="shaadi"><MandapBG /></PaintedBG>}
               {/faldaan/i.test(ev.name) && <Toran2 />}
               <div className="iv-in">
-                <p className="iv-small rv" style={{ '--d': '.2s' }}>{events.length > 1 ? `Function ${k + 1} of ${events.length}` : 'The Wedding'}</p>
+                {events.length === 1 && <p className="iv-small rv" style={{ '--d': '.2s' }}>The Wedding</p>}
                 <div className="iv-card rv" style={{ '--d': '.5s' }}>
                   <img className="iv-gan-card rv" style={{ '--d': '.8s' }} src="/images/invite/ganesh.webp" alt="" aria-hidden />
                   <h2 className="rv wr" style={{ '--d': '1s' }}>{ev.name}</h2>

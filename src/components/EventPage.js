@@ -41,7 +41,12 @@ export default function EventPage() {
                     </div>
                   )}
                   <div style={{ padding: '1.2rem 1.2rem 1.3rem' }}>
-                    <h2 className="font-display font-bold" style={{ fontSize: '2rem', color: 'var(--maroon)' }}>{e.name}</h2>
+                    {e.nameHi
+                      ? <h2 style={{ margin: 0, lineHeight: 1.15 }}>
+                          <span className="deva" style={{ display: 'block', fontSize: '2rem', fontWeight: 700, color: '#7b1e2b' }}>{e.nameHi}</span>
+                          <span className="font-display" style={{ display: 'block', fontSize: '1.2rem', fontWeight: 600, color: 'var(--maroon)', letterSpacing: '.02em', marginTop: '.15rem' }}>{e.name}</span>
+                        </h2>
+                      : <h2 className="font-display font-bold" style={{ fontSize: '2rem', color: 'var(--maroon)' }}>{e.name}</h2>}
                     <p className="font-semibold mt-1">{d.weekday}, {e.time}</p>
                     {e.dateNote && <p className="text-muted" style={{ fontSize: '.95rem' }}>({e.dateNote})</p>}
                     <p className="text-muted mt-2">{e.description}</p>

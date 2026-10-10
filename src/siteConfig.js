@@ -55,7 +55,7 @@ const siteConfig = {
       groups: [
         ["Sudhir Kumar Mishra", "Shashi Bhushan Mishra", "Alok Mishra", "Avlok Kumar Mishra", "Advait"],
       ],
-      closing: "समस्त परिवार",
+      closing: "समस्त मिश्रा परिवार",
     },
     bride: {
       heading: "आकांक्षी",
@@ -168,6 +168,7 @@ const siteConfig = {
       {
         id: 1,
         name: "Faldaan",
+        nameHi: "फलदान",
         date: "2026-11-30",
         time: "06:00 PM",
         dressCode: "Semi-formal",
@@ -176,6 +177,7 @@ const siteConfig = {
       {
         id: 2,
         name: "Mehndi",
+        nameHi: "मेहंदी",
         date: "2026-12-01",
         time: "08:30 AM",
         dressCode: "Shades of Green",
@@ -184,6 +186,7 @@ const siteConfig = {
       {
         id: 3,
         name: "Engagement & Sangeet",
+        nameHi: "सगाई एवं संगीत",
         date: "2026-12-01",
         time: "06:30 PM",
         dressCode: "Indo-Western",
@@ -192,6 +195,7 @@ const siteConfig = {
       {
         id: 4,
         name: "Haldi",
+        nameHi: "हल्दी",
         date: "2026-12-02",
         time: "08:30 AM",
         dressCode: "Shades of Blue and Yellow",
@@ -200,6 +204,7 @@ const siteConfig = {
       {
         id: 5,
         name: "Varmala & Shaadi",
+        nameHi: "वरमाला एवं शादी",
         date: "2026-12-02",
         time: "07:30 PM onwards",
         dressCode: "Traditional",
@@ -387,7 +392,6 @@ And here's to all the journeys still waiting for us.`,
         name: "Anuradha",
         relation: "Bhabhi"
       },
-      { name: "Advait Mishra", relation: "Bhai" },
       {
         name: "Rani",
         relation: "Didi"
@@ -404,9 +408,9 @@ And here's to all the journeys still waiting for us.`,
         name: "Abhishek Sharma",
         relation: "Jiju"
       },
-      { name: "Pihu", relation: "Niece" },
-      { name: "Raavi", relation: "Niece" },
-      { name: "Adi", relation: "Nephew" },
+      { name: "Pragya Thakur", relation: "Niece" },
+      { name: "Raavi Thakur", relation: "Niece" },
+      { name: "Advait Mishra", relation: "Nephew" },
       { name: "Sanvi Mishra", relation: "Niece" }
     ],
     // Shivangi's side — fill this in when ready. Example of one person:

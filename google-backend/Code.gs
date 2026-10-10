@@ -20,6 +20,8 @@ var MAX_FACES_PER_PHOTO = 25;
 
 // Functions a wedding-day guest may RSVP for (must match the event names in siteConfig.js)
 var WEDDING_DAY_EVENTS = ['Varmala & Shaadi'];
+// Every function, in order (must match the event names in siteConfig.js) — used for the per-function totals
+var ALL_EVENTS = ['Faldaan', 'Mehndi', 'Engagement & Sangeet', 'Haldi', 'Varmala & Shaadi'];
 
 var TABS = {
   RSVP: [
@@ -168,7 +170,8 @@ function rsvpSheet_() {
   return sheet;
 }
 
-// "RSVP Summary" tab: live totals (formulas), split by invite type and by arrival date.
+// "RSVP Summary" tab: live totals (formulas) — overall, for EACH FUNCTION, and by arrival date.
+// After changing this file: Wedding menu (top of the sheet) > Rebuild RSVP Summary.
 function summarySheet_() {
   var ss = SpreadsheetApp.getActive();
   if (ss.getSheetByName('RSVP Summary')) return;
@@ -177,7 +180,7 @@ function summarySheet_() {
   var by = function (col, type) { return type ? '=SUMIFS(RSVP!' + col + '2:' + col + ',' + C + ',RSVP!M2:M,"' + type + '")' : '=SUMIFS(RSVP!' + col + '2:' + col + ',' + C + ')'; };
   var cnt = function (type) { return type ? '=COUNTIFS(' + C + ',RSVP!M2:M,"' + type + '")' : '=COUNTIF(' + C + ')'; };
   var room = function (type) { return type ? '=COUNTIFS(' + C + ',RSVP!K2:K,"Yes",RSVP!M2:M,"' + type + '")' : '=COUNTIFS(' + C + ',RSVP!K2:K,"Yes")'; };
-  var rows = [
+  var top = [
     ['WEDDING RSVP SUMMARY (updates by itself)', '3-day guests', 'Wedding-day guests', 'ALL'],
     ['Families coming', cnt('3-day'), cnt('Wedding day'), cnt('')],
     ['Total guests', by('I', '3-day'), by('I', 'Wedding day'), by('I', '')],
@@ -185,20 +188,33 @@ function summarySheet_() {
     ['Women', by('G', '3-day'), by('G', 'Wedding day'), by('G', '')],
     ['Children', by('H', '3-day'), by('H', 'Wedding day'), by('H', '')],
     ['Families needing a room', room('3-day'), room('Wedding day'), room('')],
-    ['Replied "cannot come"', '=COUNTIFS(RSVP!E2:E,"No",RSVP!M2:M,"3-day")', '=COUNTIFS(RSVP!E2:E,"No",RSVP!M2:M,"Wedding day")', '=COUNTIF(RSVP!E2:E,"No")'],
-    ['', '', '', ''],
-    ['ARRIVALS (guests arriving on each date)', '3-day guests', 'Wedding-day guests', 'ALL']
+    ['Replied "cannot come"', '=COUNTIFS(RSVP!E2:E,"No",RSVP!M2:M,"3-day")', '=COUNTIFS(RSVP!E2:E,"No",RSVP!M2:M,"Wedding day")', '=COUNTIF(RSVP!E2:E,"No")']
   ];
+  sh.getRange(1, 1, top.length, 4).setValues(top);
+
+  // EACH FUNCTION: only the families who ticked that function are counted for it
+  var r0 = top.length + 2;
+  var fx = [['EACH FUNCTION (only those who ticked it)', 'Families', 'Total guests', 'Men', 'Women', 'Children']];
+  ALL_EVENTS.forEach(function (ev) {
+    var k = 'RSVP!N2:N,"*' + ev + '*"';
+    var s = function (col) { return '=SUMIFS(RSVP!' + col + '2:' + col + ',' + C + ',' + k + ')'; };
+    fx.push([ev, '=COUNTIFS(' + C + ',' + k + ')', s('I'), s('F'), s('G'), s('H')]);
+  });
+  sh.getRange(r0, 1, fx.length, 6).setValues(fx);
+
+  var a0 = r0 + fx.length + 1;
+  var arr = [['ARRIVALS (guests arriving on each date)', '3-day guests', 'Wedding-day guests', 'ALL']];
   ['2026-11-28', '2026-11-29', '2026-11-30', '2026-12-01', '2026-12-02'].forEach(function (d) {
     var f = function (type) { return '=SUMIFS(RSVP!I2:I,' + C + ',RSVP!J2:J,"' + d + '"' + (type ? ',RSVP!M2:M,"' + type + '"' : '') + ')'; };
-    rows.push([d, f('3-day'), f('Wedding day'), f('')]);
+    arr.push([d, f('3-day'), f('Wedding day'), f('')]);
   });
-  sh.getRange(1, 1, rows.length, 4).setValues(rows);
-  sh.getRange('A1:D1').setFontWeight('bold').setBackground('#f3e2c8');
-  sh.getRange('A10:D10').setFontWeight('bold').setBackground('#f3e2c8');
-  sh.getRange('A11:A15').setNumberFormat('@');
+  sh.getRange(a0 + 1, 1, arr.length - 1, 1).setNumberFormat('@');
+  sh.getRange(a0, 1, arr.length, 4).setValues(arr);
+
+  [[1, 4], [r0, 6], [a0, 4]].forEach(function (h) { sh.getRange(h[0], 1, 1, h[1]).setFontWeight('bold').setBackground('#f3e2c8'); });
   sh.getRange('A3:D3').setFontWeight('bold');
-  sh.setColumnWidth(1, 300); sh.setColumnWidths(2, 3, 160); sh.setFrozenRows(1);
+  sh.getRange(r0 + 1, 3, fx.length - 1, 1).setFontWeight('bold');
+  sh.setColumnWidth(1, 300); sh.setColumnWidths(2, 5, 140); sh.setFrozenRows(1);
 }
 
 /* ------------------------------------------------------------------ */

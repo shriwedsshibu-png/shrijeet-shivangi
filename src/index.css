@@ -644,3 +644,10 @@
 .iv .iv-sec.fin{padding-bottom:max(3.8rem,15vh)}
 @media(max-height:700px){.iv .iv-sec.fin{padding-bottom:3.4rem}.fin .iv-p{font-size:.92rem;line-height:1.4}.fin .iv-aap{font-size:2rem}.iv-gan-end{height:38px}.fin .iv-end-mantra{font-size:.88rem}}
 @media(max-height:700px){.iv .iv-sec.fin{padding-bottom:5.2rem}}
+
+/* RSVP: pick the functions (big, easy tick boxes) */
+.rsvp-ev{display:grid;grid-template-columns:1.6rem 1fr;column-gap:.6rem;align-items:center}
+.rsvp-tick{grid-row:span 2;width:1.6rem;height:1.6rem;border-radius:.45rem;border:2px solid #c9a24a;display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:800;line-height:1;background:#fff;color:var(--maroon)}
+.choice-on .rsvp-tick{background:#f1d68e;border-color:#f1d68e;color:#1f3350}
+.rsvp-ev-name{font-size:1.05rem}
+.rsvp-ev-when{font-size:.88rem;font-weight:500;opacity:.8}
