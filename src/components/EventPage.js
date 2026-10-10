@@ -2,7 +2,8 @@ import React from 'react';
 import siteConfig from '../siteConfig';
 import { Card, PageHeader } from './ui';
 import Icon from '../icons';
-import { sortedEvents, dayAndMonth, calendarLink } from '../utils';
+import { sortedEvents, dayAndMonth, calendarLink, evTime } from '../utils';
+import { L } from '../lang';
 import { tierCfg } from '../tier';
 
 function eventImage(name) {
@@ -22,7 +23,7 @@ export default function EventPage() {
   return (
     <main className="page">
       <div className="wrap-narrow">
-        <PageHeader eyebrow="The celebrations" title={cfg.title} subtitle={tierCfg().eventsSubtitle || cfg.subtitle} />
+        <PageHeader eyebrow={L('The celebrations', 'समारोह')} title={cfg.title} subtitle={tierCfg().eventsSubtitle || cfg.subtitle} />
 
         <div className="timeline grid gap-5">
           {events.map((e) => {
@@ -47,15 +48,15 @@ export default function EventPage() {
                           <span className="font-display" style={{ display: 'block', fontSize: '1.2rem', fontWeight: 600, color: 'var(--maroon)', letterSpacing: '.02em', marginTop: '.15rem' }}>{e.name}</span>
                         </h2>
                       : <h2 className="font-display font-bold" style={{ fontSize: '2rem', color: 'var(--maroon)' }}>{e.name}</h2>}
-                    <p className="font-semibold mt-1">{d.weekday}, {e.time}</p>
+                    <p className="font-semibold mt-1">{d.weekday}, {evTime(e)}</p>
                     {e.dateNote && <p className="text-muted" style={{ fontSize: '.95rem' }}>({e.dateNote})</p>}
                     <p className="text-muted mt-2">{e.description}</p>
                     <div className="flex flex-wrap gap-2 mt-3">
                       {e.dressCode && <span className="tag">👗 {e.dressCode}</span>}
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4">
-                      <a className="btn btn-ghost" style={{ minHeight: '2.7rem', padding: '.4rem 1.1rem', fontSize: '.95rem' }} href={e.mapLink || wedding.mapLink} target="_blank" rel="noopener noreferrer"><Icon name="pin" size={18} /> Map</a>
-                      <a className="btn btn-ghost" style={{ minHeight: '2.7rem', padding: '.4rem 1.1rem', fontSize: '.95rem' }} href={calendarLink(e)} target="_blank" rel="noopener noreferrer"><Icon name="calendar" size={18} /> Add to calendar</a>
+                      <a className="btn btn-ghost" style={{ minHeight: '2.7rem', padding: '.4rem 1.1rem', fontSize: '.95rem' }} href={e.mapLink || wedding.mapLink} target="_blank" rel="noopener noreferrer"><Icon name="pin" size={18} /> {L('Map', 'नक्शा')}</a>
+                      <a className="btn btn-ghost" style={{ minHeight: '2.7rem', padding: '.4rem 1.1rem', fontSize: '.95rem' }} href={calendarLink(e)} target="_blank" rel="noopener noreferrer"><Icon name="calendar" size={18} /> {L('Add to calendar', 'कैलेंडर में जोड़ें')}</a>
                     </div>
                   </div>
                 </Card>

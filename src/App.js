@@ -9,6 +9,7 @@ import MobileBottomNav from './components/MobileBottomNav';
 import { warmUp, prefetchGallery } from './api';
 import InviteFilm, { SEEN_KEY } from './components/InviteFilm';
 import { tierFromCode, codeFromPath, getTier, setTier, sideFromPath, getSide, setSide } from './tier';
+import { langFromPath, getLang, setLang } from './lang';
 
 const OurStory = lazy(() => import('./components/OurStory'));
 const EventPage = lazy(() => import('./components/EventPage'));
@@ -53,7 +54,9 @@ function TierInvite() {
   const { pathname } = useLocation();
   const t = tierFromCode(codeFromPath(pathname));
   const sd = sideFromPath(pathname);
-  const changed = (t && t !== getTier()) || (sd && sd !== getSide());
+  const lg = langFromPath(pathname);
+  const changed = (t && t !== getTier()) || (sd && sd !== getSide()) || (lg && lg !== getLang());
+  if (lg) setLang(lg);
   if (sd) setSide(sd);
   if (t && t !== getTier()) setTier(t);
   if (changed) { window.location.reload(); return null; }
@@ -93,6 +96,7 @@ export default function App() {
             {routes}
             {siteConfig.features?.invite?.enabled && <Route path="/invite/:code" element={<TierInvite />} />}
             {siteConfig.features?.invite?.enabled && <Route path="/invite/:side/:code" element={<TierInvite />} />}
+            {siteConfig.features?.invite?.enabled && <Route path="/invite/:side/:code/:lang" element={<TierInvite />} />}
             {legacy.map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

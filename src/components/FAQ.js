@@ -3,6 +3,7 @@ import siteConfig from '../siteConfig';
 import { Card, PageHeader } from './ui';
 import Icon from '../icons';
 import { getTier } from '../tier';
+import { L } from '../lang';
 
 export default function FAQ() {
   const { title, subtitle } = siteConfig.faq;
@@ -11,7 +12,7 @@ export default function FAQ() {
   return (
     <main className="page">
       <div className="wrap-narrow">
-        <PageHeader eyebrow="Questions & answers" title={title} subtitle={subtitle} />
+        <PageHeader eyebrow={L('Questions & answers', 'प्रश्न एवं उत्तर')} title={title} subtitle={subtitle} />
         <div className="grid gap-3">
           {questions.map((q, i) => {
             const isOpen = open === i;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { L } from '../lang';
 
 function calc(target) {
   const diff = new Date(target).getTime() - Date.now();
@@ -20,7 +21,7 @@ export default function Countdown({ target }) {
     return () => clearInterval(id);
   }, [target]);
 
-  const units = [['Days', t.days], ['Hours', t.hours], ['Minutes', t.minutes], ['Seconds', t.seconds]];
+  const units = [[L('Days', 'दिन'), t.days], [L('Hours', 'घंटे'), t.hours], [L('Minutes', 'मिनट'), t.minutes], [L('Seconds', 'सेकंड'), t.seconds]];
   return (
     <div className="cd-grid" role="timer" aria-label="Countdown to the wedding">
       {units.map(([label, value]) => (

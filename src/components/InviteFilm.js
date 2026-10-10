@@ -4,6 +4,8 @@ import siteConfig from '../siteConfig';
 import { sortedEvents } from '../utils';
 import makeLoopPlayer from '../loopAudio';
 import { groomFirst, isFullTier } from '../tier';
+import { L, isHi, locale } from '../lang';
+import { evName, evTime } from '../utils';
 
 /* ============================================================================
    The invitation film: a full-screen, scroll-through story (made for phones).
@@ -18,15 +20,16 @@ const MUSIC_LOOP = { firstNote: 0.0838, loopStart: 2.24, loopEnd: 21.30 }; // op
 
 const LINES = {
   // each line is written as two balanced lines ("\n" = the line break), so every card looks alike
-  Faldaan: { hing: 'Rishta pakka,\nmithai pakki!', icon: 'kalash' },
-  Mehndi: { hing: 'Henna, laughter\nand lots of colour', icon: 'hand' },
-  'Engagement & Sangeet': { hing: 'Music & dance with\nthe whole family', icon: 'dhol' },
-  Haldi: { hing: 'Yellow hands,\ngolden blessings', icon: 'marigold' },
-  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan,\nek zindagi, ek saath', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
+  // hi = the same line on the Hindi invite links
+  Faldaan: { hing: 'Rishta pakka,\nmithai pakki!', hi: 'रिश्ता पक्का,\nमिठाई पक्की!', icon: 'kalash' },
+  Mehndi: { hing: 'Henna, laughter\nand lots of colour', hi: 'मेहंदी, हँसी\nऔर ढेर सारे रंग', icon: 'hand' },
+  'Engagement & Sangeet': { hing: 'Music & dance with\nthe whole family', hi: 'पूरे परिवार संग\nसंगीत और नृत्य', icon: 'dhol' },
+  Haldi: { hing: 'Yellow hands,\ngolden blessings', hi: 'हल्दी का रंग,\nआशीर्वाद के संग', icon: 'marigold' },
+  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan,\nek zindagi, ek saath', hi: 'सात फेरे, सात वचन,\nएक जीवन, एक साथ', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
 };
 
 const fmtDate = (iso) =>
-  new Date(iso + 'T12:00:00+05:30').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'Asia/Kolkata' });
+  new Date(iso + 'T12:00:00+05:30').toLocaleDateString(locale(), { weekday: isHi() ? 'long' : 'short', day: 'numeric', month: 'long', timeZone: 'Asia/Kolkata' });
 
 /* ---------- small illustrations (original, drawn in SVG) ---------- */
 
@@ -385,13 +388,13 @@ function Scratch({ children, onReveal, auto, onTouch }) {
     if (x.roundRect) x.roundRect((W - pw) / 2, (H - ph) / 2, pw, ph, 26); else x.rect((W - pw) / 2, (H - ph) / 2, pw, ph);
     x.fill();
     x.textAlign = 'center'; x.fillStyle = '#6b4a12';
-    x.font = `600 ${Math.round(H * 0.085)}px Cinzel, serif`; x.fillText('THE WEDDING DATE', W / 2, H / 2 - H * 0.06);
-    x.fillStyle = '#5a3a0c'; x.font = `${Math.round(H * 0.2)}px "Great Vibes", cursive`; x.fillText('Scratch to reveal', W / 2, H / 2 + H * 0.15);
+    x.font = `600 ${Math.round(H * 0.085)}px Cinzel, serif`; x.fillText(L('THE WEDDING DATE', 'विवाह की शुभ तिथि'), W / 2, H / 2 - H * 0.06);
+    x.fillStyle = '#5a3a0c'; x.font = `${Math.round(H * (isHi() ? 0.17 : 0.2))}px "Great Vibes", cursive`; x.fillText(L('Scratch to reveal', 'खुरचकर देखें'), W / 2, H / 2 + H * 0.15);
   }, []);
 
   useEffect(() => {
     draw();
-    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('40px "Great Vibes"'), document.fonts.load('600 20px Cinzel')]).then(() => { if (!touched.current) draw(); }).catch(() => {});
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('40px "Great Vibes"', L('Scratch', 'खुरचकर देखें')), document.fonts.load('600 20px Cinzel', L('DATE', 'विवाह की शुभ तिथि'))]).then(() => { if (!touched.current) draw(); }).catch(() => {});
   }, [draw]);
 
   const onRevealRef = useRef(onReveal);
@@ -449,9 +452,18 @@ function useCountdown(target) {
 /* ---------- typewriter line: letters appear one by one once the page is in view ---------- */
 function Typed({ text, className = '', d = '0s' }) {
   const t = String(text || '');
+  // Hindi letters join into one shape with their matras, so Hindi lines appear word by word
+  // (each word counts as several letters, so the line takes about as long as in English)
+  const parts = /[\u0900-\u097F]/.test(t) ? t.split(/(\n| )/).filter((x) => x !== '') : Array.from(t);
+  let i = 0;
   return (
     <span className={'tw ' + className} style={{ '--d': d }} aria-label={t.replace(/\n/g, ' ')}>
-      {Array.from(t).map((c, i) => (c === '\n' ? <br key={i} /> : <span key={i} aria-hidden style={{ '--i': i }}>{c}</span>))}
+      {parts.map((c, k) => {
+        if (c === '\n') return <br key={k} />;
+        const el = <span key={k} aria-hidden style={{ '--i': i }}>{c}</span>;
+        i += c.length > 1 ? Math.max(1, Math.round(c.length * 0.8)) : 1;
+        return el;
+      })}
     </span>
   );
 }
@@ -683,7 +695,7 @@ export default function InviteFilm() {
   const groom = { name: names.fullName2 || names.name2, line: inv.groomLine, parents: inv.groomParents };
   const [p1, p2] = groomFirst() ? [groom, bride] : [bride, groom];
   const card = groomFirst() ? { ...inv, ...(inv.groomSide || {}) } : inv;   // Shrijeet's side has its own opening lines
-  const pair = (t) => { const [a, b] = String(t).split(' & '); return b ? <>{a} &amp;<br />{b}</> : t; };
+  const pair = (t) => { const [a, b] = String(t).split(' & '); return b ? <>{a} {L('&', 'एवं')}<br />{b}</> : t; };
   let idx = 0;
 
   return (
@@ -698,8 +710,8 @@ export default function InviteFilm() {
         </div>
       )}
       <div className={'iv-ctrl' + (active === 0 ? ' top' : '')}>
-        {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((v) => !v)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? '▶ Play' : '❚❚ Pause'}</button>}
-        {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>Visit wedding website</button>}
+        {opened && active > 0 && active < LAST && <button className="iv-snd" onClick={() => setPaused((v) => !v)} aria-label={paused ? 'Play' : 'Pause'}>{paused ? L('▶ Play', '▶ चलाएँ') : L('❚❚ Pause', '❚❚ रोकें')}</button>}
+        {active !== DATE_I && <button className={'iv-skip' + (opened && active === LAST ? ' hot' : '')} onClick={() => leave('/')}>{L('Visit wedding website', 'विवाह वेबसाइट देखें')}</button>}
       </div>
       {opened && hasMusic && <button className="iv-mute" onClick={toggleMusic} aria-label={musicOn ? 'Mute music' : 'Play music'}>{musicOn ? '🔊' : '🔇'}</button>}
       {opened && active > 0 && (
@@ -716,12 +728,12 @@ export default function InviteFilm() {
           <img className="iv-gan-cov rv" style={{ '--d': '.05s' }} src="/images/invite/ganesh.webp" alt="Shri Ganesh" />
           <p className="iv-ganesh rv" style={{ '--d': '.2s' }}>॥ श्री गणेशाय नमः ॥</p>
           <p className="iv-ganesh iv-mantra rv" style={{ '--d': '.5s' }}>वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।<br />निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
-          <p className="iv-small rv" style={{ '--d': '.95s' }}>The wedding of</p>
-          <h1 className="iv-names iv-shine rv wr" style={{ '--d': '1.3s' }}>{p1.name}<span>&amp;</span>{p2.name}</h1>
+          <p className="iv-small rv" style={{ '--d': '.95s' }}>{L('The wedding of', 'शुभ विवाह')}</p>
+          <h1 className="iv-names iv-shine rv wr" style={{ '--d': '1.3s' }}>{p1.name}<span>{L('&', 'संग')}</span>{p2.name}</h1>
           <div className="iv-jharokha rv" style={{ '--d': '2.4s' }}><CoupleArt /></div>
           {!opened
-            ? <button className="iv-cta iv-open rv" style={{ '--d': '3s' }} onClick={open}>Open Your Invitation</button>
-            : <p className="iv-small">scroll ↓</p>}
+            ? <button className="iv-cta iv-open rv" style={{ '--d': '3s' }} onClick={open}>{L('Open Your Invitation', 'निमंत्रण खोलें')}</button>
+            : <p className="iv-small">{L('scroll ↓', 'नीचे देखें ↓')}</p>}
         </div>
       </section>
 
@@ -730,16 +742,16 @@ export default function InviteFilm() {
         <section className="iv-sec iv-rose" data-i={idx++}>
           <PaintedBG name="date" />
           <div className="iv-in">
-            <p className="iv-small dark rv" style={{ '--d': '.2s' }}>Save the date</p>
-            <h2 className="iv-h iv-h-sm iv-h-date rv" style={{ '--d': '.35s' }}>Unveil our auspicious day</h2>
+            <p className="iv-small dark rv" style={{ '--d': '.2s' }}>{L('Save the date', 'शुभ तिथि')}</p>
+            <h2 className="iv-h iv-h-sm iv-h-date rv" style={{ '--d': '.35s' }}>{L('Unveil our auspicious day', 'जानिए हमारा शुभ दिन')}</h2>
             <div className="rv" style={{ '--d': '1.5s' }}>
               <Scratch key={dateRound} onReveal={() => { dateSeen.current = true; setRevealed(true); }} auto={autoScratch} onTouch={(v) => { touching.current = v; }}>
-                <div className="iv-date"><span className="wd">Wednesday</span><b>2 December</b><span>2026</span></div>
+                <div className="iv-date"><span className="wd">{L('Wednesday', 'बुधवार')}</span><b>{L('2 December', '2 दिसंबर')}</b><span>2026</span></div>
               </Scratch>
             </div>
-            <p className="iv-small dark rv" style={{ '--d': '2s', marginTop: '.4rem' }}>{revealed ? 'Counting down to forever' : 'Use your finger to scratch ☝'}</p>
+            <p className="iv-small dark rv" style={{ '--d': '2s', marginTop: '.4rem' }}>{revealed ? L('Counting down to forever', 'शुभ घड़ी की प्रतीक्षा') : L('Use your finger to scratch ☝', 'उंगली से खुरचें ☝')}</p>
             <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.8s' }}>
-              {[['days', cd[0]], ['hrs', cd[1]], ['min', cd[2]], ['sec', cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
+              {[[L('days', 'दिन'), cd[0]], [L('hrs', 'घंटे'), cd[1]], [L('min', 'मिनट'), cd[2]], [L('sec', 'सेकंड'), cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
           </div>
         </section>
@@ -755,10 +767,11 @@ export default function InviteFilm() {
             <p className="iv-nm rv wr" style={{ '--d': '1.1s' }}>{p1.name}</p>
             <p className="iv-req iv-of rv" style={{ '--d': '2.2s' }}>{p1.line}</p>
             <p className="iv-host rv" style={{ '--d': '2.5s' }}>{pair(p1.parents)}</p>
-            <p className="iv-with rv" style={{ '--d': '3s' }}>with</p>
+            <p className="iv-with rv" style={{ '--d': '3s' }}>{L('with', 'संग')}</p>
             <p className="iv-nm rv wr" style={{ '--d': '3.3s' }}>{p2.name}</p>
             <p className="iv-req iv-of rv" style={{ '--d': '4.4s' }}>{p2.line}</p>
             <p className="iv-host rv" style={{ '--d': '4.7s' }}>{pair(p2.parents)}</p>
+            {card.closing && <p className="iv-req iv-closing rv" style={{ '--d': '5s' }}>{card.closing}</p>}
             <div className="rv grow" style={{ '--d': '5.2s' }}><Ornament width={180} /></div>
             <p className="iv-p iv-close rv" style={{ '--d': '5.7s' }}>{siteConfig.homepage.invitationBottom}</p>
             <p className="iv-deva rv" style={{ '--d': '6.2s' }}>{siteConfig.homepage.welcomeHindi}</p>
@@ -767,7 +780,9 @@ export default function InviteFilm() {
 
         {/* 4+. events */}
         {events.map((ev, k) => {
-          const l = LINES[ev.name] || { hing: ev.description, icon: 'mandap' };
+          const l0 = LINES[ev.name] || { hing: ev.description, icon: 'mandap' };
+          const l = isHi() ? { ...l0, hing: l0.hi || ev.description } : l0;
+          const title = evName(ev);
           return (
             <section key={ev.id} className={'iv-sec ' + ['iv-teal', 'iv-green', 'iv-dusk', 'iv-sun', 'iv-royal'][k % 5] + (/shaadi|varmala/i.test(ev.name) ? ' iv-shaadi' : '')} data-i={idx++}>
               {/faldaan/i.test(ev.name) && <PaintedBG name="faldaan"><FaldaanBG /></PaintedBG>}
@@ -777,13 +792,13 @@ export default function InviteFilm() {
               {/shaadi|varmala/i.test(ev.name) && <PaintedBG name="shaadi"><MandapBG /></PaintedBG>}
               {/faldaan/i.test(ev.name) && <Toran2 />}
               <div className="iv-in">
-                {events.length === 1 && <p className="iv-small rv" style={{ '--d': '.2s' }}>The Wedding</p>}
+                {events.length === 1 && <p className="iv-small rv" style={{ '--d': '.2s' }}>{L('The Wedding', 'शुभ विवाह')}</p>}
                 <div className="iv-card rv" style={{ '--d': '.5s' }}>
                   <img className="iv-gan-card rv" style={{ '--d': '.8s' }} src="/images/invite/ganesh.webp" alt="" aria-hidden />
-                  <h2 className={'rv' + (ev.name.length > 12 ? '' : ' wr')} style={{ '--d': '1s' }}>{ev.name}</h2>
+                  <h2 className={'rv' + (title.length > 12 ? '' : ' wr')} style={{ '--d': '1s' }}>{title}</h2>
                   <p className="iv-hing"><Typed text={l.hing} d="2.1s" /></p>
-                  <div className="iv-when rv grow" style={{ '--d': '3.5s' }}><b><Typed text={fmtDate(ev.date)} d="3.9s" /></b><span className="rv" style={{ '--d': '4.6s' }}>{ev.time}</span></div>
-                  <div className="iv-dress rv" style={{ '--d': '5s' }}>Dress code · {ev.dressCode}</div>
+                  <div className="iv-when rv grow" style={{ '--d': '3.5s' }}><b><Typed text={fmtDate(ev.date)} d="3.9s" /></b><span className="rv" style={{ '--d': '4.6s' }}>{evTime(ev)}</span></div>
+                  <div className="iv-dress rv" style={{ '--d': '5s' }}>{L('Dress code', 'पहनावा')} · {ev.dressCode}</div>
                 </div>
                 {!l.noNote && <p className="iv-p light rv" style={{ '--d': '5.5s' }}>{l.note || ev.description}</p>}
               </div>
@@ -795,12 +810,12 @@ export default function InviteFilm() {
         <section className="iv-sec iv-sea iv-venue" data-i={idx++}>
           <PaintedBG name="venue"><svg className="iv-waves" viewBox="0 0 390 120" preserveAspectRatio="none" aria-hidden><path className="w1" d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V120 H0Z" fill="#ffffff22" /><path className="w2" d="M0 80 Q50 50 100 80 T200 80 T300 80 T400 80 V120 H0Z" fill="#ffffff2e" /></svg></PaintedBG>
           <div className="iv-in">
-            <p className="iv-small rv" style={{ '--d': '.2s' }}>The Venue</p>
+            <p className="iv-small rv" style={{ '--d': '.2s' }}>{L('The Venue', 'विवाह स्थल')}</p>
             <h2 className="iv-h light rv wr" style={{ '--d': '.6s' }}>{siteConfig.wedding.venueName}</h2>
             <p className="iv-p light rv" style={{ '--d': '1.7s' }}><Typed text={siteConfig.wedding.city} d="2s" /></p>
-            <p className="iv-all rv" style={{ '--d': '3s' }}>{isFullTier() ? 'All the celebrations will be held here' : 'The wedding will be held here'}</p>
-            <p className="iv-tap rv" style={{ '--d': '3.4s' }}>Tap below</p>
-            <a className="iv-map rv" style={{ '--d': '3.7s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 Open in Google Maps</a>
+            <p className="iv-all rv" style={{ '--d': '3s' }}>{isFullTier() ? L('All the celebrations will be held here', 'सभी समारोह यहीं होंगे') : L('The wedding will be held here', 'विवाह यहीं होगा')}</p>
+            <p className="iv-tap rv" style={{ '--d': '3.4s' }}>{L('Tap below', 'नीचे दबाएँ')}</p>
+            <a className="iv-map rv" style={{ '--d': '3.7s' }} href={siteConfig.wedding.mapLink} target="_blank" rel="noopener noreferrer">📍 {L('Open in Google Maps', 'गूगल मैप में देखें')}</a>
           </div>
         </section>
 
@@ -812,12 +827,12 @@ export default function InviteFilm() {
               <img className="iv-gan-end" src="/images/invite/ganesh.webp" alt="Shri Ganesh" />
             {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra">{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
             </div>
-            <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>Aap aayenge na!</h2>
-            <p className="iv-p rv" style={{ '--d': '1.6s' }}>Your presence will make our celebration complete. Kindly let us know you are coming.</p>
+            <h2 className="iv-aap rv wr" style={{ '--d': '.3s' }}>{L('Aap aayenge na!', 'आप आएँगे ना!')}</h2>
+            <p className="iv-p rv" style={{ '--d': '1.6s' }}>{L('Your presence will make our celebration complete. Kindly let us know you are coming.', 'आपकी उपस्थिति से ही हमारा उत्सव पूर्ण होगा। कृपया अपने आने की सूचना अवश्य दें।')}</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
-              <button className="iv-link" onClick={replay}>↺ Replay invitation</button>
-              {rsvpOn && <p className="iv-rsvp-hint"><span className="iv-hand" aria-hidden>👇</span> Tap below to RSVP</p>}
-              {rsvpOn && <button className="iv-cta gold sm iv-rsvp" onClick={() => leave('/rsvp')}>✓ Confirm Your Presence</button>}
+              <button className="iv-link" onClick={replay}>{L('↺ Replay invitation', '↺ निमंत्रण फिर से देखें')}</button>
+              {rsvpOn && <p className="iv-rsvp-hint"><span className="iv-hand" aria-hidden>👇</span> {L('Tap below to RSVP', 'आने की पुष्टि के लिए नीचे दबाएँ')}</p>}
+              {rsvpOn && <button className="iv-cta gold sm iv-rsvp" onClick={() => leave('/rsvp')}>{L('✓ Confirm Your Presence', '✓ अपने आने की पुष्टि करें')}</button>}
             </div>
             <div className="iv-end rv" style={{ '--d': '3.2s' }}>
               {fam && (

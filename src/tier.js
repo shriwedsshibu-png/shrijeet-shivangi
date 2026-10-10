@@ -1,4 +1,5 @@
 import siteConfig from './siteConfig';
+import { isHi } from './lang';
 
 // Which kind of guest is this? "full" (all 3 days) or "wedding" (wedding day only).
 // Set by the invite link they opened (/invite/<code>) and remembered in the browser.
@@ -65,7 +66,7 @@ export function coupleOrder() {
 }
 export function displayNames() {
   const [a, b] = coupleOrder();
-  return `${a.short} & ${b.short}`;
+  return `${a.short} ${isHi() ? 'एवं' : '&'} ${b.short}`;
 }
 
 export function setTier(t) {

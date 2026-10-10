@@ -1,5 +1,6 @@
 import siteConfig from './siteConfig';
 import { eventAllowed, pageHidden, displayNames } from './tier';
+import { locale, isHi } from './lang';
 
 const IST = 'Asia/Kolkata';
 
@@ -25,7 +26,7 @@ export function sortedEvents(everyone = false) {
 }
 
 export function formatLongDate(dateStr) {
-  return new Date(`${dateStr}T12:00:00+05:30`).toLocaleDateString('en-IN', {
+  return new Date(`${dateStr}T12:00:00+05:30`).toLocaleDateString(locale(), {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: IST,
   });
 }
@@ -34,8 +35,8 @@ export function dayAndMonth(dateStr) {
   const d = new Date(`${dateStr}T12:00:00+05:30`);
   return {
     day: d.toLocaleDateString('en-IN', { day: 'numeric', timeZone: IST }),
-    month: d.toLocaleDateString('en-IN', { month: 'short', timeZone: IST }),
-    weekday: d.toLocaleDateString('en-IN', { weekday: 'long', timeZone: IST }),
+    month: d.toLocaleDateString(locale(), { month: isHi() ? 'long' : 'short', timeZone: IST }),
+    weekday: d.toLocaleDateString(locale(), { weekday: 'long', timeZone: IST }),
   };
 }
 
@@ -133,3 +134,7 @@ export async function copyText(text) {
 export function isFeatureOn(key) {
   return !!siteConfig.features?.[key]?.enabled && !pageHidden(key);
 }
+
+// What a guest reads for an event (Hindi links show the Hindi name and time; the English name stays the key)
+export const evName = (e) => (isHi() && e.nameHi ? e.nameHi : e.name);
+export const evTime = (e) => (isHi() && e.timeHi ? e.timeHi : e.time);

@@ -1,6 +1,7 @@
 import React from 'react';
 import siteConfig from '../siteConfig';
 import { dateLine, groomFirst } from '../tier';
+import { isHi, hindiSeen, switchLang } from '../lang';
 
 const gold = '#e7cf98';
 
@@ -28,6 +29,7 @@ export default function Footer() {
 
       <p className="font-display italic mt-4" style={{ fontSize: 'min(1.2rem, 4vw)', whiteSpace: 'nowrap' }}>“{f.tagline}”</p>
       <p className="text-sm mt-3" style={{ opacity: .75 }}>{dateLine()} · {siteConfig.wedding.city}</p>
+      {hindiSeen() && <button className="foot-lang" onClick={switchLang}>🌐 {isHi() ? 'Show in English' : 'हिंदी में देखें'}</button>}
     </footer>
   );
 }

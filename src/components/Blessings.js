@@ -5,6 +5,7 @@ import { Card, Button, Field, Notice, PageHeader, Divider } from './ui';
 import Icon from '../icons';
 import { submitBlessing, backendReady, NOT_READY_MESSAGE } from '../api';
 import { copyText, getDeviceId, loadSaved, save } from '../utils';
+import { L } from '../lang';
 
 const SAVE_KEY = 'wedding_blessing_v1';
 
@@ -20,14 +21,14 @@ function BlessingCard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!name.trim() || !message.trim()) { setError('Please write your name and your blessing.'); return; }
+    if (!name.trim() || !message.trim()) { setError(L('Please write your name and your blessing.', 'कृपया अपना नाम और आशीर्वाद लिखें।')); return; }
     setLoading(true);
     try {
       await submitBlessing({ name, message, deviceId: getDeviceId() });
       save(SAVE_KEY, { name, message });
       setDone(true);
     } catch (err) {
-      setError(err.message || 'Could not send your blessing. Please try again.');
+      setError(err.message || L('Could not send your blessing. Please try again.', 'आपका आशीर्वाद भेजा नहीं जा सका। कृपया फिर से कोशिश करें।'));
     } finally {
       setLoading(false);
     }
@@ -39,22 +40,22 @@ function BlessingCard() {
       {done ? (
         <div className="text-center py-6 fade-in">
           <div style={{ fontSize: '3rem' }}>🙏</div>
-          <h3 className="script mt-2" style={{ fontSize: '2.8rem', color: 'var(--maroon)', lineHeight: 1.1 }}>Thank you</h3>
-          <p className="mt-2 text-muted">Your blessing has reached us. We will treasure your words forever.</p>
-          <div className="mt-5"><Button variant="ghost" onClick={() => setDone(false)}>Edit my blessing</Button></div>
+          <h3 className="script mt-2" style={{ fontSize: '2.8rem', color: 'var(--maroon)', lineHeight: 1.1 }}>{L('Thank you', 'धन्यवाद')}</h3>
+          <p className="mt-2 text-muted">{L('Your blessing has reached us. We will treasure your words forever.', 'आपका आशीर्वाद हम तक पहुँच गया है। आपके शब्द हम सदा सँजोकर रखेंगे।')}</p>
+          <div className="mt-5"><Button variant="ghost" onClick={() => setDone(false)}>{L('Edit my blessing', 'आशीर्वाद बदलें')}</Button></div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="grid gap-4" noValidate>
           <p className="text-muted">{cfg.blessingHint}</p>
-          <Field label="Your name" required>
-            <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" autoComplete="name" />
+          <Field label={L('Your name', 'आपका नाम')} required>
+            <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder={L('Your name', 'आपका नाम')} autoComplete="name" />
           </Field>
-          <Field label="Your blessing" required>
-            <textarea className="input" style={{ minHeight: '9rem' }} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write your good wishes or prayers here…" />
+          <Field label={L('Your blessing', 'आपका आशीर्वाद')} required>
+            <textarea className="input" style={{ minHeight: '9rem' }} value={message} onChange={(e) => setMessage(e.target.value)} placeholder={L('Write your good wishes or prayers here…', 'अपनी शुभकामनाएँ या प्रार्थना यहाँ लिखें…')} />
           </Field>
           {!backendReady() && <Notice kind="info">{NOT_READY_MESSAGE}</Notice>}
           {error && <Notice kind="error">{error}</Notice>}
-          <Button type="submit" variant="primary" block disabled={loading || !backendReady()}>{loading ? 'Sending…' : saved ? 'Update my blessing' : 'Send my blessing'}</Button>
+          <Button type="submit" variant="primary" block disabled={loading || !backendReady()}>{loading ? L('Sending…', 'भेजा जा रहा है…') : saved ? L('Update my blessing', 'आशीर्वाद बदलकर भेजें') : L('Send my blessing', 'आशीर्वाद भेजें')}</Button>
         </form>
       )}
     </Card>
@@ -135,7 +136,7 @@ export default function Blessings() {
   return (
     <main className="page">
       <div className={showShagun ? 'wrap' : 'wrap-narrow'} style={showShagun ? { maxWidth: '64rem' } : undefined}>
-        <PageHeader eyebrow="With love" title={cfg.title} subtitle={cfg.subtitle} />
+        <PageHeader eyebrow={L('With love', 'स्नेह सहित')} title={cfg.title} subtitle={cfg.subtitle} />
         <div className={`grid gap-7 ${showShagun ? 'md:grid-cols-2' : ''} items-start`}>
           <BlessingCard />
           {showShagun && <ShagunCard />}

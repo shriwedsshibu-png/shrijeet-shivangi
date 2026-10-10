@@ -2,9 +2,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { enabledPages } from '../pages';
 import Icon from '../icons';
+import { L } from '../lang';
 
 export default function MobileBottomNav() {
-  const items = [{ key: 'home', path: '/', icon: 'home', short: 'Home' }, ...enabledPages().filter((p) => p.bottom)];
+  const items = [{ key: 'home', path: '/', icon: 'home', short: L('Home', 'होम') }, ...enabledPages().filter((p) => p.bottom)];
   return (
     <nav className="bottom-nav" aria-label="Quick navigation">
       {items.map((item) => (

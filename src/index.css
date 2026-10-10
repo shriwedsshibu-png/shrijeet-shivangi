@@ -672,3 +672,11 @@
 .lb-pic>img{grid-area:1/1;max-width:100%;max-height:74vh;border-radius:.6rem;object-fit:contain}
 .lb-pic .lb-low{filter:blur(1px);width:min(92vw,40rem);height:auto}
 .lb-pic .lb-loading{opacity:0}
+
+/* ---------- Hindi invite links only (html.hi is set by src/lang.js; English pages never get it) ---------- */
+html.hi *{letter-spacing:normal!important}            /* spaced-out letters break the line on top of Hindi words */
+html.hi .iv-aap{font-family:'Great Vibes',cursive;font-style:normal;font-weight:400}
+html.hi .iv-closing{margin-top:.35rem}
+.lang-switch{width:100%;text-align:left;background:none;border:0;border-top:1px solid rgba(184,137,59,.3);margin-top:.4rem;cursor:pointer}
+.foot-lang{margin-top:1rem;background:none;border:1px solid rgba(231,207,152,.6);color:#f1d68e;border-radius:999px;padding:.45rem 1.1rem;font-size:.95rem;cursor:pointer}
+html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no single Hindi word left alone on the last line */
