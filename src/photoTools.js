@@ -68,7 +68,7 @@ export async function prepareForUpload(file) {
 // Small canvas for a selfie
 export async function selfieCanvas(file) {
   const source = await decode(file);
-  const { canvas } = drawScaled(source, 1600);
+  const { canvas } = drawScaled(source, 900);   // a selfie face is large: smaller is faster and just as accurate
   if (source.close) source.close();
   return canvas;
 }

@@ -5,7 +5,7 @@ import { Card, Button, Notice, PageHeader } from './ui';
 import Icon from '../icons';
 import { backendReady, NOT_READY_MESSAGE, uploadPhoto, fetchPhotos, fetchFaces, thumbUrl, fullUrl, downloadUrl } from '../api';
 import { prepareForUpload, selfieCanvas } from '../photoTools';
-import { loadFaceApi, describeFaces, matchPhotos } from '../faces';
+import { loadFaceApi, describeFaces, describeSelfie, matchPhotos, preloadFaceFinder } from '../faces';
 import { sortedEvents, defaultUploadEvent } from '../utils';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -206,7 +206,8 @@ function GalleryPanel({ active, openShare }) {
     try {
       const list = await fetchPhotos();
       setGuest(list.map((p) => ({ id: p.id, event: p.event || 'Other', ts: p.ts, thumb: thumbUrl(p.id, 600), full: fullUrl(p.id), download: downloadUrl(p.id) })));
-      facesCache.current = null; // new photos may have arrived
+      // new photos may have arrived: fetch the face list again, in the background, ready for "Find my photos"
+      facesCache.current = fetchFaces().catch(() => null);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -215,6 +216,12 @@ function GalleryPanel({ active, openShare }) {
   }, []);
 
   useEffect(() => { if (active) load(); }, [active, load]);
+  // while the guest looks at the gallery, quietly get the face finder ready
+  useEffect(() => {
+    if (!active) return undefined;
+    const t = setTimeout(preloadFaceFinder, 1200);
+    return () => clearTimeout(t);
+  }, [active]);
 
   const ours = useMemo(() => (cfg.ourPhotos || []).map((url, i) => ({ id: `our-${i}`, static: true, event: (cfg.ourPhotosLabel === siteConfig.couple.displayName ? displayNames() : cfg.ourPhotosLabel || 'Our Photos'), thumb: url, full: url, download: url })), [cfg]);
   const eventOrder = useMemo(() => sortedEvents(true).map((e) => e.name), []);
@@ -254,18 +261,21 @@ function GalleryPanel({ active, openShare }) {
 
   const findMe = async (file) => {
     if (!file) return;
-    setFace({ status: 'working', text: 'Getting ready… the first time can take a few seconds.' });
+    setFace({ status: 'working', text: 'Looking at your photo…' });
+    // the photo list's faces are fetched at the same time as your selfie is read
+    const recordsP = Promise.resolve(facesCache.current).then((r) => r || fetchFaces());
+    recordsP.catch(() => {});
     try {
       const canvas = await selfieCanvas(file);
       setSelfie(canvas.toDataURL('image/jpeg', 0.6));
-      const found = await describeFaces(canvas, { minConfidence: 0.4 });
+      const found = await describeSelfie(canvas);
       if (!found.length) {
         setMatches(null);
         setFace({ status: 'error', text: 'We could not see a face clearly. Please try again in good light, looking straight at the camera.' });
         return;
       }
       setFace({ status: 'working', text: 'Looking through the photos…' });
-      const records = facesCache.current || (await fetchFaces());
+      const records = await recordsP;
       facesCache.current = records;
       const m = matchPhotos(found[0].descriptor, records);
       setMatches(m);

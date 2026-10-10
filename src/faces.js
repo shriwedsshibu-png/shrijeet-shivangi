@@ -1,7 +1,12 @@
 // Face matching that runs entirely inside the guest's phone (nothing is sent anywhere).
 // It uses the open-source face-api library, copied into /public/vendor and /public/models.
+//
+// Speed: "Find my photos" only needs the small face finder (0.2 MB) + the face reader (6 MB).
+// The bigger group-photo finder (5.6 MB) is fetched only when someone uploads photos,
+// or as a fallback if a selfie is hard to read.
 
-let loading = null;
+let core = null;
+let ssd = null;
 
 function addScript(src) {
   return new Promise((resolve, reject) => {
@@ -16,32 +21,71 @@ function addScript(src) {
   });
 }
 
-export function loadFaceApi() {
-  if (!loading) {
-    loading = (async () => {
+// library + small face finder + face reader, then one tiny practice run so the phone's
+// graphics chip has its programs ready before the guest's selfie arrives
+function loadCore() {
+  if (!core) {
+    core = (async () => {
       await addScript('/vendor/face-api.js');
       const fa = window.faceapi;
       if (!fa) throw new Error('face library missing');
       await fa.tf.ready();
       await Promise.all([
-        fa.nets.ssdMobilenetv1.loadFromUri('/models'),
+        fa.nets.tinyFaceDetector.loadFromUri('/models'),
         fa.nets.faceLandmark68TinyNet.loadFromUri('/models'),
         fa.nets.faceRecognitionNet.loadFromUri('/models'),
       ]);
+      try {
+        const c = document.createElement('canvas'); c.width = 128; c.height = 128;
+        c.getContext('2d').fillRect(0, 0, 128, 128);
+        await fa.detectAllFaces(c, new fa.TinyFaceDetectorOptions({ inputSize: 160 }));
+        await fa.computeFaceDescriptor(c);
+      } catch (e) { /* the warm-up is only a nicety */ }
       return fa;
-    })().catch((e) => { loading = null; throw e; });
+    })().catch((e) => { core = null; throw e; });
   }
-  return loading;
+  return core;
 }
 
-// Returns a list of faces found: [{ descriptor: number[128], area }]
+function loadSsd() {
+  if (!ssd) {
+    ssd = loadCore().then((fa) => fa.nets.ssdMobilenetv1.loadFromUri('/models').then(() => fa))
+      .catch((e) => { ssd = null; throw e; });
+  }
+  return ssd;
+}
+
+// everything (used when uploading group photos)
+export const loadFaceApi = () => loadSsd();
+
+// Start getting the face finder ready in the background (skipped on "data saver" / very slow connections)
+export function preloadFaceFinder() {
+  try {
+    const c = navigator.connection;
+    if (c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))) return;
+  } catch (e) { /* ignore */ }
+  loadCore().catch(() => {});
+}
+
+const shape = (results) => results
+  .map((r) => ({ descriptor: Array.from(r.descriptor), area: r.detection.box.width * r.detection.box.height }))
+  .sort((a, b) => b.area - a.area);
+
+// Returns a list of faces found: [{ descriptor: number[128], area }]  (group photos: thorough finder)
 export async function describeFaces(canvas, { minConfidence = 0.5 } = {}) {
-  const fa = await loadFaceApi();
+  const fa = await loadSsd();
   const options = new fa.SsdMobilenetv1Options({ minConfidence });
-  const results = await fa.detectAllFaces(canvas, options).withFaceLandmarks(true).withFaceDescriptors();
-  return results
-    .map((r) => ({ descriptor: Array.from(r.descriptor), area: r.detection.box.width * r.detection.box.height }))
-    .sort((a, b) => b.area - a.area);
+  return shape(await fa.detectAllFaces(canvas, options).withFaceLandmarks(true).withFaceDescriptors());
+}
+
+// A selfie: the quick finder first; only if it sees nothing, try the thorough one
+export async function describeSelfie(canvas) {
+  const fa = await loadCore();
+  for (const inputSize of [416, 608]) {
+    const found = shape(await fa.detectAllFaces(canvas, new fa.TinyFaceDetectorOptions({ inputSize, scoreThreshold: 0.35 })).withFaceLandmarks(true).withFaceDescriptors());
+    if (found.length) return found;
+  }
+  return describeFaces(canvas, { minConfidence: 0.4 });
 }
 
 export function distance(a, b) {
