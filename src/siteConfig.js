@@ -53,7 +53,7 @@ const siteConfig = {
     groom: {
       heading: "आकांक्षी",
       groups: [
-        ["Sudhir Kumar Mishra", "Shashi Bhushan Mishra", "Alok Mishra", "Avlok Kumar Mishra"],
+        ["Sudhir Kumar Mishra", "Shashi Bhushan Mishra", "Alok Mishra", "Avlok Kumar Mishra", "Advait"],
       ],
       closing: "समस्त परिवार",
     },
@@ -402,7 +402,11 @@ And here's to all the journeys still waiting for us.`,
       {
         name: "Abhishek Sharma",
         relation: "Jiju"
-      }
+      },
+      { name: "Pihu", relation: "Nephew" },
+      { name: "Raavi", relation: "Nephew" },
+      { name: "Adi", relation: "Nephew" },
+      { name: "Saavi", relation: "Nephew" }
     ],
     // Shivangi's side — fill this in when ready. Example of one person:
     //   { name: "Full Name", relation: "Papa" },
