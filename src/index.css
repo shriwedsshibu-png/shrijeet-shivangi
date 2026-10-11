@@ -685,3 +685,9 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 .iv .iv-sec{height:var(--ivh,100dvh);min-height:0}
 /* a page that left the screen snaps back to hidden at once, so it replays from the start (see resetPage) */
 .iv .iv-reset .rv,.iv .iv-reset .tw>span,.iv .iv-reset .iv-in,.iv .iv-reset .iv-cd{transition:none!important}
+
+/* cover page: "Scroll down" is a clear navy-and-gold pill that gently bounces, so every guest sees it */
+.iv-scrollhint{display:inline-flex;align-items:center;gap:.5rem;margin-top:.2rem;padding:.42rem 1.1rem;min-height:2.4rem;border-radius:99px;border:1.5px solid #e2c27a;background:#1f3350;color:#fbf3e6;font-family:'Cinzel',serif;font-weight:700;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 4px 14px rgba(15,25,45,.4);cursor:pointer;animation:ivscrollhint 1.6s ease-in-out .6s infinite}
+.iv-scrollhint span{color:#f1d68e;font-size:1.05rem;line-height:1}
+@keyframes ivscrollhint{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@media(prefers-reduced-motion:reduce){.iv-scrollhint{animation:none}}

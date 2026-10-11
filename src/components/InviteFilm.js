@@ -23,9 +23,9 @@ const LINES = {
   // hi = the same line on the Hindi invite links
   Faldaan: { hing: 'Rishta pakka,\nmithai pakki!', hi: 'रिश्ता पक्का,\nमिठाई पक्की!', icon: 'kalash' },
   Mehndi: { hing: 'Henna, laughter\nand lots of colour', hi: 'मेहंदी, हँसी\nऔर ढेर सारे रंग', icon: 'hand' },
-  'Engagement & Sangeet': { hing: 'Music & dance with\nthe whole family', hi: 'पूरे परिवार संग\nसंगीत और नृत्य', icon: 'dhol' },
+  'Engagement & Sangeet': { hing: 'A night of music,\ndance & celebration', hi: 'संगीत, नृत्य और\nजश्न की एक रात', icon: 'dhol' },
   Haldi: { hing: 'Yellow hands,\ngolden blessings', hi: 'हल्दी का रंग,\nआशीर्वाद के संग', icon: 'marigold' },
-  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan,\nek zindagi, ek saath', hi: 'सात फेरे, सात वचन,\nएक जीवन, एक साथ', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
+  'Varmala & Shaadi': { hing: 'Saat phere, saat vachan,\nEk Zindagi... Ek Saath', hi: 'सात फेरे, सात वचन,\nएक जीवन... एक साथ', icon: 'mandap', noNote: true }, // short card so the couple in the painting shows
 };
 
 const fmtDate = (iso) =>
@@ -840,7 +840,7 @@ export default function InviteFilm() {
           <div className="iv-jharokha rv" style={{ '--d': '2.4s' }}><CoupleArt /></div>
           {!opened
             ? <button className="iv-cta iv-open rv" style={{ '--d': '3s' }} onClick={open}>{L('Open Your Invitation', 'निमंत्रण खोलें')}</button>
-            : <p className="iv-small">{L('scroll ↓', 'नीचे देखें ↓')}</p>}
+            : <button className="iv-scrollhint" onClick={next}>{L('Scroll down', 'नीचे देखें')}<span aria-hidden>↓</span></button>}
         </div>
       </section>
 
@@ -856,7 +856,7 @@ export default function InviteFilm() {
                 <div className="iv-date"><span className="wd">{L('Wednesday', 'बुधवार')}</span><b>{L('2 December', '2 दिसंबर')}</b><span>2026</span></div>
               </Scratch>
             </div>
-            <p className="iv-small dark rv" style={{ '--d': '2s', marginTop: '.4rem' }}>{revealed ? L('Counting down to forever', 'शुभ घड़ी की प्रतीक्षा') : L('Use your finger to scratch ☝', 'उंगली से खुरचें ☝')}</p>
+            <p className="iv-small dark rv" style={{ '--d': '2s', marginTop: '.4rem' }}>{revealed ? L('Counting down to forever', 'शुभ घड़ी की प्रतीक्षा') : L('Scratch to reveal ☝', 'कार्ड खुरचकर तिथि देखें ☝')}</p>
             <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.8s' }}>
               {[[L('days', 'दिन'), cd[0]], [L('hrs', 'घंटे'), cd[1]], [L('min', 'मिनट'), cd[2]], [L('sec', 'सेकंड'), cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
