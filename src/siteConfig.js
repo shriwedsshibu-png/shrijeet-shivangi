@@ -422,6 +422,8 @@ And here's to all the journeys still waiting for us.`,
     //   { name: "Full Name", relation: "Papa" },
     // While this list is empty, only Shrijeet's family is shown.
     shivangi: [
+      { name: "Late Surendar Prasad Singh", relation: "Dada" },
+      { name: "Late Sunanina Devi", relation: "Dadi" },
       { name: "Shailendra Kumar", relation: "Papa" },
       { name: "Anju Kumari", relation: "Mummy" },
       { name: "Gyanendra Saurav", relation: "Bhai" },
