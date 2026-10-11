@@ -49,7 +49,7 @@ function FirstVisit() {
 }
 
 // /invite/<code> or /invite/<side>/<code>: remember which kind of guest this is and whose
-// side invited them, then play the invitation.
+// side invited them, then play the invitation. Add /rsvp (or /hindi/rsvp) to open the RSVP form directly.
 function TierInvite() {
   const { pathname } = useLocation();
   const t = tierFromCode(codeFromPath(pathname));
@@ -60,6 +60,8 @@ function TierInvite() {
   if (sd) setSide(sd);
   if (t && t !== getTier()) setTier(t);
   if (changed) { window.location.reload(); return null; }
+  // .../rsvp at the end (sent in RSVP reminders): straight to the RSVP form for this kind of guest, no film
+  if (/\/rsvp\/?$/i.test(pathname)) return <Navigate to="/rsvp" replace />;
   return <InviteFilm />;
 }
 
@@ -97,6 +99,7 @@ export default function App() {
             {siteConfig.features?.invite?.enabled && <Route path="/invite/:code" element={<TierInvite />} />}
             {siteConfig.features?.invite?.enabled && <Route path="/invite/:side/:code" element={<TierInvite />} />}
             {siteConfig.features?.invite?.enabled && <Route path="/invite/:side/:code/:lang" element={<TierInvite />} />}
+            {siteConfig.features?.invite?.enabled && <Route path="/invite/:side/:code/:lang/:go" element={<TierInvite />} />}
             {legacy.map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
