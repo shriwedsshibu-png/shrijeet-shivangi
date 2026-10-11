@@ -240,7 +240,7 @@ const siteConfig = {
     ourPhotosLabel: "Shivangi & Shrijeet",
     ourPhotos: [
       "/images/shrijeet.jpg",
-      "/images/shivangi.jpg",
+      "/images/shivangi-2.jpg",
     ],
   },
 
@@ -324,7 +324,7 @@ And here's to all the journeys still waiting for us.`,
     },
     partner2Story: {
       name: "Shivangi's Story",
-      image: "/images/shivangi.jpg",
+      image: "/images/shivangi-2.jpg",
       story: "Hope this is the love which helps us grow and stay happy and jolly together through distances and fights and love always.",
     },
     howWeMet: {

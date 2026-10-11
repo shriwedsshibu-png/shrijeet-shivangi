@@ -696,3 +696,10 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 .iv-point{display:inline-block;font-size:2rem;line-height:1;letter-spacing:0;animation:ivpoint 1.1s ease-in-out .3s infinite;filter:drop-shadow(0 2px 4px rgba(120,80,20,.35))}
 @keyframes ivpoint{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 @media(prefers-reduced-motion:reduce){.iv-point{animation:none}}
+
+/* "Visit wedding website": bright marigold-yellow on every page, so guests notice it and open the website */
+.iv .iv-skip.iv-skip{background:linear-gradient(180deg,#ffdb6e,#f3b62f);color:#2a1d0c;border:1.5px solid #b8893b;font-family:'Cinzel',serif;font-weight:700;font-size:.78rem;letter-spacing:.02em;padding:.38rem .95rem;min-height:2.35rem;border-radius:999px;box-shadow:0 4px 14px rgba(120,80,0,.38);backdrop-filter:none;text-decoration:none}
+.iv .iv-skip.iv-skip span{color:inherit;opacity:1;font-family:inherit}
+.iv .iv-skip.iv-skip.hot{animation:ivhey 1.8s ease-in-out .8s infinite}
+@media(max-width:360px){.iv .iv-skip.iv-skip{font-size:.7rem;padding:.3rem .75rem}}
+@media(prefers-reduced-motion:reduce){.iv .iv-skip.iv-skip.hot{animation:none}}
