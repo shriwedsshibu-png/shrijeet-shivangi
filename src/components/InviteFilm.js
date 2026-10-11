@@ -856,7 +856,7 @@ export default function InviteFilm() {
                 <div className="iv-date"><span className="wd">{L('Wednesday', 'बुधवार')}</span><b>{L('2 December', '2 दिसंबर')}</b><span>2026</span></div>
               </Scratch>
             </div>
-            <p className="iv-small dark rv" style={{ '--d': '2s', marginTop: '.4rem' }}>{revealed ? L('Counting down to forever', 'शुभ घड़ी की प्रतीक्षा') : L('Scratch to reveal ☝', 'कार्ड खुरचकर तिथि देखें ☝')}</p>
+            <p className="iv-small dark rv" style={{ '--d': '2s', marginTop: '.4rem' }}>{revealed ? L('Counting down to forever', 'शुभ घड़ी की प्रतीक्षा') : <span className="iv-point" role="img" aria-label={L('Scratch the card', 'कार्ड खुरचें')}>☝</span>}</p>
             <div className={'iv-cd rv ' + (revealed ? 'show' : '')} style={{ '--d': '.8s' }}>
               {[[L('days', 'दिन'), cd[0]], [L('hrs', 'घंटे'), cd[1]], [L('min', 'मिनट'), cd[2]], [L('sec', 'सेकंड'), cd[3]]].map(([l, v]) => <div key={l}><b>{String(v).padStart(2, '0')}</b><i>{l}</i></div>)}
             </div>
