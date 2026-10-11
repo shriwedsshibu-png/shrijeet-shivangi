@@ -343,15 +343,15 @@ And here's to all the journeys still waiting for us.`,
     shrijeet: [
       {
         name: "Jagtaran Devi",
-        relation: "Dadi"
+        relation: "Dadi Ji"
       },
       {
         name: "Sushil Kumar Mishra",
-        relation: "Papa"
+        relation: "Papa Ji"
       },
       {
         name: "Sujata Mishra",
-        relation: "Mummy"
+        relation: "Mummy Ji"
       },
       {
         name: "Shristi Kumari",
@@ -359,59 +359,59 @@ And here's to all the journeys still waiting for us.`,
       },
       {
         name: "Shiv Chandra Singh",
-        relation: "Nana"
+        relation: "Nana Ji"
       },
       {
         name: "Prabha Devi",
-        relation: "Nani"
+        relation: "Nani Ji"
       },
       {
         name: "Sudhir Kumar Mishra",
-        relation: "Bade Papa"
+        relation: "Bade Papa Ji"
       },
       {
         name: "Abha Mishra",
-        relation: "Badi Mummy"
+        relation: "Badi Mummy Ji"
       },
       {
         name: "Shashi Bhushan Mishra",
-        relation: "Bade Papa"
+        relation: "Bade Papa Ji"
       },
       {
         name: "Kiran Mishra",
-        relation: "Badi Mummy"
+        relation: "Badi Mummy Ji"
       },
       {
         name: "Alok Mishra",
-        relation: "Bhaiya"
+        relation: "Bhaiya Ji"
       },
       {
         name: "Seema Rani Sharma",
-        relation: "Bhabhi"
+        relation: "Bhabhi Ji"
       },
       {
         name: "Avlok Kumar Mishra",
-        relation: "Bhaiya"
+        relation: "Bhaiya Ji"
       },
       {
         name: "Anuradha",
-        relation: "Bhabhi"
+        relation: "Bhabhi Ji"
       },
       {
         name: "Rani",
-        relation: "Didi"
+        relation: "Didi Ji"
       },
       {
         name: "Pankaj Thakur",
-        relation: "Jiju"
+        relation: "Jija Ji"
       },
       {
         name: "Ruby Mishra",
-        relation: "Didi"
+        relation: "Didi Ji"
       },
       {
         name: "Abhishek Sharma",
-        relation: "Jiju"
+        relation: "Jija Ji"
       },
       { name: "Pragya Thakur", relation: "Niece" },
       { name: "Raavi Thakur", relation: "Niece" },
@@ -422,17 +422,17 @@ And here's to all the journeys still waiting for us.`,
     //   { name: "Full Name", relation: "Papa" },
     // While this list is empty, only Shrijeet's family is shown.
     shivangi: [
-      { name: "Late Surendar Prasad Singh", relation: "Dada" },
-      { name: "Late Sunanina Devi", relation: "Dadi" },
-      { name: "Shailendra Kumar", relation: "Papa" },
-      { name: "Anju Kumari", relation: "Mummy" },
+      { name: "Late Surendar Prasad Singh", relation: "Dada Ji" },
+      { name: "Late Sunanina Devi", relation: "Dadi Ji" },
+      { name: "Shailendra Kumar", relation: "Papa Ji" },
+      { name: "Anju Kumari", relation: "Mummy Ji" },
       { name: "Gyanendra Saurav", relation: "Bhai" },
-      { name: "Madan Sharma", relation: "Nana" },
-      { name: "Ahilaya Devi", relation: "Nani" },
-      { name: "Satyendra Kumar", relation: "Chacha" },
-      { name: "Bharti Devi", relation: "Chachi" },
-      { name: "Sangita Kumari", relation: "Didi" },
-      { name: "Sudhanshu Shekhar", relation: "Jiju" },
+      { name: "Madan Sharma", relation: "Nana Ji" },
+      { name: "Ahilaya Devi", relation: "Nani Ji" },
+      { name: "Satyendra Kumar", relation: "Chacha Ji" },
+      { name: "Bharti Devi", relation: "Chachi Ji" },
+      { name: "Sangita Kumari", relation: "Didi Ji" },
+      { name: "Sudhanshu Shekhar", relation: "Jija Ji" },
       { name: "Rishabh", relation: "Nephew" },
       { name: "Riyansh", relation: "Nephew" },
       { name: "Neha Kumari", relation: "Cousin" },
