@@ -703,3 +703,10 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 .iv .iv-skip.iv-skip.hot{animation:ivhey 1.8s ease-in-out .8s infinite}
 @media(max-width:360px){.iv .iv-skip.iv-skip{font-size:.7rem;padding:.3rem .75rem}}
 @media(prefers-reduced-motion:reduce){.iv .iv-skip.iv-skip.hot{animation:none}}
+
+/* reception invite: the venue page uses the evening-lights painting, so its words are light */
+.iv .iv-venue-home .iv-in .iv-h{color:#f6e3b4;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.iv .iv-venue-home .iv-in > .iv-p{color:#fbf3e6;background:rgba(20,24,48,.5);border-radius:99px;padding:.25rem .95rem}
+.iv .iv-venue-home .iv-in > .iv-small{color:#e7cf98;background:rgba(20,24,48,.5)}
+.iv .iv-venue-home .iv-all{color:#fbf3e6;background:rgba(20,24,48,.55)}
+.iv .iv-venue-home .iv-tap{color:#e7cf98;opacity:1}

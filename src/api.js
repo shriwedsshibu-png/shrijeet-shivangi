@@ -52,6 +52,8 @@ export async function get(action) {
 }
 
 export const submitRsvp = (form) => post({ action: 'rsvp', ...form });
+// reception guests: their replies go to the separate "Reception RSVP" tab
+export const submitReceptionRsvp = (form) => post({ action: 'receptionRsvp', ...form });
 export const submitBlessing = (form) => post({ action: 'blessing', ...form });
 export const uploadPhoto = (payload) => post({ action: 'upload', ...payload }, 120000);
 export const fetchPhotos = async () => {

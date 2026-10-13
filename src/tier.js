@@ -11,6 +11,7 @@ export function tierFromCode(code) {
   if (!c) return '';
   if (cfg().full && c === String(cfg().full.code).toLowerCase()) return 'full';
   if (cfg().wedding && c === String(cfg().wedding.code).toLowerCase()) return 'wedding';
+  if (cfg().reception && c === String(cfg().reception.code).toLowerCase()) return 'reception';
   return '';
 }
 
@@ -80,12 +81,18 @@ export function getTier() {
   if (memo) return memo;
   let t = '';
   try { t = localStorage.getItem(KEY) || ''; } catch (e) { t = ''; }
-  memo = t === 'full' || t === 'wedding' ? t : (cfg().defaultTier || 'wedding');
+  memo = t === 'full' || t === 'wedding' || (t === 'reception' && cfg().reception) ? t : (cfg().defaultTier || 'wedding');
   return memo;
 }
 
 export const tierCfg = () => cfg()[getTier()] || {};
 export const isFullTier = () => getTier() === 'full';
+export const isReception = () => getTier() === 'reception';
+
+// Place, map and countdown for this guest: the reception guests get the reception's own (siteConfig.guestTiers.reception.wedding)
+export const wed = () => ({ ...siteConfig.wedding, ...(tierCfg().wedding || {}) });
+// Words of the invite film that differ for the reception (siteConfig.guestTiers.reception.film); else the given default
+export const filmText = (key, dflt) => { const f = tierCfg().film || {}; return f[key] != null ? f[key] : dflt; };
 
 // Call once before the app renders: picks up /invite/<code> from the address bar.
 export function initTierFromUrl() {

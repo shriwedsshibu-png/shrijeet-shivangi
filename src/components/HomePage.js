@@ -6,7 +6,7 @@ import Icon from '../icons';
 import { Card, ButtonLink, Divider } from './ui';
 import { isFeatureOn, sortedEvents, dayAndMonth, evName, evTime } from '../utils';
 import { L } from '../lang';
-import { dateLine, isFullTier, coupleOrder, groomFirst } from '../tier';
+import { dateLine, isFullTier, coupleOrder, groomFirst, isReception, wed, tierCfg } from '../tier';
 
 function ActionCard({ to, icon, title, text }) {
   return (
@@ -24,11 +24,13 @@ function ActionCard({ to, icon, title, text }) {
 }
 
 export default function HomePage() {
-  const { homepage: hp, wedding } = siteConfig;
+  const { homepage: hp } = siteConfig;
+  const wedding = wed();   // reception guests: the reception's place, map and countdown
   const [n1, n2] = coupleOrder();   // Shrijeet's guests see Shrijeet first
   // the same opening words as the guest's invite (Shrijeet's side: Dadi's request)
-  const card = groomFirst() ? { ...(hp.inviteCard || {}), ...((hp.inviteCard || {}).groomSide || {}) } : (hp.inviteCard || {});
-  const invitationTop = card.blessingsLabel && card.request ? `${card.blessingsLabel}, ${card.request}` : hp.invitationTop;
+  const ic = { ...(hp.inviteCard || {}), ...(tierCfg().inviteCard || {}) };
+  const card = groomFirst() ? { ...ic, ...((hp.inviteCard || {}).groomSide || {}), ...((tierCfg().inviteCard || {}).groomSide || {}) } : ic;
+  const invitationTop = isReception() && card.request ? card.request : card.blessingsLabel && card.request ? `${card.blessingsLabel}, ${card.request}` : hp.invitationTop;
   const events = sortedEvents();
   const photoHero = hp.heroStyle === 'photo';
 
@@ -51,7 +53,7 @@ export default function HomePage() {
 
           <div className="hero-date">
             <span className="hero-date1">{dateLine()}</span>
-            <span className="hero-date2">{wedding.city}</span>
+            <span className="hero-date2">{isReception() ? [wedding.city, wedding.state].filter(Boolean).join(', ') : wedding.city}</span>
           </div>
 
           {hp.welcomeHindi && <p className="deva hero-wel">{hp.welcomeHindi}</p>}
@@ -67,7 +69,7 @@ export default function HomePage() {
       {/* ---------- Countdown ---------- */}
       <section className="wrap text-center" style={{ padding: '3rem 1.1rem 1.5rem' }}>
         {hp.countdownTitle && <p className="eyebrow">{hp.countdownTitle}</p>}
-        <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>{L('Our forever begins in', 'शुभ घड़ी में शेष')}</h2>
+        <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>{isReception() ? L('The reception begins in', 'आशीर्वाद समारोह में शेष') : L('Our forever begins in', 'शुभ घड़ी में शेष')}</h2>
         <div className="mt-6"><Countdown target={wedding.countdownTo} /></div>
         <p className="font-display italic mt-6" style={{ fontSize: '1.4rem', color: 'var(--maroon)' }}>{hp.countdownPoem}</p>
       </section>
@@ -87,7 +89,7 @@ export default function HomePage() {
         <section className="wrap-narrow" style={{ padding: '2rem 1.1rem' }}>
           <div className="text-center mb-6">
             <p className="eyebrow">{L('The celebrations', 'समारोह')}</p>
-            <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>{isFullTier() ? L('Our celebrations', 'हमारे समारोह') : L('The wedding', 'शुभ विवाह')}</h2>
+            <h2 className="h-title mt-2" style={{ fontSize: 'clamp(2rem,7vw,3rem)' }}>{isFullTier() ? L('Our celebrations', 'हमारे समारोह') : isReception() ? L('The reception', 'आशीर्वाद समारोह') : L('The wedding', 'शुभ विवाह')}</h2>
           </div>
           <Card>
             <ul className="divide-y" style={{ borderColor: 'rgba(184,137,59,.3)' }}>
@@ -112,9 +114,9 @@ export default function HomePage() {
       {/* ---------- Venue ---------- */}
       <section className="wrap-narrow text-center" style={{ padding: '1rem 1.1rem 2rem' }}>
         <Card>
-          <p className="eyebrow">{L('Where we celebrate', 'विवाह स्थल')}</p>
+          <p className="eyebrow">{isReception() ? L('Where we celebrate', 'समारोह स्थल') : L('Where we celebrate', 'विवाह स्थल')}</p>
           <h2 className="h-title mt-2" style={{ fontSize: '2.2rem' }}>{wedding.venueName}</h2>
-          <p className="text-muted mt-1">{wedding.city}, {L('Andhra Pradesh', 'आंध्र प्रदेश')}</p>
+          <p className="text-muted mt-1">{wedding.city}, {wedding.state || L('Andhra Pradesh', 'आंध्र प्रदेश')}</p>
           <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
             <ButtonLink href={wedding.mapLink} variant="primary"><Icon name="pin" size={20} /> {L('Open in Google Maps', 'गूगल मैप में देखें')}</ButtonLink>
             {isFeatureOn('travel') && <ButtonLink to="/explore-vizag" variant="ghost">{L('Where to stay', 'कहाँ ठहरें')}</ButtonLink>}

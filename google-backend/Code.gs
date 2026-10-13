@@ -29,6 +29,12 @@ var TABS = {
     'Men', 'Women', 'Children', 'Total Guests', 'Arrival Date', 'Needs Room',
     'Anything Else', 'Invite Type', 'Functions', 'Times Updated'
   ],
+  // the wedding reception in Bihar (8 Dec) keeps its replies in its own tab, same columns
+  'Reception RSVP': [
+    'Last Updated', 'First Submitted', 'Main Guest', 'Phone', 'Attending',
+    'Men', 'Women', 'Children', 'Total Guests', 'Arrival Date', 'Needs Room',
+    'Anything Else', 'Invite Type', 'Functions', 'Times Updated'
+  ],
   Blessings: ['Last Updated', 'First Submitted', 'Name', 'Blessing', 'Times Edited', 'Device ID'],
   Photos: ['Uploaded At', 'File ID', 'Celebration', 'File Name', 'Faces Found'],
   Faces: ['File ID', 'Face Data (do not edit)']
@@ -84,6 +90,7 @@ function doPost(e) {
     var body = JSON.parse(e.postData.contents);
     switch (body.action) {
       case 'rsvp':     return json_(handleRsvp_(body));
+      case 'receptionRsvp': return json_(handleReceptionRsvp_(body));
       case 'blessing': return json_(handleBlessing_(body));
       case 'upload':   return json_(handleUpload_(body));
       default:         return json_({ success: false, message: 'Unknown request.' });
@@ -165,6 +172,46 @@ function handleRsvp_(b) {
   }
 }
 
+/* Reception RSVP (guests of the /invite/.../reception link) — one row per phone in the "Reception RSVP" tab,
+   so a guest invited to both the wedding and the reception keeps both answers. */
+function handleReceptionRsvp_(b) {
+  var name = clean_(b.contactName, 120);
+  var phoneKey = phoneKey_(b.phone);
+  if (!name) return { success: false, message: 'Please enter your name.' };
+  if (phoneKey.length < 10) return { success: false, message: 'Please enter a valid 10-digit mobile number.' };
+  var attending = String(b.attending) === 'no' ? 'No' : 'Yes', yes = attending === 'Yes';
+  var men = num_(b.men), women = num_(b.women), kids = num_(b.children);
+  var now = new Date(), note = null;
+  var lock = LockService.getScriptLock();
+  lock.waitLock(25000);
+  try {
+    var sheet = receptionSheet_(), n = TABS['Reception RSVP'].length;
+    var row = findRow_(sheet, 4, phoneKey, function (v) { return phoneKey_(v); });
+    var first = now, times = 1;
+    if (row) { var old = sheet.getRange(row, 1, 1, n).getValues()[0]; first = old[1] || now; times = (Number(old[14]) || 1) + 1; }
+    var values = [
+      now, first, name, '', attending,
+      yes ? men : '', yes ? women : '', yes ? kids : '', yes ? men + women + kids : 0,
+      '', '', clean_(b.notes, 1000), 'Reception', yes ? 'Wedding Reception' : '', times
+    ];
+    if (!row) { sheet.appendRow(values); row = sheet.getLastRow(); }
+    else sheet.getRange(row, 1, 1, n).setValues([values]);
+    sheet.getRange(row, 4).setNumberFormat('@').setValue(phoneKey);
+    note = [(times > 1 ? 'Reception RSVP updated: ' : 'New reception RSVP: ') + name + (yes ? '' : ' (cannot come)'),
+      name + ' | ' + phoneKey + ' | Reception | ' + (yes ? 'Coming: ' + (men + women + kids) + ' (M ' + men + ', W ' + women + ', C ' + kids + ')' : 'Cannot attend')];
+    return { success: true, updated: times > 1, message: times > 1 ? 'RSVP updated.' : 'RSVP saved.' };
+  } finally {
+    lock.releaseLock();
+    if (note) notify_(note[0], note[1]);
+  }
+}
+function receptionSheet_() {
+  var ss = SpreadsheetApp.getActive(), sheet = ss.getSheetByName('Reception RSVP');
+  if (!sheet) { sheet = getTab_('Reception RSVP'); sheet.getRange('D:D').setNumberFormat('@'); }
+  summarySheet_();
+  return sheet;
+}
+
 // The RSVP tab in the new layout. An older tab with different columns is kept as "RSVP (old)".
 function rsvpSheet_() {
   var ss = SpreadsheetApp.getActive(), sheet = ss.getSheetByName('RSVP');
@@ -180,12 +227,14 @@ function rsvpSheet_() {
 
 // "RSVP Summary" tab: live totals (formulas). It rebuilds itself whenever this layout changes,
 // so after pasting a new version of this file nothing else needs doing.
-var SUMMARY_TITLE = 'WEDDING RSVP SUMMARY  (updates by itself)  · v3';
+var SUMMARY_TITLE = 'WEDDING RSVP SUMMARY  (updates by itself)  · v4';
 function summarySheet_() {
   var ss = SpreadsheetApp.getActive();
   var old = ss.getSheetByName('RSVP Summary');
   if (old && String(old.getRange(1, 1).getValue()) === SUMMARY_TITLE) return;
   if (old) ss.deleteSheet(old);
+  if (!ss.getSheetByName('RSVP')) getTab_('RSVP');
+  if (!ss.getSheetByName('Reception RSVP')) getTab_('Reception RSVP');
   var sh = ss.insertSheet('RSVP Summary');
 
   var YES = 'RSVP!E2:E,"Yes"';
@@ -218,6 +267,13 @@ function summarySheet_() {
     line('Coming — everyone', ['']),
     ['Families needing a room', '=COUNTIFS(' + YES + ',RSVP!K2:K,"Yes")', '', '', '', ''],
     ['Replied "cannot come"', '=COUNTIF(RSVP!E2:E,"No")', '', '', '', '']
+  ]);
+  // 4b. Reception at home in Bihar (8 Dec) — from the "Reception RSVP" tab
+  var RR = "'Reception RSVP'!";
+  var rsum = function (col) { return '=SUMIFS(' + RR + col + '2:' + col + ',' + RR + 'E2:E,"Yes")'; };
+  block('RECEPTION — 8 Dec, Bihar (Reception RSVP tab)', [
+    ['Coming to the reception', '=COUNTIFS(' + RR + 'E2:E,"Yes")', rsum('F'), rsum('G'), rsum('H'), rsum('I')],
+    ['Replied "cannot come"', '=COUNTIF(' + RR + 'E2:E,"No")', '', '', '', '']
   ]);
   // 5. Arrivals
   if (rows.length) rows.push(['', '', '', '', '', '']);

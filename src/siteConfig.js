@@ -78,7 +78,7 @@ const siteConfig = {
     full: {
       code: "parivaar",
       label: "3-day",
-      events: "all",                       // every function
+      events: ["Faldaan", "Mehndi", "Engagement & Sangeet", "Haldi", "Varmala & Shaadi"],   // every wedding function (not the reception)
       dateLine: "30 Nov – 2 Dec 2026",
       hidePages: [],
     },
@@ -89,6 +89,43 @@ const siteConfig = {
       dateLine: "Wednesday, 2 December 2026",
       hidePages: [],                       // pages hidden from the menu for these guests (e.g. ["travel"])
       eventsSubtitle: "Join us by the sea for the Varmala and the sacred pheras.",
+    },
+    // Wedding reception at home in Bihar (8 Dec). Links:  /invite/shrijeet/reception   and   /invite/shrijeet/reception/hindi
+    // Reception guests see only the reception: its own date, place, map, invite words and a short RSVP (no arrival date / room).
+    reception: {
+      code: "reception",
+      label: "Reception",
+      events: ["Wedding Reception"],
+      dateLine: "Tuesday, 8 December 2026",
+      hidePages: ["travel", "faq"],
+      eventsSubtitle: "Come and bless the newlyweds at our home.",
+      wedding: {
+        venueName: "Our home",                                 // <-- name of the house / place
+        city: "Village, District",                             // <-- village, district
+        state: "Bihar",
+        mapLink: "https://maps.app.goo.gl/UewKnsiCF26MCvPx8",
+        countdownTo: "2026-12-08T18:30:00+05:30",
+      },
+      film: {
+        coverLabel: "Wedding Reception",
+        dateLabel: "THE RECEPTION DATE",
+        dateParts: ["Tuesday", "8 December", "2026"],
+        eventLabel: "Wedding Reception",
+        venueLabel: "The Venue",
+        venueAll: "The reception will be held at our home",
+      },
+      // the invitation page of the reception invite
+      inviteCard: {
+        blessingsLabel: "With the blessings of our elders",
+        request: "With great joy, our families share the news of the wedding of",
+        closing: "solemnised on 2nd December 2026, and request the pleasure of your company at the Wedding Reception to bless the newlyweds.",
+        groomSide: {
+          blessingsLabel: "With the grace and blessings of God",
+          request: "With great joy, Smt. Jagtaran Devi shares the news of the wedding of her youngest grandson",
+          closing: "solemnised on 2nd December 2026, and requests the pleasure of your company at the Wedding Reception to bless the newlyweds.",
+        },
+      },
+      rsvpSubtitle: "Just tell us how many of you are coming, so we can welcome everyone well. You can change your answer anytime with the same mobile number.",
     },
   },
 
@@ -214,6 +251,16 @@ const siteConfig = {
         time: "07:30 PM onwards",
         dressCode: "Traditional",
         description: "Two hearts exchange garlands, and the sacred pheras and vows begin our forever.",
+      },
+      {
+        id: 6,
+        name: "Wedding Reception",
+        nameHi: "आशीर्वाद समारोह",
+        date: "2026-12-08",
+        time: "06:30 PM onwards",
+        dressCode: "Festive / Traditional",
+        description: "An evening of blessings, dinner and celebration as we welcome the newlyweds home.",
+        mapLink: "https://maps.app.goo.gl/UewKnsiCF26MCvPx8",
       },
     ],
   },
@@ -483,6 +530,7 @@ And here's to all the journeys still waiting for us.`,
       { tier: "full", title: "What should I wear?", content: "The dress idea for every function is written on the Events page. Comfortable traditional clothes are perfect." },
       { tier: "wedding", title: "What should I wear?", content: "Traditional Indian wear is perfect for the evening." },
       { tier: "full", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming, when you arrive and whether you need a room." },
+      { tier: "reception", title: "Where is the reception?", content: "At our home in Bihar, on Tuesday 8 December 2026 from 6:30 PM. The Events page has a map button." },
       { tier: "wedding", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming, when you arrive and whether you need a room. It takes less than a minute." },
       { title: "I need to change my RSVP. What do I do?", content: "No problem. Fill the RSVP form again with the same mobile number. Your new answer replaces the old one." },
       { title: "How do I share my photos?", content: "Scan the wedding QR code or open the Photos page, choose the celebration, and add your photos. No login and no caption needed." },

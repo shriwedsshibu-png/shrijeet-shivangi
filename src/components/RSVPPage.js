@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import siteConfig from '../siteConfig';
 import { Card, Button, Field, Notice, PageHeader } from './ui';
-import { submitRsvp, backendReady, NOT_READY_MESSAGE } from '../api';
+import { submitRsvp, submitReceptionRsvp, backendReady, NOT_READY_MESSAGE } from '../api';
 import { sortedEvents, loadSaved, save } from '../utils';
-import { isFullTier, getTier } from '../tier';
+import { isFullTier, getTier, isReception, tierCfg } from '../tier';
 import { L, locale, isHi } from '../lang';
 import { evTime } from '../utils';
 
 const SAVE_KEY = 'wedding_rsvp_v3';
+const RECEPTION_KEY = 'reception_rsvp_v1';   // the reception form is kept apart from the wedding one
 
 const blank = () => ({
   contactName: '',
@@ -27,7 +28,9 @@ function Choice({ on, onClick, children }) {
 }
 
 export default function RSVPPage() {
-  const saved = loadSaved(SAVE_KEY);
+  const rec = isReception();
+  const KEY = rec ? RECEPTION_KEY : SAVE_KEY;
+  const saved = loadSaved(KEY);
   const [form, setForm] = useState(() => { const f = { ...blank(), ...(saved || {}) }; if (!Array.isArray(f.events)) f.events = []; return f; });
   const [hadSaved] = useState(!!saved);
   const [loading, setLoading] = useState(false);
@@ -55,17 +58,19 @@ export default function RSVPPage() {
     if (form.attending === 'yes') {
       if (choose && !events.some((ev) => picked(ev.name))) { setError(L('Please tick the functions you will attend.', 'कृपया उन कार्यक्रमों पर निशान लगाएँ जिनमें आप आएँगे।')); return; }
       if (n(form.men) + n(form.women) + n(form.children) === 0) { setError(L('Please tell us how many people are coming.', 'कृपया बताएँ कि कितने लोग आ रहे हैं।')); return; }
-      if (!form.arrivalDate) { setError(L('Please choose your date of arrival.', 'कृपया अपने पहुँचने की तारीख़ चुनें।')); return; }
-      if (!form.accommodation) { setError(L('Please tell us if you need a room.', 'कृपया बताएँ कि क्या आपको कमरा चाहिए।')); return; }
+      if (!rec && !form.arrivalDate) { setError(L('Please choose your date of arrival.', 'कृपया अपने पहुँचने की तारीख़ चुनें।')); return; }
+      if (!rec && !form.accommodation) { setError(L('Please tell us if you need a room.', 'कृपया बताएँ कि क्या आपको कमरा चाहिए।')); return; }
     }
     setLoading(true);
     try {
-      const result = await submitRsvp({ ...form, eventsAttending: (choose ? events.filter((ev) => picked(ev.name)) : events).map((ev) => ev.name), inviteType: getTier() });
-      save(SAVE_KEY, form);
+      const payload = { ...form, eventsAttending: (choose ? events.filter((ev) => picked(ev.name)) : events).map((ev) => ev.name), inviteType: getTier() };
+      const result = rec ? await submitReceptionRsvp({ ...payload, arrivalDate: '', accommodation: '' }) : await submitRsvp(payload);
+      save(KEY, form);
       setDone(result.updated ? 'updated' : 'new');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      setError(err.message || L('Could not save your RSVP. Please try again.', 'आपका उत्तर सहेजा नहीं जा सका। कृपया फिर से कोशिश करें।'));
+      const m = err.message || '';
+      setError(/unknown request/i.test(m) ? L('The reception RSVP opens in a little while. Please try again later.', 'आशीर्वाद समारोह का उत्तर थोड़ी देर में खुलेगा। कृपया बाद में फिर कोशिश करें।') : (m || L('Could not save your RSVP. Please try again.', 'आपका उत्तर सहेजा नहीं जा सका। कृपया फिर से कोशिश करें।')));
     } finally {
       setLoading(false);
     }
@@ -77,7 +82,7 @@ export default function RSVPPage() {
   return (
     <main className="page">
       <div className="wrap-narrow">
-        <PageHeader eyebrow={L('Help us welcome you', 'आपके स्वागत की तैयारी')} title={cfg.title} subtitle={full ? cfg.subtitle : (cfg.weddingSubtitle || cfg.subtitle)} />
+        <PageHeader eyebrow={L('Help us welcome you', 'आपके स्वागत की तैयारी')} title={cfg.title} subtitle={rec ? (tierCfg().rsvpSubtitle || cfg.subtitle) : full ? cfg.subtitle : (cfg.weddingSubtitle || cfg.subtitle)} />
 
         {!backendReady() && <div className="mb-5"><Notice kind="info">{NOT_READY_MESSAGE}</Notice></div>}
 
@@ -144,6 +149,7 @@ export default function RSVPPage() {
                     <p className="hint" style={{ margin: 0 }}>{L('Total:', 'कुल:')} <b>{n(form.men) + n(form.women) + n(form.children)}</b> {L(n(form.men) + n(form.women) + n(form.children) === 1 ? 'person including you' : 'people including you', 'व्यक्ति (आप सहित)')}</p>
                   </section>
 
+                  {!rec && <>
                   <section className="grid gap-3">
                     <h2 className="form-title">{L('When do you arrive?', 'आप कब पहुँचेंगे?')}</h2>
                     <div className="grid grid-cols-2 gap-3">
@@ -159,6 +165,7 @@ export default function RSVPPage() {
                       <Choice on={form.accommodation === 'no'} onClick={() => set('accommodation', 'no')}>{L('No, thank you', 'नहीं, धन्यवाद')}</Choice>
                     </div>
                   </section>
+                  </>}
                 </>
               )}
 

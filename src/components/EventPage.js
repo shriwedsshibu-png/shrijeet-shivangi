@@ -12,7 +12,7 @@ function eventImage(name) {
   if (n.includes('mehndi')) return '/images/cards/mehndi.jpg';
   if (n.includes('sangeet') || n.includes('engagement')) return '/images/cards/sangeet.jpg';
   if (n.includes('haldi')) return '/images/cards/haldi.jpg';
-  if (n.includes('shaadi') || n.includes('varmala')) return '/images/cards/shaadi.jpg';
+  if (n.includes('shaadi') || n.includes('varmala') || n.includes('reception')) return '/images/cards/shaadi.jpg';
   return null;
 }
 
