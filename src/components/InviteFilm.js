@@ -926,7 +926,7 @@ export default function InviteFilm() {
 
         {/* venue */}
         <section className={'iv-sec iv-sea iv-venue' + (isReception() ? ' iv-venue-home' : '')} data-i={idx++}>
-          {isReception() ? <PaintedBG name="sangeet" dark><SangeetBG /></PaintedBG> : <PaintedBG name="venue"><svg className="iv-waves" viewBox="0 0 390 120" preserveAspectRatio="none" aria-hidden><path className="w1" d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V120 H0Z" fill="#ffffff22" /><path className="w2" d="M0 80 Q50 50 100 80 T200 80 T300 80 T400 80 V120 H0Z" fill="#ffffff2e" /></svg></PaintedBG>}
+          {isReception() ? <PaintedBG name="home" dark /> : <PaintedBG name="venue"><svg className="iv-waves" viewBox="0 0 390 120" preserveAspectRatio="none" aria-hidden><path className="w1" d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V120 H0Z" fill="#ffffff22" /><path className="w2" d="M0 80 Q50 50 100 80 T200 80 T300 80 T400 80 V120 H0Z" fill="#ffffff2e" /></svg></PaintedBG>}
           <div className="iv-in">
             <p className="iv-small rv" style={{ '--d': '.2s' }}>{filmText('venueLabel', L('The Venue', 'विवाह स्थल'))}</p>
             <h2 className="iv-h light rv wr" style={{ '--d': '.6s' }}>{wed().venueName}</h2>

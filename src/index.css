@@ -713,3 +713,13 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 
 /* reception invitation page: a soft ivory halo keeps the longer lines readable over the painted flowers */
 .iv-msg-rec .iv-in > *{text-shadow:0 0 6px rgba(253,249,240,.95),0 0 14px rgba(253,249,240,.85)}
+/* reception venue page: the painted family home sits at the bottom, so the words stay in the evening sky above it */
+.iv-venue-home:has(.p-home){align-items:flex-start;padding-top:6.5rem}
+.iv-paint.p-home img{object-position:center bottom}
+.iv-paint.p-home::after{background:linear-gradient(rgba(20,24,48,.35),rgba(20,24,48,.12) 45%,rgba(20,24,48,0) 62%)}
+@media(max-height:700px){.iv-venue-home:has(.p-home){padding-top:4.6rem}}
+.iv .iv-venue-home .iv-in > .iv-p{font-size:clamp(.88rem,4.1vw,1.02rem);line-height:1.35;padding:.2rem .85rem}
+.iv .iv-venue-home .iv-all{font-size:clamp(.95rem,4.3vw,1.1rem);padding:.25rem .85rem}
+.iv .iv-venue-home .iv-tap{background:rgba(20,24,48,.5);border-radius:99px;padding:.1rem .7rem;color:#f1d68e}
+.iv .iv-venue-home .iv-in{gap:.4rem}
+@media(max-height:760px){.iv-venue-home:has(.p-home){padding-top:5rem}}
