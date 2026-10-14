@@ -492,6 +492,13 @@ function boxIn(el, sec) {
   if (e !== sec) return null;
   return { left: x, top: y, right: x + el.offsetWidth, bottom: y + el.offsetHeight, width: el.offsetWidth, height: el.offsetHeight };
 }
+// bottom edge of the kalash painted at the top of the invitation page (the painting fills the screen like object-fit: cover)
+function kalashBottom(sec, W, H) {
+  const img = sec.querySelector('.iv-paint img');
+  if (!img || !img.naturalWidth) return 0.17 * H;
+  const s = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+  return (H - img.naturalHeight * s) / 2 + 0.16 * img.naturalHeight * s;
+}
 function fitPages(r, opened) {
   if (!r) return;
   const H = r.clientHeight, W = r.clientWidth;
@@ -505,6 +512,8 @@ function fitPages(r, opened) {
     const inn = sec.querySelector('.iv-in');
     if (!inn) return null;
     inn.style.zoom = '';
+    // reception invitation page (longer words): start the words below the kalash so they never sit on it
+    if (sec.classList.contains('iv-msg-rec')) { const k = kalashBottom(sec, W, H); sec.style.paddingTop = Math.round(k + 0.5 * rem) + 'px'; sec.dataset.k = String(Math.round(k)); }
     return { sec, inn, i };
   }).filter(Boolean).map(({ sec, inn, i }) => {
     const box = boxIn(inn, sec);
@@ -517,7 +526,7 @@ function fitPages(r, opened) {
       topRes = !opened && link ? link.getBoundingClientRect().bottom + pad : pad;
       zones = [];
     } else {
-      topRes = 0.55 * rem + 4 + pad;                    // progress bar
+      topRes = Math.max(0.55 * rem + 4 + pad, Number(sec.dataset.k || 0) + 4);   // progress bar (and the kalash on the reception card)
       const right = i === last ? [W - edge - 11 * rem, H - edge - sndH]
         : i === 1 ? [W - edge - 7 * rem, H - edge - sndH]
         : [W - edge - 11 * rem, H - edge - skipH - gap - sndH];
@@ -866,7 +875,7 @@ export default function InviteFilm() {
         </section>
 
         {/* 3. message: the invitation, in the traditional card form */}
-        <section className="iv-sec iv-cream iv-msg2" data-i={idx++}>
+        <section className={'iv-sec iv-cream iv-msg2' + (isReception() ? ' iv-msg-rec' : '')} data-i={idx++}>
           <PaintedBG name="message"><MsgBG /></PaintedBG>
           <div className="iv-drift" aria-hidden>{Array.from({ length: 9 }).map((_, i) => <i key={i} style={{ left: (4 + i * 11) + '%', animationDelay: (i * 1.7) % 10 + 's', animationDuration: 11 + (i % 3) * 2 + 's', background: ['#f4c2bd', '#eeb0aa', '#f2d18a'][i % 3] }} />)}</div>
           <div className="iv-in">

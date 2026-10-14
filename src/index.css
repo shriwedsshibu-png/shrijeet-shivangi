@@ -710,3 +710,6 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 .iv .iv-venue-home .iv-in > .iv-small{color:#e7cf98;background:rgba(20,24,48,.5)}
 .iv .iv-venue-home .iv-all{color:#fbf3e6;background:rgba(20,24,48,.55)}
 .iv .iv-venue-home .iv-tap{color:#e7cf98;opacity:1}
+
+/* reception invitation page: a soft ivory halo keeps the longer lines readable over the painted flowers */
+.iv-msg-rec .iv-in > *{text-shadow:0 0 6px rgba(253,249,240,.95),0 0 14px rgba(253,249,240,.85)}
