@@ -59,12 +59,12 @@ export default function RSVPPage() {
       if (choose && !events.some((ev) => picked(ev.name))) { setError(L('Please tick the functions you will attend.', 'कृपया उन कार्यक्रमों पर निशान लगाएँ जिनमें आप आएँगे।')); return; }
       if (n(form.men) + n(form.women) + n(form.children) === 0) { setError(L('Please tell us how many people are coming.', 'कृपया बताएँ कि कितने लोग आ रहे हैं।')); return; }
       if (!rec && !form.arrivalDate) { setError(L('Please choose your date of arrival.', 'कृपया अपने पहुँचने की तारीख़ चुनें।')); return; }
-      if (!rec && !form.accommodation) { setError(L('Please tell us if you need a room.', 'कृपया बताएँ कि क्या आपको कमरा चाहिए।')); return; }
+      if (full && !form.accommodation) { setError(L('Please tell us if you need a room.', 'कृपया बताएँ कि क्या आपको कमरा चाहिए।')); return; }
     }
     setLoading(true);
     try {
       const payload = { ...form, eventsAttending: (choose ? events.filter((ev) => picked(ev.name)) : events).map((ev) => ev.name), inviteType: getTier() };
-      const result = rec ? await submitReceptionRsvp({ ...payload, arrivalDate: '', accommodation: '' }) : await submitRsvp(payload);
+      const result = rec ? await submitReceptionRsvp({ ...payload, arrivalDate: '', accommodation: '' }) : await submitRsvp(full ? payload : { ...payload, accommodation: '' });
       save(KEY, form);
       setDone(result.updated ? 'updated' : 'new');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -158,19 +158,19 @@ export default function RSVPPage() {
                     <Field label={L('Another date?', 'कोई और तारीख़?')}><input className="input" type="date" value={days.includes(form.arrivalDate) ? '' : form.arrivalDate} onChange={(e) => set('arrivalDate', e.target.value)} /></Field>
                   </section>
 
-                  <section className="grid gap-3">
+                  {full && <section className="grid gap-3">
                     <h2 className="form-title">{L('Do you need a room?', 'क्या आपको कमरा चाहिए?')}</h2>
                     <div className="grid grid-cols-2 gap-3">
                       <Choice on={form.accommodation === 'yes'} onClick={() => set('accommodation', 'yes')}>{L('Yes, please', 'हाँ, चाहिए')}</Choice>
                       <Choice on={form.accommodation === 'no'} onClick={() => set('accommodation', 'no')}>{L('No, thank you', 'नहीं, धन्यवाद')}</Choice>
                     </div>
-                  </section>
+                  </section>}
                   </>}
                 </>
               )}
 
               <section className="grid gap-4">
-                <Field label={L('Anything else we should know?', 'कुछ और बताना चाहें?')} hint={L('Optional — for example wheelchair help, travel details, or a note for us.', 'वैकल्पिक — जैसे व्हीलचेयर की मदद, यात्रा की जानकारी या हमारे लिए कोई संदेश।')}>
+                <Field label={L('Anything else we should know?', 'कुछ और बताना चाहें?')} hint={full ? L('Optional — for example wheelchair help, travel details, or a note for us.', 'वैकल्पिक — जैसे व्हीलचेयर की मदद, यात्रा की जानकारी या हमारे लिए कोई संदेश।') : L('Optional — for example if you need help with a stay, wheelchair help, travel details, or a note for us.', 'वैकल्पिक — जैसे ठहरने में मदद चाहिए, व्हीलचेयर की मदद, यात्रा की जानकारी या हमारे लिए कोई संदेश।')}>
                   <textarea className="input" value={form.notes} onChange={(e) => set('notes', e.target.value)} />
                 </Field>
               </section>

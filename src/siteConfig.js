@@ -100,10 +100,11 @@ const siteConfig = {
       hidePages: ["travel", "faq"],
       eventsSubtitle: "Come and bless the newlyweds at our home.",
       wedding: {
-        venueName: "Our home",                                 // <-- name of the house / place
-        city: "Village, District",                             // <-- village, district
+        venueName: "Mishra Niwas",
+        city: "Silaut Basdeo, Muzaffarpur",
+        address: "Mishra Niwas, Silout Rd, Basudeo, Muzaffarpur, Silaut Basdeo, Bihar 843119",
         state: "Bihar",
-        mapLink: "https://maps.app.goo.gl/UewKnsiCF26MCvPx8",
+        mapLink: "https://maps.app.goo.gl/3GcWmJahuHtE1i8X8",
         countdownTo: "2026-12-08T18:30:00+05:30",
       },
       film: {
@@ -260,7 +261,7 @@ const siteConfig = {
         time: "06:30 PM onwards",
         dressCode: "Festive / Traditional",
         description: "An evening of blessings, dinner and celebration as we welcome the newlyweds home.",
-        mapLink: "https://maps.app.goo.gl/UewKnsiCF26MCvPx8",
+        mapLink: "https://maps.app.goo.gl/3GcWmJahuHtE1i8X8",
       },
     ],
   },
@@ -272,7 +273,7 @@ const siteConfig = {
     title: "Kindly Confirm Your Presence",
     subtitle: "Just a few quick details — how many of you are coming, when you arrive and whether you need a room. You can change your answer anytime with the same mobile number.",
     // shown to wedding-day guests (their form is short: name, number, how many, food)
-    weddingSubtitle: "Just a few quick details — how many of you are coming, when you arrive and whether you need a room. You can change your answer anytime with the same mobile number.",
+    weddingSubtitle: "Just a few quick details — how many of you are coming and when you arrive. You can change your answer anytime with the same mobile number.",
   },
 
   // --------------------------------------------------------------------------
@@ -530,8 +531,8 @@ And here's to all the journeys still waiting for us.`,
       { tier: "full", title: "What should I wear?", content: "The dress idea for every function is written on the Events page. Comfortable traditional clothes are perfect." },
       { tier: "wedding", title: "What should I wear?", content: "Traditional Indian wear is perfect for the evening." },
       { tier: "full", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming, when you arrive and whether you need a room." },
-      { tier: "reception", title: "Where is the reception?", content: "At our home in Bihar, on Tuesday 8 December 2026 from 6:30 PM. The Events page has a map button." },
-      { tier: "wedding", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming, when you arrive and whether you need a room. It takes less than a minute." },
+      { tier: "reception", title: "Where is the reception?", content: "At Mishra Niwas, Silout Rd, Basudeo, Muzaffarpur (Silaut Basdeo), Bihar 843119, on Tuesday 8 December 2026 from 6:30 PM. The Events page has a map button." },
+      { tier: "wedding", title: "How do I confirm that I am coming?", content: "Open the RSVP page and fill in the short form — your name, number, how many of you are coming and when you arrive. It takes less than a minute." },
       { title: "I need to change my RSVP. What do I do?", content: "No problem. Fill the RSVP form again with the same mobile number. Your new answer replaces the old one." },
       { title: "How do I share my photos?", content: "Scan the wedding QR code or open the Photos page, choose the celebration, and add your photos. No login and no caption needed." },
       { title: "How can I find photos of myself?", content: "On the Photos page, open the Gallery and tap 'Find my photos'. Take a quick selfie and we will show the photos you are in. Your selfie stays on your phone and is never saved." },

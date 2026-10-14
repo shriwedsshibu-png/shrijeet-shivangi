@@ -156,7 +156,7 @@ function handleRsvp_(b) {
     var values = [
       now, first, name, '', attending,
       yes ? men : '', yes ? women : '', yes ? kids : '', yes ? men + women + kids : 0,
-      yes ? clean_(b.arrivalDate, 20) : '', yes ? yesNo_(b.accommodation) : '',
+      yes ? clean_(b.arrivalDate, 20) : '', yes && b.accommodation ? yesNo_(b.accommodation) : '',
       clean_(b.notes, 1000), typeLabel, yes ? list.join(' | ') : '', times
     ];
     if (!row) { sheet.appendRow(values); row = sheet.getLastRow(); }
