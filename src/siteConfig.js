@@ -505,6 +505,11 @@ And here's to all the journeys still waiting for us.`,
         note: "Comfortable stay for our guests.",
         mapLink: "https://maps.app.goo.gl/t9wvFRQ3nxergAsVA",
       },
+      {
+        name: "Sea Haven Inn",
+        note: "A few minutes' walk from the resort.",
+        mapLink: "https://maps.app.goo.gl/2LSTDyUS6cwV5C8X7",
+      },
     ],
     nearbyMalls: [
       { name: "CMR Central Mall", mapLink: "https://maps.app.goo.gl/A8icEosB1jrsTcJ9A" },
