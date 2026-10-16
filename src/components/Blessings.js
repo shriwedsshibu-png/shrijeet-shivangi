@@ -9,10 +9,10 @@ import { L } from '../lang';
 
 const SAVE_KEY = 'wedding_blessing_v1';
 
-function BlessingCard() {
+export function BlessingCard({ defaultName = '', bare = false, heading, hint }) {
   const cfg = siteConfig.blessings;
   const saved = loadSaved(SAVE_KEY);
-  const [name, setName] = useState(saved?.name || '');
+  const [name, setName] = useState(saved?.name || defaultName);
   const [message, setMessage] = useState(saved?.message || '');
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -34,9 +34,10 @@ function BlessingCard() {
     }
   };
 
+  const Wrap = bare ? 'div' : Card;
   return (
-    <Card>
-      <h2 className="form-title flex items-center gap-2"><Icon name="heart" size={26} /> {cfg.blessingHeading}</h2>
+    <Wrap>
+      <h2 className="form-title flex items-center gap-2"><Icon name="heart" size={26} /> {heading || cfg.blessingHeading}</h2>
       {done ? (
         <div className="text-center py-6 fade-in">
           <div style={{ fontSize: '3rem' }}>🙏</div>
@@ -46,7 +47,7 @@ function BlessingCard() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="grid gap-4" noValidate>
-          <p className="text-muted">{cfg.blessingHint}</p>
+          <p className="text-muted">{hint || cfg.blessingHint}</p>
           <Field label={L('Your name', 'आपका नाम')} required>
             <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder={L('Your name', 'आपका नाम')} autoComplete="name" />
           </Field>
@@ -58,7 +59,7 @@ function BlessingCard() {
           <Button type="submit" variant="primary" block disabled={loading || !backendReady()}>{loading ? L('Sending…', 'भेजा जा रहा है…') : saved ? L('Update my blessing', 'आशीर्वाद बदलकर भेजें') : L('Send my blessing', 'आशीर्वाद भेजें')}</Button>
         </form>
       )}
-    </Card>
+    </Wrap>
   );
 }
 

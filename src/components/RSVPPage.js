@@ -6,6 +6,8 @@ import { sortedEvents, loadSaved, save } from '../utils';
 import { isFullTier, getTier, isReception, tierCfg } from '../tier';
 import { L, locale, isHi } from '../lang';
 import { evTime } from '../utils';
+import { BlessingCard } from './Blessings';
+import { Link } from 'react-router-dom';
 
 const SAVE_KEY = 'wedding_rsvp_v3';
 const RECEPTION_KEY = 'reception_rsvp_v1';   // the reception form is kept apart from the wedding one
@@ -97,6 +99,14 @@ export default function RSVPPage() {
               </p>
               <p className="text-muted mt-2">{L('Need to change something? You can edit and send again anytime.', 'कुछ बदलना है? आप कभी भी बदलकर फिर से भेज सकते हैं।')}</p>
               <div className="mt-6"><Button variant="ghost" onClick={() => setDone(null)}>{L('Edit my RSVP', 'उत्तर बदलें')}</Button></div>
+              {!attending && (
+                <div className="mt-8 pt-7 text-left" style={{ borderTop: '1px solid rgba(184,137,59,.35)' }}>
+                  <BlessingCard bare defaultName={form.contactName}
+                    heading={L('Send your blessings', 'अपना आशीर्वाद भेजें')}
+                    hint={L('You may not be with us on the day, but your blessings will be. Write a few words for Shrijeet and Shivangi and we will keep them with us forever.', 'आप उस दिन हमारे साथ न हों, पर आपका आशीर्वाद ज़रूर साथ रहेगा। श्रीजीत और शिवांगी के लिए कुछ शब्द लिखें, हम उन्हें सदा सँजोकर रखेंगे।')} />
+                  {siteConfig.shagun?.enabled && <p className="text-muted mt-4 text-center"><Link to="/blessings" style={{ color: 'var(--maroon)', textDecoration: 'underline' }}>{L('You can also send a digital shagun on the Blessings page', 'आशीर्वाद पेज पर डिजिटल शगुन भी भेज सकते हैं')}</Link></p>}
+                </div>
+              )}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="grid gap-8" noValidate>
