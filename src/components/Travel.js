@@ -26,6 +26,7 @@ export default function Travel() {
   const stays = (t.stays || []).filter((s) => s.mapLink);
   const malls = (t.nearbyMalls || []).filter((m) => m.mapLink);
   const attractions = t.attractions || [];
+  const home = t.familyHome;
 
   return (
     <main className="page">
@@ -34,6 +35,8 @@ export default function Travel() {
 
         <div className="grid gap-5">
           <PlaceCard eyebrow="Wedding venue" icon="pin" name={t.venueName} note={t.venueAddress} href={t.venueMapLink} cta="Open in Google Maps" image="/images/cards/venue.jpg" />
+
+          {home && home.mapLink && <PlaceCard eyebrow="Groom's home" icon="home" name={home.name} note={home.note} href={home.mapLink} cta="Open in Google Maps" />}
 
           {stays.map((s) => <PlaceCard key={s.name} eyebrow="Where to stay" icon="bed" name={s.name} note={s.note} href={s.mapLink} cta="Open in Google Maps" />)}
 

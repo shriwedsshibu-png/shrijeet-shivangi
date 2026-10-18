@@ -499,6 +499,12 @@ And here's to all the journeys still waiting for us.`,
     venueAddress: "Visakhapatnam, Andhra Pradesh, India",
     venueMapLink: "https://maps.app.goo.gl/1HVHEgr3f7jfm7fU7",
     venueEmbedUrl: "https://www.google.com/maps?q=Aarif%20Seaside%20Resort%2C%20Visakhapatnam&output=embed",
+    // The groom's family home (shown after the venue). Leave mapLink empty to hide it.
+    familyHome: {
+      name: "Mishra family home",
+      note: "Shrijeet's home in Sriharipuram, Visakhapatnam.",
+      mapLink: "https://maps.app.goo.gl/hbY97gTrxpn5Yhdt9",
+    },
     stays: [
       {
         name: "Hotel FantaSea",
