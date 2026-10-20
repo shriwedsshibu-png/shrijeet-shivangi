@@ -945,7 +945,7 @@ export default function InviteFilm() {
               <img className="iv-gan-end" src="/images/invite/ganesh.webp" alt="Shri Ganesh" />
             {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra">{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
             </div>
-            <h2 className={'iv-aap rv wr' + (isReception() ? ' long' : '')} style={{ '--d': '.3s' }}>{isReception() ? L('Do grace us with your presence!', 'आकर हमें अनुगृहीत करें') : L('Aap aayenge na!', 'आप आएँगे ना!')}</h2>
+            <h2 className="iv-aap rv wr long" style={{ '--d': '.3s' }}>{L('Do grace us with your presence!', 'आकर हमें अनुगृहीत करें')}</h2>
             <p className="iv-p rv" style={{ '--d': '1.6s' }}>{isReception() ? L('Your presence and blessings will make our celebration complete.', 'आपकी उपस्थिति और आशीर्वाद से ही हमारा उत्सव पूर्ण होगा।') : L('Your presence will make our celebration complete. Kindly let us know you are coming.', 'आपकी उपस्थिति से ही हमारा उत्सव पूर्ण होगा। कृपया अपने आने की सूचना अवश्य दें।')}</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
               <button className="iv-link" onClick={replay}>{L('↺ Replay invitation', '↺ निमंत्रण फिर से देखें')}</button>
