@@ -273,7 +273,7 @@ const siteConfig = {
     title: "Kindly Confirm Your Presence",
     subtitle: "Just a few quick details — how many of you are coming, when you arrive and whether you need a room. You can change your answer anytime with the same mobile number.",
     // shown to wedding-day guests (their form is short: name, number, how many, food)
-    weddingSubtitle: "Just a few quick details — how many of you are coming and when you arrive. You can change your answer anytime with the same mobile number.",
+    weddingSubtitle: "Just a few quick details — how many of you are coming and where from. You can change your answer anytime with the same mobile number.",
   },
 
   // --------------------------------------------------------------------------

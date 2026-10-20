@@ -22,6 +22,7 @@ const blank = () => ({
   arrivalDate: '',
   accommodation: '',
   notes: '',
+  from: '',     // wedding-day guests: 'vizag' or 'outside'
   events: [],   // the functions this family will come for (3-day guests choose)
 });
 
@@ -40,6 +41,7 @@ export default function RSVPPage() {
   const [error, setError] = useState('');
   const events = sortedEvents();
   const full = isFullTier();
+  const wedOnly = !full && !rec;                      // wedding-day guests: Vizag or outside, no room question
   const choose = full && events.length > 1;            // 3-day guests pick their functions
   const picked = (name) => form.events.includes(name);
   const allPicked = choose && events.every((ev) => picked(ev.name));
@@ -60,12 +62,18 @@ export default function RSVPPage() {
     if (form.attending === 'yes') {
       if (choose && !events.some((ev) => picked(ev.name))) { setError(L('Please tick the functions you will attend.', 'कृपया उन कार्यक्रमों पर निशान लगाएँ जिनमें आप आएँगे।')); return; }
       if (n(form.men) + n(form.women) + n(form.children) === 0) { setError(L('Please tell us how many people are coming.', 'कृपया बताएँ कि कितने लोग आ रहे हैं।')); return; }
-      if (!rec && !form.arrivalDate) { setError(L('Please choose your date of arrival.', 'कृपया अपने पहुँचने की तारीख़ चुनें।')); return; }
+      if (full && !form.arrivalDate) { setError(L('Please choose your date of arrival.', 'कृपया अपने पहुँचने की तारीख़ चुनें।')); return; }
+      if (wedOnly && !form.from) { setError(L('Please tell us where you are coming from.', 'कृपया बताएँ कि आप कहाँ से आ रहे हैं।')); return; }
       if (full && !form.accommodation) { setError(L('Please tell us if you need a room.', 'कृपया बताएँ कि क्या आपको कमरा चाहिए।')); return; }
     }
     setLoading(true);
     try {
       const payload = { ...form, eventsAttending: (choose ? events.filter((ev) => picked(ev.name)) : events).map((ev) => ev.name), inviteType: getTier() };
+      if (wedOnly && form.attending === 'yes') {
+        const out = form.from === 'outside';
+        payload.arrivalDate = out ? form.arrivalDate : '';
+        payload.notes = (out ? 'From outside Vizag' : 'From Vizag') + (form.notes.trim() ? ' · ' + form.notes.trim() : '');
+      }
       const result = rec ? await submitReceptionRsvp({ ...payload, arrivalDate: '', accommodation: '' }) : await submitRsvp(full ? payload : { ...payload, accommodation: '' });
       save(KEY, form);
       setDone(result.updated ? 'updated' : 'new');
@@ -159,9 +167,17 @@ export default function RSVPPage() {
                     <p className="hint" style={{ margin: 0 }}>{L('Total:', 'कुल:')} <b>{n(form.men) + n(form.women) + n(form.children)}</b> {L(n(form.men) + n(form.women) + n(form.children) === 1 ? 'person including you' : 'people including you', 'व्यक्ति (आप सहित)')}</p>
                   </section>
 
-                  {!rec && <>
+                  {wedOnly && <section className="grid gap-3">
+                    <h2 className="form-title">{L('Where are you coming from?', 'आप कहाँ से आ रहे हैं?')}</h2>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Choice on={form.from === 'vizag'} onClick={() => set('from', 'vizag')}>{L('From Vizag', 'विशाखापत्तनम से')}</Choice>
+                      <Choice on={form.from === 'outside'} onClick={() => set('from', 'outside')}>{L('From outside Vizag', 'बाहर से')}</Choice>
+                    </div>
+                  </section>}
+
+                  {(full || (wedOnly && form.from === 'outside')) && <>
                   <section className="grid gap-3">
-                    <h2 className="form-title">{L('When do you arrive?', 'आप कब पहुँचेंगे?')}</h2>
+                    <h2 className="form-title">{full ? L('When do you arrive?', 'आप कब पहुँचेंगे?') : L('When do you arrive? (optional)', 'आप कब पहुँचेंगे? (वैकल्पिक)')}</h2>
                     <div className="grid grid-cols-2 gap-3">
                       {days.map((d) => <Choice key={d} on={form.arrivalDate === d} onClick={() => set('arrivalDate', d)}>{dayLabel(d)}</Choice>)}
                     </div>
@@ -180,7 +196,7 @@ export default function RSVPPage() {
               )}
 
               <section className="grid gap-4">
-                <Field label={L('Anything else we should know?', 'कुछ और बताना चाहें?')} hint={full ? L('Optional — for example wheelchair help, travel details, or a note for us.', 'वैकल्पिक — जैसे व्हीलचेयर की मदद, यात्रा की जानकारी या हमारे लिए कोई संदेश।') : L('Optional — for example if you need help with a stay, wheelchair help, travel details, or a note for us.', 'वैकल्पिक — जैसे ठहरने में मदद चाहिए, व्हीलचेयर की मदद, यात्रा की जानकारी या हमारे लिए कोई संदेश।')}>
+                <Field label={L('Anything else we should know?', 'कुछ और बताना चाहें?')} hint={full ? L('Optional — for example wheelchair help, travel details, or a note for us.', 'वैकल्पिक — जैसे व्हीलचेयर की मदद, यात्रा की जानकारी या हमारे लिए कोई संदेश।') : L('Optional — any help you need, travel details, or a note for us.', 'वैकल्पिक — कोई मदद चाहिए, यात्रा की जानकारी या हमारे लिए कोई संदेश।')}>
                   <textarea className="input" value={form.notes} onChange={(e) => set('notes', e.target.value)} />
                 </Field>
               </section>
