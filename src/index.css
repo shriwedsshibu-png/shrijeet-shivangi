@@ -723,3 +723,4 @@ html.hi .iv p,html.hi .hero-text,html.hi .h-sub{text-wrap:balance}   /* no singl
 .iv .iv-venue-home .iv-tap{background:rgba(20,24,48,.5);border-radius:99px;padding:.1rem .7rem;color:#f1d68e}
 .iv .iv-venue-home .iv-in{gap:.4rem}
 @media(max-height:760px){.iv-venue-home:has(.p-home){padding-top:5rem}}
+.iv-aap.long,.fin .iv-aap.long{white-space:normal;font-size:clamp(1.9rem,8.4vw,2.5rem);line-height:1.3;text-wrap:balance}
