@@ -26,6 +26,32 @@ const blank = () => ({
   events: [],   // the functions this family will come for (3-day guests choose)
 });
 
+// one row per group with − and + buttons, so nobody has to type a number
+function Stepper({ label, sub, value, onChange, max }) {
+  const btn = { width: '2.9rem', height: '2.9rem', borderRadius: '999px', border: '1.5px solid var(--maroon)', background: '#fff', color: 'var(--maroon)', fontSize: '1.5rem', fontWeight: 700, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' };
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '.8rem', padding: '.65rem .9rem', border: '1.5px solid #dccbb0', borderRadius: '1rem', background: '#fffdf8' }}>
+      <div style={{ minWidth: 0 }}><b style={{ fontSize: '1.08rem', color: 'var(--maroon)' }}>{label}</b>{sub && <div className="hint" style={{ margin: 0 }}>{sub}</div>}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', flex: 'none' }}>
+        <button type="button" style={{ ...btn, opacity: value <= 0 ? 0.35 : 1 }} disabled={value <= 0} onClick={() => onChange(Math.max(0, value - 1))} aria-label={L('One less', 'एक कम')}>−</button>
+        <span style={{ minWidth: '1.6rem', textAlign: 'center', fontSize: '1.45rem', fontWeight: 700, color: 'var(--maroon)' }} aria-live="polite">{value}</span>
+        <button type="button" style={{ ...btn, background: 'var(--maroon)', color: '#fbf3e6', opacity: value >= max ? 0.35 : 1 }} disabled={value >= max} onClick={() => onChange(Math.min(max, value + 1))} aria-label={L('One more', 'एक और')}>+</button>
+      </div>
+    </div>
+  );
+}
+
+// "2 men · 1 woman · 2 children = 5 people in all (including you)"
+function headLine(m, w, k) {
+  const t = m + w + k;
+  const parts = isHi()
+    ? [m && `${m} पुरुष`, w && `${w} ${w === 1 ? 'महिला' : 'महिलाएँ'}`, k && `${k} ${k === 1 ? 'बच्चा' : 'बच्चे'}`]
+    : [m && `${m} ${m === 1 ? 'man' : 'men'}`, w && `${w} ${w === 1 ? 'woman' : 'women'}`, k && `${k} ${k === 1 ? 'child' : 'children'}`];
+  const list = parts.filter(Boolean).join(' · ');
+  if (!t) return L('Tap + to add the people coming.', 'आने वालों को जोड़ने के लिए + दबाएँ।');
+  return isHi() ? <>{list} = <b>कुल {t} {t === 1 ? 'व्यक्ति' : 'लोग'}</b> (आप सहित)</> : <>{list} = <b>{t} {t === 1 ? 'person' : 'people'} in all</b> (including you)</>;
+}
+
 function Choice({ on, onClick, children }) {
   return <button type="button" onClick={onClick} className={`choice ${on ? 'choice-on' : ''}`} aria-pressed={on}>{children}</button>;
 }
@@ -159,12 +185,12 @@ export default function RSVPPage() {
 
                   <section className="grid gap-4">
                     <h2 className="form-title">{L('How many of you are coming?', 'आप कितने लोग आ रहे हैं?')}</h2>
-                    <div className="grid grid-cols-3 gap-3">
-                      <Field label={L('Men', 'पुरुष')}><input className="input" type="number" inputMode="numeric" min="0" max="30" value={form.men} onChange={(e) => set('men', e.target.value)} /></Field>
-                      <Field label={L('Women', 'महिलाएँ')}><input className="input" type="number" inputMode="numeric" min="0" max="30" value={form.women} onChange={(e) => set('women', e.target.value)} /></Field>
-                      <Field label={L('Children', 'बच्चे')}><input className="input" type="number" inputMode="numeric" min="0" max="20" value={form.children} onChange={(e) => set('children', e.target.value)} /></Field>
+                    <div className="grid gap-2">
+                      <Stepper label={L('Men', 'पुरुष')} value={n(form.men)} onChange={(v) => set('men', String(v))} max={30} />
+                      <Stepper label={L('Women', 'महिलाएँ')} value={n(form.women)} onChange={(v) => set('women', String(v))} max={30} />
+                      <Stepper label={L('Children', 'बच्चे')} sub={L('below 12 years', '12 साल से कम')} value={n(form.children)} onChange={(v) => set('children', String(v))} max={20} />
                     </div>
-                    <p className="hint" style={{ margin: 0 }}>{L('Total:', 'कुल:')} <b>{n(form.men) + n(form.women) + n(form.children)}</b> {L(n(form.men) + n(form.women) + n(form.children) === 1 ? 'person including you' : 'people including you', 'व्यक्ति (आप सहित)')}</p>
+                    <p className="hint" style={{ margin: 0, fontSize: '1.02rem' }}>{headLine(n(form.men), n(form.women), n(form.children))}</p>
                   </section>
 
                   {wedOnly && <section className="grid gap-3">
