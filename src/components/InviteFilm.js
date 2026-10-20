@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import siteConfig from '../siteConfig';
-import { sortedEvents } from '../utils';
+import { sortedEvents, isFeatureOn } from '../utils';
 import makeLoopPlayer from '../loopAudio';
 import { groomFirst, isFullTier, isReception, wed, filmText, tierCfg } from '../tier';
 import { L, isHi, locale } from '../lang';
@@ -590,7 +590,7 @@ export default function InviteFilm() {
   const outDone = useRef(false);       // current page has started its exit fade
   const [doors, setDoors] = useState(0); // 0 none, 1 closed, 2 seam glows, 3 swinging open
   const doorZoom = useRef('none');
-  const rsvpOn = !!siteConfig.features?.rsvp?.enabled;
+  const rsvpOn = isFeatureOn('rsvp');   // off for the reception invite (no RSVP there)
   const fam = (groomFirst() ? siteConfig.inviteFamily?.groom : siteConfig.inviteFamily?.bride) || null;
   const total = 5 + events.length;
   const DATE_I = 1, LAST = total - 1;
@@ -945,8 +945,8 @@ export default function InviteFilm() {
               <img className="iv-gan-end" src="/images/invite/ganesh.webp" alt="Shri Ganesh" />
             {(siteConfig.inviteEndMantra || []).length > 0 && <p className="iv-end-mantra">{siteConfig.inviteEndMantra.map((l, i) => <span key={i}>{l}</span>)}</p>}
             </div>
-            <h2 className={'iv-aap rv wr' + (isReception() ? ' long' : '')} style={{ '--d': '.3s' }}>{isReception() ? L('Do come and bless us!', 'आशीर्वाद देने ज़रूर पधारिए!') : L('Aap aayenge na!', 'आप आएँगे ना!')}</h2>
-            <p className="iv-p rv" style={{ '--d': '1.6s' }}>{L('Your presence will make our celebration complete. Kindly let us know you are coming.', 'आपकी उपस्थिति से ही हमारा उत्सव पूर्ण होगा। कृपया अपने आने की सूचना अवश्य दें।')}</p>
+            <h2 className={'iv-aap rv wr' + (isReception() ? ' long' : '')} style={{ '--d': '.3s' }}>{isReception() ? L('Do grace us with your presence!', 'आकर हमें अनुगृहीत करें') : L('Aap aayenge na!', 'आप आएँगे ना!')}</h2>
+            <p className="iv-p rv" style={{ '--d': '1.6s' }}>{isReception() ? L('Your presence and blessings will make our celebration complete.', 'आपकी उपस्थिति और आशीर्वाद से ही हमारा उत्सव पूर्ण होगा।') : L('Your presence will make our celebration complete. Kindly let us know you are coming.', 'आपकी उपस्थिति से ही हमारा उत्सव पूर्ण होगा। कृपया अपने आने की सूचना अवश्य दें।')}</p>
             <div className="iv-btns rv" style={{ '--d': '2.3s' }}>
               <button className="iv-link" onClick={replay}>{L('↺ Replay invitation', '↺ निमंत्रण फिर से देखें')}</button>
               {rsvpOn && <p className="iv-rsvp-hint"><span className="iv-hand" aria-hidden>👇</span> {L('Tap below to RSVP', 'आने की पुष्टि के लिए नीचे दबाएँ')}</p>}

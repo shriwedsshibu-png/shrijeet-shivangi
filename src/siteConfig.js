@@ -97,7 +97,7 @@ const siteConfig = {
       label: "Reception",
       events: ["Wedding Reception"],
       dateLine: "Tuesday, 8 December 2026",
-      hidePages: ["travel", "faq"],
+      hidePages: ["travel", "faq", "rsvp"],
       eventsSubtitle: "Come and bless the newlyweds at our home.",
       wedding: {
         venueName: "Mishra Niwas",
@@ -118,12 +118,12 @@ const siteConfig = {
       // the invitation page of the reception invite
       inviteCard: {
         blessingsLabel: "With the blessings of our elders",
-        request: "With great joy, our families share the news of the wedding of",
-        closing: "to be solemnised on 2nd December 2026, and request the pleasure of your company at the Wedding Reception to bless the newlyweds.",
+        request: "With great joy, our families announce the wedding of",
+        closing: "which will be solemnised on 2nd December 2026, and request the pleasure of your company at the Wedding Reception to bless the newlyweds.",
         groomSide: {
           blessingsLabel: "With the grace and blessings of God",
-          request: "With great joy, Smt. Jagtaran Devi shares the news of the wedding of her youngest grandson",
-          closing: "to be solemnised on 2nd December 2026, and requests the pleasure of your company at the Wedding Reception to bless the newlyweds.",
+          request: "With great joy, Smt. Jagtaran Devi announces the wedding of her youngest grandson",
+          closing: "which will be solemnised on 2nd December 2026, and requests the pleasure of your company at the Wedding Reception to bless the newlyweds.",
         },
       },
       rsvpSubtitle: "Just tell us how many of you are coming, so we can welcome everyone well. You can change your answer anytime with the same mobile number.",
