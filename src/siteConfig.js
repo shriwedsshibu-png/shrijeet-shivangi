@@ -138,7 +138,9 @@ const siteConfig = {
   // --------------------------------------------------------------------------
   features: {
     events:    { enabled: true, label: "Events" },
-    rsvp:      { enabled: true, label: "RSVP" },
+    // quietFrom: from this date the home page and the bottom bar stop pushing the RSVP (it stays in the menu and its links keep working).
+    // The home button becomes "Share Your Blessings" and "Our Families" takes the RSVP place on the bottom bar. Remove the date (or set "") to undo.
+    rsvp:      { enabled: true, label: "RSVP", quietFrom: "2026-11-20" },
     photos:    { enabled: true, label: "Photos" },
     blessings: { enabled: true, label: "Blessings" },
     ourStory:  { enabled: false, label: "Our Story" },

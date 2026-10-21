@@ -1,5 +1,6 @@
 import siteConfig from './siteConfig';
 import { pageHidden } from './tier';
+import { rsvpUpFront } from './utils';
 import { L } from './lang';
 
 // Order here = order in the menu. "bottom" pages also get a big button on the phone's bottom bar.
@@ -18,6 +19,8 @@ export const PAGES = [
 export const enabledPages = () =>
   PAGES.filter((p) => siteConfig.features?.[p.key]?.enabled && !pageHidden(p.key)).map((p) => ({
     ...p,
+    // RSVP on the bottom bar only while we are still collecting replies; then "Our Families" takes its place
+    bottom: p.key === 'rsvp' ? rsvpUpFront() : p.key === 'families' ? !rsvpUpFront() : p.bottom,
     short: L(p.short, p.shortHi),
     label: siteConfig.features[p.key].label || p.short,
   }));

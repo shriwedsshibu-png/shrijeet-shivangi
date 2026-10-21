@@ -4,7 +4,7 @@ import siteConfig from '../siteConfig';
 import Countdown from './Countdown';
 import Icon from '../icons';
 import { Card, ButtonLink, Divider } from './ui';
-import { isFeatureOn, sortedEvents, dayAndMonth, evName, evTime } from '../utils';
+import { isFeatureOn, rsvpUpFront, sortedEvents, dayAndMonth, evName, evTime } from '../utils';
 import { L } from '../lang';
 import { dateLine, isFullTier, coupleOrder, groomFirst, isReception, wed, tierCfg } from '../tier';
 
@@ -59,7 +59,8 @@ export default function HomePage() {
           {hp.welcomeHindi && <p className="deva hero-wel">{hp.welcomeHindi}</p>}
 
           <div className="hero-btns">
-            {isFeatureOn('rsvp') && <ButtonLink to="/rsvp" variant="gold">{L('Confirm Your Presence', 'अपने आने की पुष्टि करें')}</ButtonLink>}
+            {rsvpUpFront() && <ButtonLink to="/rsvp" variant="gold">{L('Confirm Your Presence', 'अपने आने की पुष्टि करें')}</ButtonLink>}
+            {!rsvpUpFront() && isFeatureOn('blessings') && <ButtonLink to="/blessings" variant="gold">{L('Share Your Blessings', 'अपना आशीर्वाद भेजें')}</ButtonLink>}
             {isFeatureOn('photos') && <ButtonLink to="/photos" variant="light">{L('Share Your Photos', 'अपनी फ़ोटो भेजें')}</ButtonLink>}
             {siteConfig.inviteFilm?.enabled && siteConfig.inviteFilm?.homeButton && <ButtonLink to="/invite" variant="light">{L('▶ Watch the Invitation', '▶ निमंत्रण देखें')}</ButtonLink>}
           </div>
@@ -78,7 +79,7 @@ export default function HomePage() {
       <section className="wrap-narrow" style={{ padding: '1.5rem 1.1rem' }}>
         <Divider />
         <div className="grid gap-4 mt-6">
-          {isFeatureOn('rsvp') && <ActionCard to="/rsvp" icon="mail" title={L('RSVP', 'आने की पुष्टि')} text={L('Tell us you are coming, and help us welcome you well.', 'बताइए कि आप आ रहे हैं, ताकि हम आपका अच्छे से स्वागत कर सकें।')} />}
+          {rsvpUpFront() && <ActionCard to="/rsvp" icon="mail" title={L('RSVP', 'आने की पुष्टि')} text={L('Tell us you are coming, and help us welcome you well.', 'बताइए कि आप आ रहे हैं, ताकि हम आपका अच्छे से स्वागत कर सकें।')} />}
           {isFeatureOn('photos') && <ActionCard to="/photos" icon="camera" title={L('Photos', 'फ़ोटो')} text={L('Share your photos and find your own with a selfie.', 'अपनी फ़ोटो भेजें और एक सेल्फ़ी से अपनी फ़ोटो ढूँढें।')} />}
           {isFeatureOn('blessings') && <ActionCard to="/blessings" icon="heart" title={L('Digital Blessings', 'आशीर्वाद')} text={L('Leave your blessings and good wishes for us.', 'हमारे लिए अपना आशीर्वाद और शुभकामनाएँ लिखें।')} />}
         </div>

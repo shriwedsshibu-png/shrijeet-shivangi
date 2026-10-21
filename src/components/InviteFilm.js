@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import siteConfig from '../siteConfig';
-import { sortedEvents, isFeatureOn } from '../utils';
+import { sortedEvents, isFeatureOn, rsvpUpFront } from '../utils';
 import makeLoopPlayer from '../loopAudio';
 import { groomFirst, isFullTier, isReception, wed, filmText, tierCfg } from '../tier';
 import { L, isHi, locale } from '../lang';
@@ -590,7 +590,8 @@ export default function InviteFilm() {
   const outDone = useRef(false);       // current page has started its exit fade
   const [doors, setDoors] = useState(0); // 0 none, 1 closed, 2 seam glows, 3 swinging open
   const doorZoom = useRef('none');
-  const rsvpOn = isFeatureOn('rsvp');   // off for the reception invite (no RSVP there)
+  const rsvpOn = rsvpUpFront();   // off for the reception invite, and after features.rsvp.quietFrom
+  const blessOn = !rsvpOn && isFeatureOn('blessings');   // off for the reception invite (no RSVP there)
   const fam = (groomFirst() ? siteConfig.inviteFamily?.groom : siteConfig.inviteFamily?.bride) || null;
   const total = 5 + events.length;
   const DATE_I = 1, LAST = total - 1;
@@ -951,6 +952,7 @@ export default function InviteFilm() {
               <button className="iv-link" onClick={replay}>{L('↺ Replay invitation', '↺ निमंत्रण फिर से देखें')}</button>
               {rsvpOn && <p className="iv-rsvp-hint"><span className="iv-hand" aria-hidden>👇</span> {L('Tap below to RSVP', 'आने की पुष्टि के लिए नीचे दबाएँ')}</p>}
               {rsvpOn && <button className="iv-cta gold sm iv-rsvp" onClick={() => leave('/rsvp')}>{L('✓ Confirm Your Presence', '✓ अपने आने की पुष्टि करें')}</button>}
+              {blessOn && <button className="iv-cta gold sm iv-rsvp" onClick={() => leave('/blessings')}>{L('💌 Share Your Blessings', '💌 अपना आशीर्वाद भेजें')}</button>}
             </div>
             <div className="iv-end rv" style={{ '--d': '3.2s' }}>
               {fam && (

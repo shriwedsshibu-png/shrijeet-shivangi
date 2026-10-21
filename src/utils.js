@@ -138,3 +138,14 @@ export function isFeatureOn(key) {
 // What a guest reads for an event (Hindi links show the Hindi name and time; the English name stays the key)
 export const evName = (e) => (isHi() && e.nameHi ? e.nameHi : e.name);
 export const evTime = (e) => (isHi() && e.timeHi ? e.timeHi : e.time);
+
+// After features.rsvp.quietFrom (Indian date): the RSVP is no longer pushed on the home page / bottom bar.
+export function rsvpQuiet() {
+  const d = siteConfig.features?.rsvp?.quietFrom;
+  if (!d) return false;
+  let today = new Date(Date.now() + 5.5 * 3600 * 1000).toISOString().slice(0, 10);
+  try { const t = localStorage.getItem('ss_test_today'); if (t) today = t; } catch (e) { /* private mode */ }
+  return today >= d;
+}
+// the RSVP button is shown up front only before quietFrom
+export function rsvpUpFront() { return isFeatureOn('rsvp') && !rsvpQuiet(); }
