@@ -115,3 +115,8 @@ export function pageHidden(key) {
 export function dateLine() {
   return tierCfg().dateLine || siteConfig.wedding.dateLine;
 }
+
+// true only when this phone opened a Shivangi-side invite link (not the default side of a plain visit)
+export function invitedByBride() {
+  try { return localStorage.getItem(SIDE_KEY) === 'bride'; } catch (e) { return false; }
+}

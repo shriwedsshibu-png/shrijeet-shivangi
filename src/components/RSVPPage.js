@@ -3,7 +3,7 @@ import siteConfig from '../siteConfig';
 import { Card, Button, Field, Notice, PageHeader } from './ui';
 import { submitRsvp, submitReceptionRsvp, backendReady, NOT_READY_MESSAGE } from '../api';
 import { sortedEvents, loadSaved, save } from '../utils';
-import { isFullTier, getTier, isReception, tierCfg } from '../tier';
+import { isFullTier, getTier, isReception, tierCfg, invitedByBride } from '../tier';
 import { L, locale, isHi } from '../lang';
 import { evTime } from '../utils';
 import { BlessingCard } from './Blessings';
@@ -95,10 +95,12 @@ export default function RSVPPage() {
     setLoading(true);
     try {
       const payload = { ...form, eventsAttending: (choose ? events.filter((ev) => picked(ev.name)) : events).map((ev) => ev.name), inviteType: getTier() };
+      // invited from Shivangi's side (opened a /invite/shivangi/... link): tag the note so the family planner keeps their count apart
+      if (invitedByBride()) payload.notes = (payload.notes ? payload.notes + ' · ' : '') + "[Shivangi side]";
       if (wedOnly && form.attending === 'yes') {
         const out = form.from === 'outside';
         payload.arrivalDate = out ? form.arrivalDate : '';
-        payload.notes = (out ? 'From outside Vizag' : 'From Vizag') + (form.notes.trim() ? ' · ' + form.notes.trim() : '');
+        payload.notes = (out ? 'From outside Vizag' : 'From Vizag') + (form.notes.trim() ? ' · ' + form.notes.trim() : '') + (invitedByBride() ? " · [Shivangi side]" : '');
       }
       const result = rec ? await submitReceptionRsvp({ ...payload, arrivalDate: '', accommodation: '' }) : await submitRsvp(full ? payload : { ...payload, accommodation: '' });
       save(KEY, form);
